@@ -3,6 +3,6 @@ package JDBCConfig;
 
 public class JDBCConfig {
     
-    //comment
+    //comment modified
 
     }
