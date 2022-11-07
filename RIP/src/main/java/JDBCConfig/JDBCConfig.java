@@ -1,8 +1,8 @@
-package com.groupa.rip.JDBCConfig;
+package JDBCConfig;
 
 
 public class JDBCConfig {
     
     //comment
 
-}
+    }
