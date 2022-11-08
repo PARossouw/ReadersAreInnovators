@@ -22,7 +22,7 @@ public class JDBCConfig {
         } catch (ClassNotFoundException ex) {
             Logger.getLogger(JDBCConfig.class.getName()).log(Level.SEVERE, null, ex);
         }
-        String url = "jdbc:mysql://localhost:3306/readersareinnovators";
+        String url = "jdbc:mysql://localhost:3306/blonk";
         
         try {
             connection = DriverManager.getConnection(url,"root","root");
