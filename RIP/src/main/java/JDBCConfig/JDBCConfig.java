@@ -1,10 +1,41 @@
 package JDBCConfig;
 
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.SQLException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
 
 public class JDBCConfig {
     
-    //comment modified
-
+    private Connection connection;
     
-    // Tarun is cool
+    public JDBCConfig(){
+        try {
+            Class.forName("com.mysql.jdbc.Driver");
+        } catch (ClassNotFoundException ex) {
+            Logger.getLogger(JDBCConfig.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        String url = "jdbc:mysql://localhost:3306/readersareinnovators";
+        
+        try {
+            connection = DriverManager.getConnection(url,"root","root");
+        } catch (SQLException ex) {
+            Logger.getLogger(JDBCConfig.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+    
+    public Connection getConnection(){
+        return connection;
+    }
+    
+    public void closeConnection()throws SQLException{
+        
+        if(connection!=null)
+            connection.close();
+        
+    }
+    
+
     }
