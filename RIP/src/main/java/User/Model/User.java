@@ -1,8 +1,6 @@
 package User.Model;
 
-import Category.Model.Category;
 import java.util.Calendar;
-import java.util.List;
 
 public abstract class User {
 
@@ -14,12 +12,32 @@ public abstract class User {
     private Boolean isActive;
     private Calendar dateAdded;
     private Integer roleID;
-    private List<Category> preferredCategories;
 
     public User() {
     }
 
-    public User(Integer UserID, String username, String email, String phoneNumber, String password, Boolean isActive, Calendar dateAdded, Integer roleID, List<Category> preferredCategories) {
+    public User(Integer UserID, String username, String email, String password, Boolean isActive, Calendar dateAdded) {
+        this.UserID = UserID;
+        this.username = username;
+        this.email = email;
+        this.password = password;
+        this.isActive = isActive;
+        this.dateAdded = dateAdded;
+    }
+
+    public User(Integer UserID, String username, String email, String phoneNumber, String password, Boolean isActive, Calendar dateAdded) {
+        this.UserID = UserID;
+        this.username = username;
+        this.email = email;
+        this.phoneNumber = phoneNumber;
+        this.password = password;
+        this.isActive = isActive;
+        this.dateAdded = dateAdded;
+    }
+    
+    
+
+    public User(Integer UserID, String username, String email, String phoneNumber, String password, Boolean isActive, Calendar dateAdded, Integer roleID) {
         this.UserID = UserID;
         this.username = username;
         this.email = email;
@@ -28,10 +46,8 @@ public abstract class User {
         this.isActive = isActive;
         this.dateAdded = dateAdded;
         this.roleID = roleID;
-        this.preferredCategories = preferredCategories;
-    }
 
-    
+    }
 
     public Integer getUserID() {
         return UserID;
@@ -97,19 +113,9 @@ public abstract class User {
         this.roleID = roleID;
     }
 
-    public List<Category> getPreferredCategories() {
-        return preferredCategories;
-    }
-
-    public void setPreferredCategories(List<Category> preferredCategories) {
-        this.preferredCategories = preferredCategories;
-    }
-
     @Override
     public String toString() {
-        return "User{" + "UserID=" + UserID + ", username=" + username + ", email=" + email + ", phoneNumber=" + phoneNumber + ", password=" + password + ", isActive=" + isActive + ", dateAdded=" + dateAdded + ", roleID=" + roleID + ", preferredCategories=" + preferredCategories + '}';
+        return "User{" + "UserID=" + UserID + ", username=" + username + ", email=" + email + ", phoneNumber=" + phoneNumber + ", password=" + password + ", isActive=" + isActive + ", dateAdded=" + dateAdded + ", roleID=" + roleID + '}';
     }
-    
-    
 
 }
