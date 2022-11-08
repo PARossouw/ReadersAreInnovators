@@ -2,6 +2,8 @@ package JDBCConfig;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -10,6 +12,9 @@ import java.util.logging.Logger;
 public class JDBCConfig {
     
     private Connection connection;
+    protected PreparedStatement ps;
+    protected ResultSet rs;
+    protected Integer rowsAffected;
     
     public JDBCConfig(){
         try {
