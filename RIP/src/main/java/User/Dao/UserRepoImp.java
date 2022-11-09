@@ -1,11 +1,14 @@
 package User.Dao;
 
 import JDBCConfig.JDBCConfig;
+import User.Model.AdminEditor;
 import User.Model.User;
 import java.sql.SQLException;
-import user.Editor.Model.Editor;
-import user.Reader.Model.Reader;
-import user.Writer.Model.Writer;
+import java.util.Calendar;
+import java.util.Date;
+import User.Model.Editor;
+import User.Model.Reader;
+import User.Model.Writer;
 
 
 public class UserRepoImp extends JDBCConfig implements UserRepo {
@@ -51,9 +54,11 @@ public class UserRepoImp extends JDBCConfig implements UserRepo {
                 String email = (rs.getString("email"));
                 String phoneNumber = (rs.getString("phonenumber"));
                 String password = (rs.getString("password"));
-                boolean isActive = (rs.getBoolean(""));
-                String date = (rs.getString(""));
-                int role = (rs.getInt(""));                     //how to get date out
+                boolean isActive = (rs.getBoolean("isactive"));
+                Date dateAdded = rs.getDate("dateadded");
+                Calendar calendar = Calendar.getInstance();
+                calendar.setTime(dateAdded);
+                int role = (rs.getInt(""));
                 
                 switch(role) {
                 
@@ -66,9 +71,9 @@ public class UserRepoImp extends JDBCConfig implements UserRepo {
                     case 3 :
                         u = new Editor();
                         break;
-          //          case 4 :
-          //              u = new AdminEditor();
-          //              break;
+                    case 4 :
+                        u = new AdminEditor();
+                        break;
                     default :
                         
                         break;
