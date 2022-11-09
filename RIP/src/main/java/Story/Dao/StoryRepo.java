@@ -11,12 +11,10 @@ import user.Writer.Model.Writer;
 
 public interface StoryRepo {
 
-    //editor
-    List<Story> getApprovedStories(Editor editor) throws SQLException;
+    List<Story> getApprovedStories() throws SQLException;
 
-    List<Story> getRejectedStories(Editor editor) throws SQLException;
+    List<Story> getRejectedStories() throws SQLException;
 
-    //Reader
     List<Story> getLikedStories(Reader reader) throws SQLException;
 
     Boolean submitStory(Story story) throws SQLException;

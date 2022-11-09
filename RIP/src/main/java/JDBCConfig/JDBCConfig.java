@@ -8,39 +8,40 @@ import java.sql.SQLException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-
 public class JDBCConfig {
-    
+
     private Connection connection;
     protected PreparedStatement ps;
     protected ResultSet rs;
     protected Integer rowsAffected;
-    
-    public JDBCConfig(){
+
+    public JDBCConfig() {
         try {
             Class.forName("com.mysql.jdbc.Driver");
         } catch (ClassNotFoundException ex) {
             Logger.getLogger(JDBCConfig.class.getName()).log(Level.SEVERE, null, ex);
         }
-        String url = "jdbc:mysql://localhost:3306/readersareinnovators";
-        
+        String url = "jdbc:mysql://localhost:3306/blonk";
+
         try {
-            connection = DriverManager.getConnection(url,"root","root");
+            connection = DriverManager.getConnection(url, "root", "root");
         } catch (SQLException ex) {
             Logger.getLogger(JDBCConfig.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
-    
-    public Connection getConnection(){
+
+    public Connection getConnection() {
         return connection;
     }
-    
-    public void closeConnection()throws SQLException{
-        
-        if(connection!=null)
+
+    public void closeConnection() throws SQLException {
+
+        if (connection != null) {
             connection.close();
-        
-    }
-    
+            ps.close();
+            rs.close();
+        }
 
     }
+
+}
