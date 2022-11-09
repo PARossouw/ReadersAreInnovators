@@ -10,7 +10,7 @@ public interface StoryTransactionRepo {
 
     boolean createEvent(Story story, Reader reader) throws SQLException;
     
-    boolean updateEvent(Story story, Boolean bool, Reader reader) throws SQLException;
+    boolean updateEvent(Story story, String action, Reader reader) throws SQLException;
     
     
     

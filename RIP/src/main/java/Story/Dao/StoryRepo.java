@@ -28,5 +28,7 @@ public interface StoryRepo {
     Boolean updateStory(Story story) throws SQLException ;
     
     Story retrieveStory(Story story) throws SQLException ; 
+    
+     Boolean createStory(Story story) throws SQLException ;
 
 }
