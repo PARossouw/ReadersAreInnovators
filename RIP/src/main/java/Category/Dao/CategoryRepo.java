@@ -17,11 +17,11 @@ public interface CategoryRepo {
 
     Boolean updateCategory(Category category) throws SQLException;
 
-    List<Category> getPreferredCatesgories(Reader reader) throws SQLException;
+    List<Category> getPreferredCategories(Reader reader) throws SQLException;
 
     Boolean addPreferredCategories(Reader reader, List<Category> categories) throws SQLException;
     
-    List<Category> getStoryCatesgories(Story story) throws SQLException;
+    List<Category> getStoryCategories(Story story) throws SQLException;
     
 
 }
