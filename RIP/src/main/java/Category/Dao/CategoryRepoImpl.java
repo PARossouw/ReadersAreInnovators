@@ -49,7 +49,12 @@ public class CategoryRepoImpl extends JDBCConfig implements CategoryRepo {
             if (rs.next()) {
                 category.setCategoryID(CategoryID);
                 category.setName(rs.getString("Category"));
-                category.setDateAdded(rs.getDate("dateAdded"));                       //how to get date out
+                
+                Date createdOn = rs.getDate("dateAdded");
+                Calendar calendar = Calendar.getInstance();
+                calendar.setTime(createdOn);
+                category.setDateAdded(calendar);
+            
             }
         }
         close();
@@ -83,7 +88,11 @@ public class CategoryRepoImpl extends JDBCConfig implements CategoryRepo {
 
             while (rs.next()) {
 
-                categoryList.add(new Category(rs.getInt("categoryid"), rs.getString("category"), rs.getDate("dateAdded")));
+                Date createdOn = rs.getDate("dateAdded");
+                Calendar calendar = Calendar.getInstance();
+                calendar.setTime(createdOn);
+
+                categoryList.add(new Category(rs.getInt("categoryid"), rs.getString("category"), calendar));
 
             }
         }
@@ -101,7 +110,14 @@ public class CategoryRepoImpl extends JDBCConfig implements CategoryRepo {
             rs = ps.executeQuery();
 
             while (rs.next()) {
-                categoryList.add(new Category(rs.getInt("categoryID"), rs.getString("category"), rs.getDate("dateAdded")));
+                
+                 Date createdOn = rs.getDate("dateAdded");
+                Calendar calendar = Calendar.getInstance();
+                calendar.setTime(createdOn);
+                
+                
+                
+                categoryList.add(new Category(rs.getInt("categoryID"), rs.getString("category"), calendar));
 
             }
 
@@ -140,7 +156,13 @@ public class CategoryRepoImpl extends JDBCConfig implements CategoryRepo {
             rs = ps.executeQuery();
 
             while (rs.next()) {
-                categories.add(new Category(rs.getInt("categoryID"), rs.getString("category"), rs.getDate("dateAdded")));
+                
+                 Date createdOn = rs.getDate("dateAdded");
+                Calendar calendar = Calendar.getInstance();
+                calendar.setTime(createdOn);
+                
+                
+                categories.add(new Category(rs.getInt("categoryID"), rs.getString("category"), calendar));
             }
         }
         close();
