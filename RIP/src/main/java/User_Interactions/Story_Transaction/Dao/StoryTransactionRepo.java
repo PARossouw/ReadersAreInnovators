@@ -1,6 +1,8 @@
 package User_Interactions.Story_Transaction.Dao;
 
+import Story.Model.Story;
 import java.sql.SQLException;
+import user.Reader.Model.Reader;
 
 /**
  *
@@ -8,6 +10,10 @@ import java.sql.SQLException;
  */
 public interface StoryTransactionRepo {
 
-    boolean createEvent() throws SQLException;
+    boolean createEvent(Story story, Reader reader) throws SQLException;
+    
+    boolean updateEvent(Story story, Boolean bool, Reader reader) throws SQLException;
+    
+    
 
 }
