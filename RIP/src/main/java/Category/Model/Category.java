@@ -1,5 +1,6 @@
 package Category.Model;
 
+import java.util.Calendar;
 import java.util.Date;
 
 
@@ -7,12 +8,12 @@ public class Category {
     
     private Integer CategoryID;
     private String Name;
-    private Date dateAdded;
+    private Calendar dateAdded;
     
     public Category() {
     }
 
-    public Category(Integer CategoryID, String Name, Date dateAdded) {
+    public Category(Integer CategoryID, String Name, Calendar dateAdded) {
         this.CategoryID = CategoryID;
         this.Name = Name;
         this.dateAdded = dateAdded;
@@ -38,11 +39,11 @@ public class Category {
         this.Name = Name;
     }
 
-    public Date getDateAdded() {
+    public Calendar getDateAdded() {
         return dateAdded;
     }
 
-    public void setDateAdded(Date dateAdded) {
+    public void setDateAdded(Calendar dateAdded) {
         this.dateAdded = dateAdded;
     }
     
