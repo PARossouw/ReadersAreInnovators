@@ -8,8 +8,8 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
-import user.Reader.Model.Reader;
-import user.Writer.Model.Writer;
+import User.Model.Reader;
+import User.Model.Writer;
 
 
 public class StoryRepoImpl extends JDBCConfig implements StoryRepo {
