@@ -17,10 +17,10 @@ public interface StoryRepo {
 
     Boolean submitStory(Story story) throws SQLException;
 
-    List<Story> getStoryByCategory(List<Category> categories) throws SQLException;
-
-    List<Story> getDraftStories(Writer writer) throws SQLException;
-
+    List<Story> getStoryByCategory(List<Category> categories) throws SQLException; 
+    
+    List<Story> getWritersDraftStories(Writer writer) throws SQLException;
+    
     List<Story> getPendingStories() throws SQLException;//not yet approved
 
 }
