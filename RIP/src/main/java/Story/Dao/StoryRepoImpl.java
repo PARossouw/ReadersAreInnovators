@@ -11,6 +11,8 @@ import java.util.List;
 import user.Editor.Model.Editor;
 import user.Reader.Model.Reader;
 import user.Writer.Model.Writer;
+import User.Model.Reader;
+import User.Model.Writer;
 
 
 public class StoryRepoImpl extends JDBCConfig implements StoryRepo {

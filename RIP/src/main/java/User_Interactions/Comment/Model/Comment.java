@@ -2,7 +2,7 @@ package User_Interactions.Comment.Model;
 
 import Story.Model.Story;
 import java.util.Calendar;
-import user.Reader.Model.Reader;
+import User.Model.Reader;
 
 /**
  *

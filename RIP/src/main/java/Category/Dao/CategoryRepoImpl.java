@@ -8,7 +8,7 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
-import user.Reader.Model.Reader;
+import User.Model.Reader;
 
 public class CategoryRepoImpl extends JDBCConfig implements CategoryRepo {
     

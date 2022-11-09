@@ -4,8 +4,8 @@ import Category.Model.Category;
 import Story.Model.Story;
 import java.sql.SQLException;
 import java.util.List;
-import user.Reader.Model.Reader;
-import user.Writer.Model.Writer;
+import User.Model.Reader;
+import User.Model.Writer;
 
 public interface StoryRepo {
 

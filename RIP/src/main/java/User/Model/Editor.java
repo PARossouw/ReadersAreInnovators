@@ -1,4 +1,4 @@
-package user.Editor.Model;
+package User.Model;
 
 import User.Model.User;
 import User_Interactions.Story_Transaction.Model.StoryTransaction;
