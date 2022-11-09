@@ -1,4 +1,4 @@
-package user.Reader.Model;
+package User.Model;
 
 import Category.Model.Category;
 import Story.Model.Story;
