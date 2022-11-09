@@ -5,7 +5,7 @@ import Story.Model.Story;
 import User.Model.User;
 import java.sql.SQLException;
 import java.util.List;
-import user.Reader.Model.Reader;
+import User.Model.Reader;
 
 public interface CategoryRepo {
 

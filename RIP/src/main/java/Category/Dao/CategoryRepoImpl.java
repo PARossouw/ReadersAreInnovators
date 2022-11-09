@@ -3,14 +3,12 @@ package Category.Dao;
 import Category.Model.Category;
 import JDBCConfig.JDBCConfig;
 import Story.Model.Story;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
-import user.Reader.Model.Reader;
+import User.Model.Reader;
 
 public class CategoryRepoImpl extends JDBCConfig implements CategoryRepo {
     
@@ -30,7 +28,7 @@ public class CategoryRepoImpl extends JDBCConfig implements CategoryRepo {
             rowsAffected = ps.executeUpdate();
 
         }
-        close();
+        closeConnection();
 
         return rowsAffected == 1;
     }
@@ -49,10 +47,15 @@ public class CategoryRepoImpl extends JDBCConfig implements CategoryRepo {
             if (rs.next()) {
                 category.setCategoryID(CategoryID);
                 category.setName(rs.getString("Category"));
-                category.setDateAdded(rs.getDate("dateAdded"));                       //how to get date out
+                
+                Date createdOn = rs.getDate("dateAdded");
+                Calendar calendar = Calendar.getInstance();
+                calendar.setTime(createdOn);
+                category.setDateAdded(calendar);
+            
             }
         }
-        close();
+        closeConnection();
         return category;
     }
 
@@ -68,7 +71,7 @@ public class CategoryRepoImpl extends JDBCConfig implements CategoryRepo {
             rowsAffected = ps.executeUpdate();
 
         }
-        close();
+        closeConnection();
         return rowsAffected == 1;
     }
 
@@ -83,7 +86,11 @@ public class CategoryRepoImpl extends JDBCConfig implements CategoryRepo {
 
             while (rs.next()) {
 
-                categoryList.add(new Category(rs.getInt("categoryid"), rs.getString("category"), rs.getDate("dateAdded")));
+                Date createdOn = rs.getDate("dateAdded");
+                Calendar calendar = Calendar.getInstance();
+                calendar.setTime(createdOn);
+
+                categoryList.add(new Category(rs.getInt("categoryid"), rs.getString("category"), calendar));
 
             }
         }
@@ -101,11 +108,18 @@ public class CategoryRepoImpl extends JDBCConfig implements CategoryRepo {
             rs = ps.executeQuery();
 
             while (rs.next()) {
-                categoryList.add(new Category(rs.getInt("categoryID"), rs.getString("category"), rs.getDate("dateAdded")));
+                
+                 Date createdOn = rs.getDate("dateAdded");
+                Calendar calendar = Calendar.getInstance();
+                calendar.setTime(createdOn);
+                
+                
+                
+                categoryList.add(new Category(rs.getInt("categoryID"), rs.getString("category"), calendar));
 
             }
 
-            close();
+            closeConnection();
 
         }
         return categoryList;
@@ -125,7 +139,7 @@ public class CategoryRepoImpl extends JDBCConfig implements CategoryRepo {
             rowsAffected = ps.executeBatch().length;
 
         }
-        close();
+        closeConnection();
         return rowsAffected == categories.size();
     }
 
@@ -140,19 +154,17 @@ public class CategoryRepoImpl extends JDBCConfig implements CategoryRepo {
             rs = ps.executeQuery();
 
             while (rs.next()) {
-                categories.add(new Category(rs.getInt("categoryID"), rs.getString("category"), rs.getDate("dateAdded")));
+                
+                 Date createdOn = rs.getDate("dateAdded");
+                Calendar calendar = Calendar.getInstance();
+                calendar.setTime(createdOn);
+                
+                
+                categories.add(new Category(rs.getInt("categoryID"), rs.getString("category"), calendar));
             }
         }
-        close();
+        closeConnection();
         return categories;
     }
 
-    private void close() throws SQLException {
-        if (rs != null) {
-            rs.close();
-        }
-        if (ps != null) {
-            ps.close();
-        }
-    }
 }

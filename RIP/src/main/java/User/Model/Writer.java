@@ -1,10 +1,9 @@
-package user.Writer.Model;
+package User.Model;
 
 import Category.Model.Category;
 import Story.Model.Story;
 import java.util.Calendar;
 import java.util.List;
-import user.Reader.Model.Reader;
 
 public class Writer extends Reader{
 
