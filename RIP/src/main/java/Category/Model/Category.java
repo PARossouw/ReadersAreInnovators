@@ -18,6 +18,10 @@ public class Category {
         this.dateAdded = dateAdded;
     }
 
+    public Category(String Name) {
+        this.Name = Name;
+    }
+
     public Integer getCategoryID() {
         return CategoryID;
     }
