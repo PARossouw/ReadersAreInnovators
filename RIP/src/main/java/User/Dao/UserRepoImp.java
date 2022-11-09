@@ -47,10 +47,10 @@ public class UserRepoImp extends JDBCConfig implements UserRepo {
             rs = ps.executeQuery();
 
             if (rs.next()) {
-                int userID = (rs.getInt(""));
-                String email = (rs.getString(""));
-                String phoneNumber = (rs.getString(""));
-                String password = (rs.getString(""));
+                int userID = (rs.getInt("userid"));
+                String email = (rs.getString("email"));
+                String phoneNumber = (rs.getString("phonenumber"));
+                String password = (rs.getString("password"));
                 boolean isActive = (rs.getBoolean(""));
                 String date = (rs.getString(""));
                 int role = (rs.getInt(""));                     //how to get date out
