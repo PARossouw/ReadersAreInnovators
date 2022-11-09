@@ -2,7 +2,7 @@ package User_Interactions.Rating_Transaction.Model;
 
 import Story.Model.Story;
 import java.util.Calendar;
-import user.Reader.Model.Reader;
+import User.Model.Reader;
 
 /**
  *
