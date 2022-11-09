@@ -1,7 +1,7 @@
 package user.Editor.Model;
 
 import User.Model.User;
-import User_Interactions.StoryTransaction.Model.StoryTransaction;
+import User_Interactions.Story_Transaction.Model.StoryTransaction;
 import java.util.Calendar;
 import java.util.List;
 
