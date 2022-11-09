@@ -4,9 +4,8 @@ import Category.Model.Category;
 import java.util.Calendar;
 import java.util.List;
 
-
 public class Story {
-    
+
     private Integer storyID;
     private String title;
     private String writer;
@@ -26,6 +25,23 @@ public class Story {
     public Story() {
     }
 
+    public Story(Integer storyID, String title, String writer, String description, String imagePath, String body, Boolean isDraft, Boolean isActive, Calendar createdOn, Boolean allowComments, Boolean isApproved, Integer views, Integer likes, Double avgRating) {
+        this.storyID = storyID;
+        this.title = title;
+        this.writer = writer;
+        this.description = description;
+        this.imagePath = imagePath;
+        this.body = body;
+        this.isDraft = isDraft;
+        this.isActive = isActive;
+        this.createdOn = createdOn;
+        this.allowComments = allowComments;
+        this.isApproved = isApproved;
+        this.views = views;
+        this.likes = likes;
+        this.avgRating = avgRating;
+    }
+
     public Story(Integer storyID, String title, String writer, String description, String imagePath, String body, Boolean isDraft, Boolean isActive, Calendar createdOn, Boolean allowComments, Boolean isApproved, Integer views, Integer likes, Double avgRating, List<Category> categoryList) {
         this.storyID = storyID;
         this.title = title;
@@ -43,8 +59,6 @@ public class Story {
         this.avgRating = avgRating;
         this.categoryList = categoryList;
     }
-
-   
 
     public Integer getStoryID() {
         return storyID;
@@ -162,9 +176,5 @@ public class Story {
     public String toString() {
         return "Story{" + "storyID=" + storyID + ", title=" + title + ", writer=" + writer + ", description=" + description + ", imagePath=" + imagePath + ", body=" + body + ", isDraft=" + isDraft + ", isActive=" + isActive + ", createdOn=" + createdOn + ", allowComments=" + allowComments + ", isApproved=" + isApproved + ", views=" + views + ", likes=" + likes + ", avgRating=" + avgRating + '}';
     }
-    
-    
-    
-    
 
 }

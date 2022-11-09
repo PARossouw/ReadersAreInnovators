@@ -1,7 +1,3 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
- */
 package Story.Dao;
 
 import Category.Model.Category;
@@ -12,7 +8,6 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
-import user.Editor.Model.Editor;
 import user.Reader.Model.Reader;
 import user.Writer.Model.Writer;
 
@@ -20,23 +15,160 @@ import user.Writer.Model.Writer;
 public class StoryRepoImpl extends JDBCConfig implements StoryRepo {
 
     @Override
-    public List<Story> getApprovedStories(Editor editor) throws SQLException {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+    public List<Story> getApprovedStories() throws SQLException {
+        
+        List<Story> allApprovedStories = new ArrayList<>();
+        Story story = null;
+        
+        if (getConnection() != null) {
+            
+            ps = getConnection().prepareStatement("select storyID, title, "
+                    + "writer, description, imagePath, body, isDraft, isActive, "
+                    + "createdOn, allowComments, isApproved, views, likes, "
+                    + "avgRating from story where isApproved = ?");
+            
+            ps.setInt(1, 1);
+            rs = ps.executeQuery();
+            
+            while (rs.next()) {
+                
+                int storyID = rs.getInt("storyID");
+                String title = rs.getString("title");
+                String writer = rs.getString("writer");
+                String description = rs.getString("description");
+                String imagePath = rs.getString("imagePath");
+                String body = rs.getString("body");
+                boolean isDraft = rs.getBoolean("isDraft");
+                boolean isActive = rs.getBoolean("isActive");
+
+                Date createdOn = rs.getDate("createdOn");
+                Calendar calendar = Calendar.getInstance();
+                calendar.setTime(createdOn);
+
+                boolean allowComments = rs.getBoolean("allowComments");
+                boolean isApproved = rs.getBoolean("isApproved");
+                int views = rs.getInt("views");
+                int likes = rs.getInt("likes");
+                double avgRating = rs.getDouble("avgRating");
+
+                story = new Story(storyID, title, writer, description, 
+                        imagePath, body, isDraft, isActive, 
+                        calendar, allowComments, isApproved, 
+                        views, likes, avgRating);
+            }
+        }
+        closeConnection();
+        
+        return allApprovedStories;
     }
 
     @Override
-    public List<Story> getRejectedStories(Editor editor) throws SQLException {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+    public List<Story> getRejectedStories() throws SQLException {
+        
+        List<Story> allRejectedStories = new ArrayList<>();
+        Story story = null;
+        
+        if (getConnection() != null) {
+            
+            ps = getConnection().prepareStatement("select storyID, title, "
+                    + "writer, description, imagePath, body, isDraft, isActive, "
+                    + "createdOn, allowComments, isApproved, views, likes, "
+                    + "avgRating from story where isApproved = ?");
+            
+            ps.setInt(1, 0);
+            rs = ps.executeQuery();
+            
+            while (rs.next()) {
+                
+                int storyID = rs.getInt("storyID");
+                String title = rs.getString("title");
+                String writer = rs.getString("writer");
+                String description = rs.getString("description");
+                String imagePath = rs.getString("imagePath");
+                String body = rs.getString("body");
+                boolean isDraft = rs.getBoolean("isDraft");
+                boolean isActive = rs.getBoolean("isActive");
+
+                Date createdOn = rs.getDate("createdOn");
+                Calendar calendar = Calendar.getInstance();
+                calendar.setTime(createdOn);
+
+                boolean allowComments = rs.getBoolean("allowComments");
+                boolean isApproved = rs.getBoolean("isApproved");
+                int views = rs.getInt("views");
+                int likes = rs.getInt("likes");
+                double avgRating = rs.getDouble("avgRating");
+
+                story = new Story(storyID, title, writer, description, 
+                        imagePath, body, isDraft, isActive, 
+                        calendar, allowComments, isApproved, 
+                        views, likes, avgRating);
+            }
+        }
+        closeConnection();
+        
+        return allRejectedStories;
     }
 
     @Override
     public List<Story> getLikedStories(Reader reader) throws SQLException {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+        
+        List<Story> readersLikesStories = new ArrayList<>();
+        Story story = null;
+        
+        if (getConnection() != null) {
+            
+            ps = getConnection().prepareStatement("select storyID, title, "
+                    + "writer, description, imagePath, body, isDraft, isActive, "
+                    + "createdOn, allowComments, isApproved, views, likes, "
+                    + "avgRating from story s inner join like_transaction lt on s.storyID = lt.story where lt.reader = ?");
+            
+            ps.setInt(1, 1);
+            rs = ps.executeQuery();
+            
+            while (rs.next()) {
+                
+                int storyID = rs.getInt("storyID");
+                String title = rs.getString("title");
+                String writer = rs.getString("writer");
+                String description = rs.getString("description");
+                String imagePath = rs.getString("imagePath");
+                String body = rs.getString("body");
+                boolean isDraft = rs.getBoolean("isDraft");
+                boolean isActive = rs.getBoolean("isActive");
+
+                Date createdOn = rs.getDate("createdOn");
+                Calendar calendar = Calendar.getInstance();
+                calendar.setTime(createdOn);
+
+                boolean allowComments = rs.getBoolean("allowComments");
+                boolean isApproved = rs.getBoolean("isApproved");
+                int views = rs.getInt("views");
+                int likes = rs.getInt("likes");
+                double avgRating = rs.getDouble("avgRating");
+
+                story = new Story(storyID, title, writer, description, 
+                        imagePath, body, isDraft, isActive, 
+                        calendar, allowComments, isApproved, 
+                        views, likes, avgRating);
+            }
+        }
+        closeConnection();
+        
+        return readersLikesStories;
     }
 
     @Override
     public Boolean submitStory(Story story) throws SQLException {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+        
+        if (getConnection() != null) {
+            ps = getConnection().prepareStatement("update story set isDraft = 0 where storyID = ?");
+            ps.setInt(1, story.getStoryID());
+            rowsAffected = ps.executeUpdate();
+        }
+        closeConnection();
+
+        return rowsAffected == 1;
     }
 
 
@@ -81,7 +213,7 @@ public class StoryRepoImpl extends JDBCConfig implements StoryRepo {
                  draftStories.add(storyObj);
             }
         }
-        close();
+        closeConnection();
 
         return draftStories;
     }
@@ -129,7 +261,7 @@ public class StoryRepoImpl extends JDBCConfig implements StoryRepo {
                  pendingStories.add(storyObj);
             }
         }
-        close();
+        closeConnection();
 
         return pendingStories;
     }
@@ -160,19 +292,8 @@ public class StoryRepoImpl extends JDBCConfig implements StoryRepo {
         }
         }
         
-        close();
+        closeConnection();
 
         return storiesByCategory;
     }
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
 }
