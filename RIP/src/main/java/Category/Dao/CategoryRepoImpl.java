@@ -3,8 +3,6 @@ package Category.Dao;
 import Category.Model.Category;
 import JDBCConfig.JDBCConfig;
 import Story.Model.Story;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -30,7 +28,7 @@ public class CategoryRepoImpl extends JDBCConfig implements CategoryRepo {
             rowsAffected = ps.executeUpdate();
 
         }
-        close();
+        closeConnection();
 
         return rowsAffected == 1;
     }
@@ -57,7 +55,7 @@ public class CategoryRepoImpl extends JDBCConfig implements CategoryRepo {
             
             }
         }
-        close();
+        closeConnection();
         return category;
     }
 
@@ -73,7 +71,7 @@ public class CategoryRepoImpl extends JDBCConfig implements CategoryRepo {
             rowsAffected = ps.executeUpdate();
 
         }
-        close();
+        closeConnection();
         return rowsAffected == 1;
     }
 
@@ -121,7 +119,7 @@ public class CategoryRepoImpl extends JDBCConfig implements CategoryRepo {
 
             }
 
-            close();
+            closeConnection();
 
         }
         return categoryList;
@@ -141,7 +139,7 @@ public class CategoryRepoImpl extends JDBCConfig implements CategoryRepo {
             rowsAffected = ps.executeBatch().length;
 
         }
-        close();
+        closeConnection();
         return rowsAffected == categories.size();
     }
 
@@ -165,16 +163,8 @@ public class CategoryRepoImpl extends JDBCConfig implements CategoryRepo {
                 categories.add(new Category(rs.getInt("categoryID"), rs.getString("category"), calendar));
             }
         }
-        close();
+        closeConnection();
         return categories;
     }
 
-    private void close() throws SQLException {
-        if (rs != null) {
-            rs.close();
-        }
-        if (ps != null) {
-            ps.close();
-        }
-    }
 }
