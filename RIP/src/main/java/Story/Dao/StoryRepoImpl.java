@@ -8,6 +8,7 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
+
 import User.Model.Reader;
 import User.Model.Writer;
 
@@ -173,14 +174,14 @@ public class StoryRepoImpl extends JDBCConfig implements StoryRepo {
 
 
     @Override
-    public List<Story> getWritersDraftStories(Writer writer) throws SQLException {
+    public List<Story> getWriterStories(Writer writer) throws SQLException {
 
    
         List <Story> draftStories = new ArrayList<>();
         Story storyObj;
 
         if (getConnection() != null) {
-            ps = getConnection().prepareStatement("select storyID, title, writer,description, imagePath, body, isDraft, isActive , createdOn, allowComments, isApproved, views, likes, avgRating from story where writer = ? and isDraft = ? ");
+            ps = getConnection().prepareStatement("select storyID, title, writer,description, imagePath, body, isDraft, isActive , createdOn, allowComments, isApproved, views, likes, avgRating from story where writer = ?");
             
 
             ps.setInt(1,writer.getUserID());
@@ -323,5 +324,134 @@ public class StoryRepoImpl extends JDBCConfig implements StoryRepo {
         closeConnection();
 
         return storiesByCategory;
+    }
+
+    @Override
+    public Boolean createStory(Story story) throws SQLException {
+        
+            Boolean createdStory = false;
+
+            if (getConnection() != null) {
+
+            ps = getConnection().prepareStatement("insert into story (title, writer, description, imagePath, body, isDraft, isActive, allowComment, isApproved, views, avgRating,likes) values (?, ?, ?, ?,?,?,?,?,?,?,?,?)");
+            ps.setString(1, story.getTitle());
+            ps.setString(2, story.getWriter());
+            ps.setString(3, story.getDescription());
+            ps.setString(4, story.getImagePath());
+            ps.setString(5, story.getBody());
+            ps.setBoolean(6, story.getIsDraft());
+            ps.setBoolean(7, story.getIsActive());
+            ps.setBoolean(8, story.getAllowComments());
+            ps.setBoolean(9, story.getIsApproved());
+            ps.setInt(10, story.getViews());
+            ps.setDouble(11, story.getAvgRating());
+            ps.setInt(12, story.getLikes());
+
+            rowsAffected = ps.executeUpdate();
+
+            createdStory = true;
+            }    
+    
+           closeConnection();
+           return createdStory ;
+
+    }
+
+    @Override
+    public Story retrieveStory(Story story) throws SQLException {
+    
+        Story storyObj = new Story();
+
+        if (getConnection() != null) {
+            ps = getConnection().prepareStatement("select storyID, title, writer,description, "
+                    + "imagePath, body, isDraft, isActive , createdOn, allowComments, "
+                    + "isApproved, views, likes, avgRating from story where storyID = ? ");
+            ps.setInt(1, story.getStoryID());
+            
+            rs = ps.executeQuery();
+            
+            if (rs.next()) {
+                int storyID = rs.getInt("storyID");  
+                String title = rs.getString("title"); 
+                String writer = rs.getString("writer");
+                String description = rs.getString("description");
+                String imagePath = rs.getString("imagePath");
+                String body = rs.getString("body");
+                boolean isDraft = rs.getBoolean("isDraft");
+                boolean isActive = rs.getBoolean("isActive");
+                             
+                Date createdOn = rs.getDate("createdOn");
+                Calendar calendar = Calendar.getInstance();
+                calendar.setTime(createdOn);
+                
+                boolean allowComments = rs.getBoolean("allowComments");
+                boolean isApproved = rs.getBoolean("isApproved");
+                int views = rs.getInt("views"); 
+                int likes = rs.getInt("likes"); 
+                double avgRating = rs.getDouble("avgRating");
+                    
+                storyObj = new Story(storyID,title, writer, description, imagePath, body, 
+                isDraft, isActive, calendar, allowComments, isApproved, views, likes, avgRating);
+
+            }
+        }
+        closeConnection();
+
+        return storyObj;
+
+    }
+
+    @Override
+    public Boolean updateStory(Story story) throws SQLException {
+        
+        Boolean storyUpdated = false;
+            if (getConnection() != null) 
+            {
+            ps = getConnection().prepareStatement("update story set title = ?, writer = ? ,description = ? , "
+                    + "imagePath = ? , body = ? , isDraft = ?, isActive = ? , createdOn = ?, allowComments = ?, "
+                    + "isApproved = ?, views = ?, likes = ?, avgRating = ?  where storyID = ? ");
+            
+            ps.setString(1, story.getTitle());
+            ps.setString(2, story.getWriter());
+            ps.setString(3, story.getDescription());
+            ps.setString(4, story.getImagePath());
+            ps.setString(5, story.getBody());
+            ps.setBoolean(6, story.getIsDraft());
+            ps.setBoolean(7, story.getIsActive());
+            ps.setBoolean(8, story.getIsActive());
+            ps.setBoolean(9, story.getAllowComments());
+            ps.setBoolean(10, story.getIsApproved());
+            ps.setInt(11, story.getViews());
+            ps.setDouble(12, story.getAvgRating());
+            ps.setInt(13, story.getLikes());
+            ps.setInt(14, story.getStoryID());
+            
+            rs = ps.executeQuery();
+            storyUpdated = true;
+            
+        }
+        closeConnection();
+        
+    return storyUpdated;
+    }
+
+    @Override
+    public Boolean deleteStory(Story story) throws SQLException {
+        
+        Boolean storyDeleted = false;
+        
+        if (getConnection() != null) 
+            {
+            ps = getConnection().prepareStatement("update story set isActive = ? where storyID = ? ");
+                 
+            ps.setInt(1, 0);
+            ps.setInt(2, story.getStoryID());         
+            rs = ps.executeQuery();
+            storyDeleted = true;
+       
+        }
+        closeConnection();
+        return storyDeleted;
+    
     }
 }
