@@ -6,6 +6,6 @@ import User.Model.User;
 
 public interface ViewTransactionService {
     
-    Story viewStory(Story story, User user);
+    String viewStory(Story story, User user);
 
 }

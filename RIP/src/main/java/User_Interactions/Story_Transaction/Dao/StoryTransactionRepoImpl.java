@@ -7,13 +7,15 @@ package User_Interactions.Story_Transaction.Dao;
 import JDBCConfig.JDBCConfig;
 import Story.Model.Story;
 import User.Model.Reader;
+import User.Model.User;
 import java.sql.SQLException;
 
 
+//need to integrate the String action as an argument into this class
 public class StoryTransactionRepoImpl extends JDBCConfig implements StoryTransactionRepo {
 
     @Override
-    public boolean createEvent(Story story, Reader reader) throws SQLException {
+    public boolean createEvent(Story story, User user, String action) throws SQLException {
     
         Boolean createdEvent = false;
 
@@ -35,26 +37,6 @@ public class StoryTransactionRepoImpl extends JDBCConfig implements StoryTransac
         
     }
 
-    @Override
-    public boolean updateEvent(Story story, String action, Reader reader) throws SQLException {
-    
-     Boolean updatedEvent = false;
-            if (getConnection() != null) 
-            {
-            ps = getConnection().prepareStatement("update story_transaction set user = ? ,action = ? where story = ? ");
-                  
-            ps.setInt(1, reader.getUserID());
-            ps.setString(2, action);
-            ps.setInt(3, story.getStoryID());
-            
-            
-            rs = ps.executeQuery();
-            updatedEvent = true;
-            
-        }
-        closeConnection();
-        return updatedEvent;
-        
-    }
+
     
 }
