@@ -10,9 +10,9 @@ public interface CategoryController {
     
     List<Category> displayAllCategories();
     
-    String addCategoryToStory(Category category, Story story);
+    String addCategoriesToStory(List<Category> categories, Story story);
     
-    List<Category> topCategpriesForMonth(Calendar calendar);
+    List<Category> topCategoriesForMonth();
     
     
 
