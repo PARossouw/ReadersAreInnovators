@@ -1,4 +1,4 @@
-package User_Interactions.Like_Transaction.Dao;
+package User_Interactions.Rating_Transaction.Dao;
 
 import JDBCConfig.JDBCConfig;
 import Story.Model.Story;
@@ -6,19 +6,39 @@ import User.Model.Reader;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 
-public class LiketransactionRepoImpl extends JDBCConfig implements LikeTransactionRepo {
+public class RatingTransactionRepoImpl extends JDBCConfig implements RatingTransactionRepo {
 
     @Override
-    public boolean createLike(Reader reader, Story story) throws SQLException {
+    public boolean createRating(Story story, Reader reader, int rating) throws SQLException {
 
         if (getConnection() != null) {
 
-            ps = getConnection().prepareStatement("insert into like_Transaction (reader, storyid) values (?, ?)");
-            ps.setInt(1, reader.getUserID());
+            ps = getConnection().prepareStatement("insert into rating_Transaction (rating, reader, storyID) values (?, ?, ?)");
+            ps.setInt(1, rating);
+            ps.setInt(2, reader.getUserID());
+            ps.setInt(3, story.getStoryID());
+
+            rowsAffected = ps.executeUpdate();
+
+        }
+        closeConnection();
+        return rowsAffected == 1;
+    }
+
+    @Override
+    public boolean updateRating(Story story, Reader reader, int rating) throws SQLException {
+
+        if (getConnection() != null) {
+
+            //need to have triggers ofr this to update the avgrating on story
+            ps = getConnection().prepareStatement("update rating_Transaction set rating = ? where storyID = ? and reader = ?");
+            ps.setInt(1, rating);
             ps.setInt(2, story.getStoryID());
+            ps.setInt(3, reader.getUserID());
 
             rowsAffected = ps.executeUpdate();
 
@@ -28,25 +48,8 @@ public class LiketransactionRepoImpl extends JDBCConfig implements LikeTransacti
 
     }
 
-    @Override
-    public boolean updateLike(Reader reader, Story story) throws SQLException {
-
-        if (getConnection() != null) {
-
-            //what is this supposed to do? if it's supposed to 'unlike' a story then we need an isActive on like_Transaction or a boolean isLiked
-            //created a boolean isLiked like_Transaction
-            ps = getConnection().prepareStatement("update like_Transaction set like");
-
-        }
-        closeConnection();
-        return false;
-    }
-
-    @Override//supposed to get the total number of likes for each book - so you a map(key = storyid, value = amount of likes in that period)
-            //the period is from the start of the current month
-            //try where dateAdded like "%"Calendar.year + Calendar.month"%" --this method might be wrong
-            //try reference the date in mysql
-    public List<Story> getAllLikesInPeriod(Reader reader) throws SQLException {//I'm making this return a list of story.. it was originally returning a list of reader
+    @Override//the five highest? the top 10%? ..I'll return a list in ascending order for now
+    public List<Story> getHighestRatedStoriesForMonth() throws SQLException {//I cahnge the argument here from calendar to nothing - make sure you can just minus a month here tho
 
         List<Story> storyList = new ArrayList<>();
 
@@ -55,10 +58,7 @@ public class LiketransactionRepoImpl extends JDBCConfig implements LikeTransacti
             ps = getConnection().prepareStatement("select storyID, title, "
                     + "writer, description, imagePath, body, isDraft, isActive, "
                     + "createdOn, allowComments, isApproved, views, likes, "
-                    + "avgRating from Story where storyID IN (select storyID from like_Transaction where reader = ? and DATE_SUB( (select CURRENT_TIMESTAMP), INTERVAL 1 MONTH ))");
-
-            ps.setInt(1, reader.getUserID());
-            rs = ps.executeQuery();
+                    + "avgRating from Story where storyID IN (select storyID from rating_Transaction where ratedOn DATE_SUB( (select CURRENT_TIMESTAMP), INTERVAL 1 MONTH ))");
 
             while (rs.next()) {
 
@@ -90,9 +90,21 @@ public class LiketransactionRepoImpl extends JDBCConfig implements LikeTransacti
             }
 
         }
-        closeConnection();
-        return storyList;
+        for (int i = 0; i < storyList.size(); i++) {
 
+            if (i == storyList.size() - 2) {
+                break;
+            }
+
+            if (storyList.get(i).getAvgRating() < storyList.get(i + 1).getAvgRating()) {
+
+                Collections.swap(storyList, i, i + 1);
+                i = 0;
+
+            }
+
+        }
+        return storyList;
     }
 
 }
