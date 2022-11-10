@@ -167,4 +167,17 @@ public class CategoryRepoImpl extends JDBCConfig implements CategoryRepo {
         return categories;
     }
 
+    @Override
+    public List<Category> topCategoriesForMonth(Calendar month) throws SQLException{
+        
+        List<Category> topCategories = new ArrayList<>();
+        
+        if (getConnection()!=null) {
+            ps = getConnection().prepareStatement("select category from Category c "
+                    + "inner join story_category sc on c.categoryID = sc.category"
+                    + "inner join story s on sc.story = s.storyID");
+        }
+        
+    }
+
 }
