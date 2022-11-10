@@ -1,12 +1,7 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
- */
 package User_Interactions.Story_Transaction.Dao;
 
 import JDBCConfig.JDBCConfig;
 import Story.Model.Story;
-import User.Model.Reader;
 import User.Model.User;
 import java.sql.SQLException;
 
