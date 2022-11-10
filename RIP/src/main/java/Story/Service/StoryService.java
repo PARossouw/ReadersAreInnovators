@@ -9,7 +9,7 @@ public interface StoryService {
 
     List<Story> searchStoriesByCategories(List<Category> categories);
 
-    List<Story> viewStroiesByWriter(Writer writer);
+    List<Story> viewStoriesByWriter(Writer writer);
 
     String saveStory(Story story);
 

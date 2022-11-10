@@ -27,7 +27,7 @@ public class Like_TransactionServiceImpl implements Like_TransactionService {
         try {
            successfullyLikedStory =  likeTransactionRepo.createLike(reader, story);
            
-           if(successfullyLikedStory == true)
+           if(successfullyLikedStory)
            {
                totalNumberOfLikes = story.getLikes()+1;
            }
@@ -42,12 +42,33 @@ public class Like_TransactionServiceImpl implements Like_TransactionService {
 
     @Override
     public String changeLike(Reader reader, Story story) {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+    
+        Boolean successfullyLikedStory = false;
+        String successMessage = "";
+        
+        try {
+           successfullyLikedStory =  likeTransactionRepo.createLike(reader, story);
+           
+           if(successfullyLikedStory)
+           {
+              successMessage = "The like count has been updated successfully.";
+           }
+           else 
+           {
+               successMessage = "Unfortunetly, The like count has not been updated.";
+           }
+            }
+        catch (SQLException ex) 
+        {
+            Logger.getLogger(Like_TransactionServiceImpl.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        
+    return successMessage;
     }
 
     @Override
     public Map<Story, Integer> getAllLikesInPeriod(Calendar startDate, Calendar endDate) {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+        throw new UnsupportedOperationException("Not supported yet."); 
     }
     
 }
