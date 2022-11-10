@@ -6,12 +6,14 @@ import Story.Model.Story;
 import User.Model.Writer;
 import java.sql.SQLException;
 import java.util.ArrayList;
+
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
 
 public class StoryServiceImpl implements StoryService {
+    private StoryRepo storyRepo;
 
     private StoryRepo storyRepo ;
     @Override
@@ -113,7 +115,22 @@ public class StoryServiceImpl implements StoryService {
 
     @Override
     public Story viewStoryDescription(Story story) {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+        
+        try {
+            Story  myStory = storyRepo.retrieveStory(story);
+            
+            if(myStory != null){
+                return myStory;
+            }
+            else{
+                return null;
+            }
+        } catch (SQLException ex) {
+            Logger.getLogger(StoryServiceImpl.class.getName()).log(Level.SEVERE, null, ex);
+            return null;
+        }
+        
+        
     }
 
  
