@@ -4,10 +4,6 @@ import Story.Model.Story;
 import java.util.Calendar;
 import User.Model.Reader;
 
-/**
- *
- * @author piete
- */
 public class Comment {
     
     private Integer commentID;

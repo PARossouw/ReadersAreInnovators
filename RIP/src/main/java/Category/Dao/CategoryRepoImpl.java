@@ -11,10 +11,10 @@ import java.util.List;
 import User.Model.Reader;
 
 public class CategoryRepoImpl extends JDBCConfig implements CategoryRepo {
-    
+
     public static void main(String[] args) throws SQLException {
         CategoryRepoImpl cri = new CategoryRepoImpl();
-        
+
         cri.createCategory(new Category("Test category Anton"));
     }
 
@@ -47,12 +47,12 @@ public class CategoryRepoImpl extends JDBCConfig implements CategoryRepo {
             if (rs.next()) {
                 category.setCategoryID(CategoryID);
                 category.setName(rs.getString("Category"));
-                
+
                 Date createdOn = rs.getDate("dateAdded");
                 Calendar calendar = Calendar.getInstance();
                 calendar.setTime(createdOn);
                 category.setDateAdded(calendar);
-            
+
             }
         }
         closeConnection();
@@ -108,13 +108,11 @@ public class CategoryRepoImpl extends JDBCConfig implements CategoryRepo {
             rs = ps.executeQuery();
 
             while (rs.next()) {
-                
-                 Date createdOn = rs.getDate("dateAdded");
+
+                Date createdOn = rs.getDate("dateAdded");
                 Calendar calendar = Calendar.getInstance();
                 calendar.setTime(createdOn);
-                
-                
-                
+
                 categoryList.add(new Category(rs.getInt("categoryID"), rs.getString("category"), calendar));
 
             }
@@ -154,12 +152,11 @@ public class CategoryRepoImpl extends JDBCConfig implements CategoryRepo {
             rs = ps.executeQuery();
 
             while (rs.next()) {
-                
-                 Date createdOn = rs.getDate("dateAdded");
+
+                Date createdOn = rs.getDate("dateAdded");
                 Calendar calendar = Calendar.getInstance();
                 calendar.setTime(createdOn);
-                
-                
+
                 categories.add(new Category(rs.getInt("categoryID"), rs.getString("category"), calendar));
             }
         }
@@ -168,16 +165,27 @@ public class CategoryRepoImpl extends JDBCConfig implements CategoryRepo {
     }
 
     @Override
-    public List<Category> topCategoriesForMonth(Calendar month) throws SQLException{
-        
-        List<Category> topCategories = new ArrayList<>();
-        
-        if (getConnection()!=null) {
-            ps = getConnection().prepareStatement("select category from Category c "
-                    + "inner join story_category sc on c.categoryID = sc.category"
-                    + "inner join story s on sc.story = s.storyID");
-        }
-        
-    }
+    public List<Category> topCategoriesForMonth() throws SQLException {
 
+        List<Category> topCategories = new ArrayList<>();
+
+        if (getConnection() != null) {
+            ps = getConnection().prepareStatement("select distinct c.category from category c "
+                    + "inner join story_category sc on c.categoryID = sc.category "
+                    + "inner join story s on sc.story = s.storyID order by views desc "
+                    + "where month(dateViewed) = month(current_timestamp) and "
+                    + "year(dateViewed) = year(current_timestamp)");
+            rs = ps.executeQuery();
+
+            while (rs.next()) {
+                Date createdOn = rs.getDate("dateAdded");
+                Calendar calendar = Calendar.getInstance();
+                calendar.setTime(createdOn);
+
+                topCategories.add(new Category(rs.getInt("categoryID"), rs.getString("category"), calendar));
+            }
+        }
+        closeConnection();
+        return topCategories;
+    }
 }
