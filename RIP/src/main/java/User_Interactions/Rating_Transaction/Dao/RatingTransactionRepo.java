@@ -10,11 +10,9 @@ import java.util.List;
  * @author piete
  */
 public interface RatingTransactionRepo {
-    
-    boolean createRating(Story story, Reader reader, int rating) throws SQLException;
-    
-    boolean updateRating(Story story, Reader reader, int rating) throws SQLException;
-    
-    List<Story> getHighestRatedStoriesForMonth() throws SQLException;
-    
+
+    Boolean createRating(Story story, Reader reader, int rating) throws SQLException;
+
+    Boolean updateRating(Story story, Reader reader, int rating) throws SQLException;
+
 }
