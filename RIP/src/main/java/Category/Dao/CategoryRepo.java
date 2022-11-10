@@ -24,5 +24,7 @@ public interface CategoryRepo {
     List<Category> getStoryCategories(Story story) throws SQLException;
     
     List<Category> topCategoriesForMonth(Calendar month) throws SQLException;
+    
+    Boolean addCategoriesToStory(List<Category> categories, Story story);
 
 }
