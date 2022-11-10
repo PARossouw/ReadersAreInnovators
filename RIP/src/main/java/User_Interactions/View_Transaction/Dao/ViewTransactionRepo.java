@@ -1,13 +1,10 @@
 package User_Interactions.View_Transaction.Dao;
 
+import User_Interactions.View_Transaction.Model.ViewTransaction;
 import java.sql.SQLException;
 
-/**
- *
- * @author piete
- */
 public interface ViewTransactionRepo {
     
-    boolean createView() throws SQLException;
+    boolean createView(ViewTransaction view) throws SQLException;
     
 }
