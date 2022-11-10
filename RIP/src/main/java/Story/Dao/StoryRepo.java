@@ -6,6 +6,7 @@ import java.sql.SQLException;
 import java.util.List;
 import User.Model.Reader;
 import User.Model.Writer;
+import java.util.Calendar;
 
 public interface StoryRepo {
 
@@ -29,6 +30,9 @@ public interface StoryRepo {
     
     Story retrieveStory(Story story) throws SQLException ; 
     
-     Boolean createStory(Story story) throws SQLException ;
+    Boolean createStory(Story story) throws SQLException ;
+     
+    List<Story> getHighestRatedStoriesForMonth(Calendar calendar) throws SQLException;
+
 
 }
