@@ -10,10 +10,15 @@ import java.util.Date;
 import java.util.List;
 
 public class LiketransactionRepoImpl extends JDBCConfig implements LikeTransactionRepo {
+    
+    
+     
+     
 
     @Override
     public boolean createLike(Reader reader, Story story) throws SQLException {
 
+        Boolean likeCreated = false;
         if (getConnection() != null) {
 
             ps = getConnection().prepareStatement("insert into like_Transaction (reader, storyid) values (?, ?)");
@@ -21,10 +26,11 @@ public class LiketransactionRepoImpl extends JDBCConfig implements LikeTransacti
             ps.setInt(2, story.getStoryID());
 
             rowsAffected = ps.executeUpdate();
+            likeCreated = true;
 
         }
         closeConnection();
-        return rowsAffected == 1;
+        return likeCreated;
 
     }
 
