@@ -21,9 +21,10 @@ public class StoryTransactionRepoImpl extends JDBCConfig implements StoryTransac
 
             if (getConnection() != null) {
 
-            ps = getConnection().prepareStatement("insert into story_transaction (story, reader) values (?, ?)");
+            ps = getConnection().prepareStatement("insert into story_transaction (story, user, action) values (?, ?, ?)");
             ps.setInt(1, story.getStoryID());
-            ps.setInt(2, reader.getUserID());
+             ps.setInt(2, user.getUserID());
+            ps.setString(3, action);
            
 
             rowsAffected = ps.executeUpdate();
