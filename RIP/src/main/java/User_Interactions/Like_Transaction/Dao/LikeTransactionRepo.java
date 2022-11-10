@@ -1,6 +1,9 @@
 package User_Interactions.Like_Transaction.Dao;
 
+import Story.Model.Story;
+import User.Model.Reader;
 import java.sql.SQLException;
+import java.util.List;
 
 /**
  *
@@ -8,8 +11,10 @@ import java.sql.SQLException;
  */
 public interface LikeTransactionRepo {
     
-    boolean createLike() throws SQLException;
+    boolean createLike(Reader reader, Story story) throws SQLException;
     
-    boolean updateLike() throws SQLException;
+    boolean updateLike(Reader reader, Story story) throws SQLException;
+    
+    List<Reader> getAllLikesInPeriod(Reader reader) throws SQLException;
     
 }
