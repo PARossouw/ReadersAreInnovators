@@ -9,6 +9,6 @@ public interface CategoryServiceRepo {
     
     List<Category> displayAllCategories();
     
-    Boolean addCategoryToStory(Category category, Story story);
+    String addCategoryToStory(Category category, Story story);
 
 }

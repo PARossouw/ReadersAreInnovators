@@ -6,20 +6,18 @@ import User.Model.User;
 import User.Model.Writer;
 import java.util.List;
 
-
 public interface UserService {
-    
+
     User login(User user);
-    
-    Boolean addPreferredCategoriesToUser(List<Category> categories);
-    
-    Boolean registerUser(User user);
-    
-    Boolean blockWriter(Writer writer);
-    
-    Boolean addNewEditor(Editor Editor);
-    
-    Boolean removeEditor(Editor Editor);
-    
+
+    String addPreferredCategoriesToUser(List<Category> categories);
+
+    String registerUser(User user);
+
+    String blockWriter(Writer writer);
+
+    String addNewEditor(Editor Editor);
+
+    String removeEditor(Editor Editor);
 
 }
