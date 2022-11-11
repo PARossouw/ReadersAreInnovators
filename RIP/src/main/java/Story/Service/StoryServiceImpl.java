@@ -15,7 +15,7 @@ import java.util.logging.Logger;
 public class StoryServiceImpl implements StoryService {
     private StoryRepo storyRepo;
 
-    private StoryRepo storyRepo ;
+
     @Override
     public List<Story> searchStoriesByCategories(List<Category> categories) {
 
