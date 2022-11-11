@@ -5,7 +5,6 @@ import Story.Model.Story;
 import java.sql.SQLException;
 import java.util.List;
 import User.Model.Reader;
-import java.util.Calendar;
 
 public interface CategoryRepo {
 
@@ -23,8 +22,6 @@ public interface CategoryRepo {
     
     List<Category> getStoryCategories(Story story) throws SQLException;
     
-    List<Category> topCategoriesForMonth(Calendar month) throws SQLException;
-    
-    Boolean addCategoriesToStory(List<Category> categories, Story story);
+    List<Category> topCategoriesForMonth() throws SQLException;
 
 }
