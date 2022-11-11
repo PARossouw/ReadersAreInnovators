@@ -34,5 +34,6 @@ public interface StoryRepo {
      
     List<Story> getHighestRatedStoriesForMonth(Calendar calendar) throws SQLException;
 
+    List<Story> searchForStory(String text) throws SQLException;
 
 }
