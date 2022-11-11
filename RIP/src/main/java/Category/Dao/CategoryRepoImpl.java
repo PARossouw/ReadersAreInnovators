@@ -168,13 +168,13 @@ public class CategoryRepoImpl extends JDBCConfig implements CategoryRepo {
     public List<Category> topCategoriesForMonth() throws SQLException {
 
         List<Category> topCategories = new ArrayList<>();
-        
+
         if (getConnection() != null) {
-            ps = getConnection().prepareStatement("select categoryID, category, dateAdded, count(vt.story) as categoryViews from category c "
+            ps = getConnection().prepareStatement("select distinct c.category from category c "
                     + "inner join story_category sc on c.categoryID = sc.category "
-                    + "inner join story s on sc.story = s.storyID "
-                    + "inner join view_transaction vt on s.storyID = vt.story "
-                    + "where month(dateViewed) = month(current_timestamp) and year(dateViewed) = year(current_timestamp) order by categoryViews desc");
+                    + "inner join story s on sc.story = s.storyID order by views desc "
+                    + "where month(dateViewed) = month(current_timestamp) and "
+                    + "year(dateViewed) = year(current_timestamp)");
             rs = ps.executeQuery();
 
             while (rs.next()) {

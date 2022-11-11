@@ -1,5 +1,6 @@
 package User.Dao;
 
+import Category.Model.Category;
 import JDBCConfig.JDBCConfig;
 import User.Model.AdminEditor;
 import User.Model.User;

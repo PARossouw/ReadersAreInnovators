@@ -29,45 +29,12 @@ public class ViewTransactionRepoImpl extends JDBCConfig implements ViewTransacti
         Map<Story, Integer> allStoryViews = new HashMap<>();
         
         if (getConnection()!=null) {
-            
-            ps = getConnection().prepareStatement("select storyID, title, writer, description, "
-                    + "imagePath, body, isDraft, isActive, createdOn, allowComment, isApproved, "
-                    + "views, avgRating, likes, count(vt.story) as viewsInPeriod from story s "
-                    + "inner join view_transaction vt on s.storyID = vt.story where vt.dateViewed "
-                    + "between ? and ? order by count(vt.story) desc");
-            
+            ps = getConnection().prepareStatement("select storyID, title, writer, count(vt.*) from story s "
+                    + "inner join view_transaction vt on s.storyID = vt.story where vt.dateViewed between ? and ?");//Pieter - check with someone
             ps.setDate(1, (Date) startDate.getTime());
             ps.setDate(2, (Date) endDate.getTime());
             rs = ps.executeQuery();
-            
-            while (rs.next()) {
-                
-                int storyID = rs.getInt("storyID");
-                String title = rs.getString("title");
-                String writer = rs.getString("writer");
-                String description = rs.getString("description");
-                String imagePath = rs.getString("imagePath");
-                String body = rs.getString("body");
-                boolean isDraft = rs.getBoolean("isDraft");
-                boolean isActive = rs.getBoolean("isActive");
-
-                java.util.Date createdOn = rs.getDate("createdOn");
-                Calendar calendar = Calendar.getInstance();
-                calendar.setTime(createdOn);
-
-                boolean allowComments = rs.getBoolean("allowComments");
-                boolean isApproved = rs.getBoolean("isApproved");
-                int views = rs.getInt("views");
-                int likes = rs.getInt("likes");
-                double avgRating = rs.getDouble("avgRating");
-
-                allStoryViews.put(new Story(storyID, title, writer, description,
-                        imagePath, body, isDraft, isActive,
-                        calendar, allowComments, isApproved,
-                        views, likes, avgRating), rs.getInt("viewsInPeriod"));
-            }
         }
-        closeConnection();
         return allStoryViews;
     }
 
