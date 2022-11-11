@@ -1,13 +1,11 @@
 package User.Dao;
 
-import Category.Model.Category;
-import Story.Model.Story;
-import User.Model.User;
-import java.sql.SQLException;
-import java.util.List;
 import User.Model.Editor;
-import User.Model.Reader;
+import User.Model.User;
 import User.Model.Writer;
+import java.sql.SQLException;
+import java.util.Calendar;
+import java.util.List;
 
 public interface UserRepo {
 
@@ -19,6 +17,12 @@ public interface UserRepo {
 
     Boolean deleteUser(User user) throws SQLException;
 
-    
+    List<Writer> TopWriters() throws SQLException;
+
+    List<Writer> TopRejectedWritersForMonth(Calendar calendar) throws SQLException;
+
+    List<Editor> topApprovingEditors() throws SQLException;
+
+    Boolean blockWriter(Writer writer) throws SQLException;
 
 }
