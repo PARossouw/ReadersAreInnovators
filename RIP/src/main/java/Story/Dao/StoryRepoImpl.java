@@ -56,6 +56,8 @@ public class StoryRepoImpl extends JDBCConfig implements StoryRepo {
                         imagePath, body, isDraft, isActive,
                         calendar, allowComments, isApproved,
                         views, likes, avgRating);
+                
+                allApprovedStories.add(story);
             }
         }
         closeConnection();
