@@ -489,4 +489,51 @@ public class StoryRepoImpl extends JDBCConfig implements StoryRepo {
         return storyList;
     }
 
+    @Override
+    public List<Story> searchForStory(String text) throws SQLException {
+        List<Story> stories = new ArrayList<>();
+        Story storyObj;
+
+        if (getConnection() != null) {
+
+            ps = getConnection().prepareStatement("select storyID, title, "
+                    + "writer, description, imagePath, body, isDraft, isActive, "
+                    + "createdOn, allowComments, isApproved, views, likes, "
+                    + "avgRating from story where title like '%?%' or writer like '%?%'");
+
+            ps.setString(1, text);
+            ps.setString(2, text);
+
+            rs = ps.executeQuery();
+
+            while (rs.next()) {
+
+                int storyID = rs.getInt("storyid");
+                String title = rs.getString("title");
+                String writer1 = rs.getString("writer");
+                String description = rs.getString("description");
+                String imagePath = rs.getString("imagePath");
+                String body = rs.getString("body");
+                boolean isDraft = rs.getBoolean("isDraft");
+                boolean isActive = rs.getBoolean("isActive");
+
+                Date createdOn = rs.getDate("createdOn");
+                Calendar calendar = Calendar.getInstance();
+                calendar.setTime(createdOn);
+
+                boolean allowComments = rs.getBoolean("allowComments");
+                boolean isApproved = rs.getBoolean("isApproved");
+                int views = rs.getInt("views");
+                int likes = rs.getInt("likes");
+                double avgRating = rs.getDouble("avgRating");
+
+                storyObj = new Story(storyID, title, writer1, description, imagePath, body, isDraft, isActive, calendar, allowComments, isApproved, views, likes, avgRating);
+                stories.add(storyObj);
+            }
+        }
+
+        closeConnection();
+        return stories;
+    }
+
 }
