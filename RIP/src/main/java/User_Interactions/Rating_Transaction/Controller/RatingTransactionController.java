@@ -7,6 +7,8 @@ public interface RatingTransactionController {
     
     Double rateStory(Story story, Reader reader, Integer rating);
     
+    
+    
     String changeRating(Story story, Reader reader, Integer rating);
     
 }

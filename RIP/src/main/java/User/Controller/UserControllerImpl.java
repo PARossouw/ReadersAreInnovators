@@ -2,29 +2,36 @@ package User.Controller;
 
 import Category.Model.Category;
 import User.Model.Editor;
+import User.Model.Reader;
 import User.Model.User;
 import User.Model.Writer;
+import User.Service.UserService;
 import java.util.Calendar;
 import java.util.List;
 
 
 public class UserControllerImpl implements UserController{
 
+    private UserService userService;
+    
     @Override
-    public User login(User user) {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+    public User login(User user) 
+    {
+    return userService.login(user);
     }
 
     @Override
-    public String addPreferredCategriesToUser(List<Category> categories) {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+    public String addPreferredCategriesToUser(Reader reader,List<Category> categories) 
+    {
+        return userService.addPreferredCategoriesToUser(reader,categories);
     }
 
     @Override
-    public String registerUser(User user) {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+    public String registerUser(User user) 
+    {
+        return userService.registerUser(user);
     }
-
+    
     @Override
     public String blockWriter(Writer writer) {
         throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
