@@ -10,6 +10,6 @@ public interface Rating_TransactionService {
     
     Double rateStory(Story story, Reader reader, Integer rating);
     
-    Boolean updateRating(Story story, Reader reader, Integer rating);
+    String updateRating(Story story, Reader reader, Integer rating);
 
 }
