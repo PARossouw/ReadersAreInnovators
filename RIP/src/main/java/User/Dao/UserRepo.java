@@ -19,7 +19,7 @@ public interface UserRepo {
 
     List<Writer> TopWriters() throws SQLException;
 
-    List<Writer> TopRejectedWritersForMonth(Calendar calendar) throws SQLException;
+    List<Writer> TopRejectedWritersForMonth() throws SQLException;
 
     List<Editor> topApprovingEditors() throws SQLException;
 
