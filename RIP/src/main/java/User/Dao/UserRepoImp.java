@@ -178,7 +178,7 @@ public class UserRepoImp extends JDBCConfig implements UserRepo {
     }
 
     @Override
-    public List<Writer> TopRejectedWritersForMonth(Calendar calendar) throws SQLException {
+    public List<Writer> TopRejectedWritersForMonth() throws SQLException {
         List<Writer> writerList = new ArrayList<>();
 
         if (getConnection() != null) {
