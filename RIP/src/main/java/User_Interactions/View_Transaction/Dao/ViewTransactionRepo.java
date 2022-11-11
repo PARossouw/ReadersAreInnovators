@@ -1,13 +1,15 @@
 package User_Interactions.View_Transaction.Dao;
 
+import Story.Model.Story;
+import User.Model.Reader;
 import java.sql.SQLException;
+import java.util.Calendar;
+import java.util.Map;
 
-/**
- *
- * @author piete
- */
 public interface ViewTransactionRepo {
     
-    boolean createView() throws SQLException;
+    Boolean createView(Story story, Reader reader) throws SQLException;
+    
+    Map<Story, Integer> getAllStoryViewsInPeriod(Calendar startDate, Calendar endDate) throws SQLException;
     
 }
