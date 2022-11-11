@@ -5,10 +5,12 @@ import Story.Model.Story;
 import java.util.List;
 
 
-public interface CategoryServiceRepo {
+public interface CategoryService {
     
     List<Category> displayAllCategories();
     
-    String addCategoryToStory(Category category, Story story);
+    String addCategoriesToStory(List<Category> categories, Story story);
+
+    public List<Category> topCategoriesForTheMonth();
 
 }

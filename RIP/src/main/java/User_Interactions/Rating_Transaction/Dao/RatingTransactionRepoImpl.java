@@ -4,11 +4,6 @@ import JDBCConfig.JDBCConfig;
 import Story.Model.Story;
 import User.Model.Reader;
 import java.sql.SQLException;
-import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Collections;
-import java.util.Date;
-import java.util.List;
 
 public class RatingTransactionRepoImpl extends JDBCConfig implements RatingTransactionRepo {
 

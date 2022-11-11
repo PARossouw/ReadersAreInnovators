@@ -10,7 +10,7 @@ import java.util.Map;
 public interface Like_TransactionService {
     
     //returns the total amount of likes
-    Integer likeStory(Story story);
+    Integer likeStory(Reader reader, Story story);
     
     String changeLike(Reader reader, Story story);
     
