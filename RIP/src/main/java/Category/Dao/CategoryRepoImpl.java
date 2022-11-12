@@ -188,4 +188,20 @@ public class CategoryRepoImpl extends JDBCConfig implements CategoryRepo {
         closeConnection();
         return topCategories;
     }
+
+    @Override
+    public Boolean addCategoriesToStory(Story story, List<Category> categories) throws SQLException {
+        
+        if (getConnection()!=null) {
+            for (Category category : categories) {
+                rowsAffected = 0;
+                ps = getConnection().prepareStatement("insert into story_category (story, category) values (?,?)");
+                ps.setInt(1, story.getStoryID());
+                ps.setInt(2, category.getCategoryID());
+                rowsAffected = ps.executeUpdate();
+            }
+        }
+        closeConnection();
+        return rowsAffected == 1;
+    }
 }

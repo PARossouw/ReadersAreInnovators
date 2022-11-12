@@ -19,7 +19,7 @@ public class ViewTransactionServiceImpl implements ViewTransactionService {
             return viewRepo.createView(story, reader) ? "View entry made." : "Could not record that the story was viewed.";
         } catch (SQLException ex) {
             Logger.getLogger(ViewTransactionServiceImpl.class.getName()).log(Level.SEVERE, null, ex);
-            return null;
+            return "Operation unsuccessful, please try again later.";
         }
     }
 
