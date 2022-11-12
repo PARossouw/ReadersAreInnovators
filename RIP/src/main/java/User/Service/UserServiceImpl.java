@@ -12,55 +12,70 @@ import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+public class UserServiceImpl implements UserService {
 
-public class UserServiceImpl implements UserService{
-    
     private UserRepo userRepo;
     private CategoryRepo categoryRepo;
 
     @Override
     public User login(User user) {
-        
+
         try {
             User userloggingIn = userRepo.getUser(user);
-            
-            if(userloggingIn != null){
+
+            if (userloggingIn != null) {
                 return userloggingIn;
-            }
-            else{
+            } else {
                 return null;
             }
         } catch (SQLException ex) {
             Logger.getLogger(UserServiceImpl.class.getName()).log(Level.SEVERE, null, ex);
             return null;
         }
-        
+
     }
 
     @Override
     public String addPreferredCategoriesToUser(Reader reader, List<Category> categories) {
-        
+
         try {
-            if(categoryRepo.addPreferredCategories(reader, categories)){
+            if (categoryRepo.addPreferredCategories(reader, categories)) {
                 return "successfully added categories";
-            }
-            else{
+            } else {
                 return "unsuccessful operation";
             }
         } catch (SQLException ex) {
             Logger.getLogger(UserServiceImpl.class.getName()).log(Level.SEVERE, null, ex);
-                return "unsuccessful operation";
+            return "unsuccessful operation";
         }
     }
 
     @Override
-    public Boolean registerUser(User user) {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+    public String registerUser(User user) {
+        try {
+            if (userRepo.getUser(user) != null) {
+                return "This username or email is already in use.";
+            } else {
+                return userRepo.createUser(user) ? "User registered successfully." : "Could not complete registration at this time.";
+            }
+        } catch (SQLException ex) {
+            Logger.getLogger(UserServiceImpl.class.getName()).log(Level.SEVERE, null, ex);
+            return ex.getMessage();
+        }
     }
 
     @Override
-    public Boolean blockWriter(Writer writer) {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+    public String blockWriter(Writer writer) {
+        try {
+            if (userRepo.getUser(writer) == null) {
+                return "No such user exists.";
+            } else if (userRepo.getUser(writer).getRoleID() == 2) {
+                return userRepo.blockWriter(writer) ? "Writer status removed." : "Could not removed writer status at this time.";
+            }
+        } catch (SQLException ex) {
+            Logger.getLogger(UserServiceImpl.class.getName()).log(Level.SEVERE, null, ex);
+            return ex.getMessage();
+        }
     }
 
     @Override

@@ -6,92 +6,65 @@ import Story.Model.Story;
 import User.Model.Writer;
 import java.sql.SQLException;
 import java.util.ArrayList;
-
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-
 public class StoryServiceImpl implements StoryService {
-    private StoryRepo storyRepo;
 
+    private StoryRepo storyRepo;
 
     @Override
     public List<Story> searchStoriesByCategories(List<Category> categories) {
 
-        List<Story> storyList = new ArrayList <>();
-        try
-        {
+        List<Story> storyList = new ArrayList<>();
+        try {
             storyList = storyRepo.getStoryByCategory(categories);
-        } 
-        catch (SQLException ex) {
+        } catch (SQLException ex) {
             Logger.getLogger(StoryServiceImpl.class.getName()).log(Level.SEVERE, null, ex);
         }
-    
-        return storyList;
-    
-        
 
+        return storyList;
     }
-    
+
     @Override
     public List<Story> viewStoriesByWriter(Writer writer) {
-    
-        List<Story> storyList = new ArrayList <>();
-        try
-        {
+
+        List<Story> storyList = new ArrayList<>();
+        try {
             storyList = storyRepo.getWriterStories(writer);
-        } 
-        catch (SQLException ex) {
+        } catch (SQLException ex) {
             Logger.getLogger(StoryServiceImpl.class.getName()).log(Level.SEVERE, null, ex);
         }
-    
+
         return storyList;
-    
     }
-    
+
     @Override
     public String saveStory(Story story) {
-        
+
         Boolean storySuccessfullySaved = false;
         String successMessage = "";
-        
-        if(story == null)
-        {
+
+        if (story == null) {
             successMessage = "The story is empty and thus could not be saved.";
+        } else {
+
+            try {
+                storySuccessfullySaved = storyRepo.updateStory(story);
+
+                if (storySuccessfullySaved) {
+                    successMessage = "Story has been successfully saved.";
+                } else {
+                    successMessage = "unfotunetly, the story has not been saved successfully.";
+                }
+
+            } catch (SQLException ex) {
+                Logger.getLogger(StoryServiceImpl.class.getName()).log(Level.SEVERE, null, ex);
+            }
         }
-        else 
-        {
-            
-        try
-        {
-           storySuccessfullySaved =  storyRepo.updateStory(story);
-            
-           if(storySuccessfullySaved)
-           {
-               successMessage = "Story has been successfully saved.";
-           }
-           else 
-           {
-               successMessage = "unfotunetly, the story has not been saved successfully.";
-           }
-           
-        } 
-        catch (SQLException ex) {
-            Logger.getLogger(StoryServiceImpl.class.getName()).log(Level.SEVERE, null, ex);
-        }
-        }
-         return successMessage;
+        return successMessage;
     }
-    
-    
-    
-
-
-
-
-
-
 
     @Override
     public String submitCompletedStory(Story story) {
@@ -115,26 +88,20 @@ public class StoryServiceImpl implements StoryService {
 
     @Override
     public Story viewStoryDescription(Story story) {
-        
+
         try {
-            Story  myStory = storyRepo.retrieveStory(story);
-            
-            if(myStory != null){
+            Story myStory = storyRepo.retrieveStory(story);
+
+            if (myStory != null) {
                 return myStory;
-            }
-            else{
+            } else {
                 return null;
             }
         } catch (SQLException ex) {
             Logger.getLogger(StoryServiceImpl.class.getName()).log(Level.SEVERE, null, ex);
             return null;
         }
-        
-        
-    }
 
- 
-    
-    
+    }
 
 }
