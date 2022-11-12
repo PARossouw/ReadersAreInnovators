@@ -25,7 +25,11 @@ public class ViewTransactionServiceImpl implements ViewTransactionService {
 
     @Override
     public Map<Story, Integer> getAllStoryViewsInPeriod(Calendar startDate, Calendar endDate) {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+        try {
+            return viewRepo.getAllStoryViewsInPeriod(startDate, endDate);
+        } catch (SQLException ex) {
+            Logger.getLogger(ViewTransactionServiceImpl.class.getName()).log(Level.SEVERE, null, ex);
+            return null;
+        }
     }
-
 }
