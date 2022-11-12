@@ -81,12 +81,12 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public Boolean addNewEditor(Editor Editor) {
+    public String addNewEditor(Editor Editor) {
         throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
     }
 
     @Override
-    public Boolean removeEditor(Editor Editor) {
+    public String removeEditor(Editor Editor) {
         throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
     }
 

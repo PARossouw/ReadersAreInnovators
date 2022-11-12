@@ -34,17 +34,17 @@ public class UserControllerImpl implements UserController{
     
     @Override
     public String blockWriter(Writer writer) {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+        return userService.blockWriter(writer);
     }
 
     @Override
     public String addNewEditor(Editor editor) {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+        return userService.addNewEditor(editor);
     }
 
     @Override
     public String removeEditor(Editor editor) {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+        return userService.removeEditor(editor);
     }
 
     @Override
