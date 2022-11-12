@@ -60,7 +60,7 @@ public class UserServiceImpl implements UserService {
             }
         } catch (SQLException ex) {
             Logger.getLogger(UserServiceImpl.class.getName()).log(Level.SEVERE, null, ex);
-            return ex.getMessage();
+            return "Opertaion unsuccessful, please try again later.";
         }
     }
 
@@ -69,12 +69,14 @@ public class UserServiceImpl implements UserService {
         try {
             if (userRepo.getUser(writer) == null) {
                 return "No such user exists.";
-            } else if (userRepo.getUser(writer).getRoleID() == 2) {
-                return userRepo.blockWriter(writer) ? "Writer status removed." : "Could not removed writer status at this time.";
+            } else if (userRepo.getUser(writer).getRoleID() != 2) {
+                return "This user is not a writer.";
+            } else {
+                return userRepo.blockWriter(writer) ? "Writer status removed." : "Could not removed writer status from this account at this time.";
             }
         } catch (SQLException ex) {
             Logger.getLogger(UserServiceImpl.class.getName()).log(Level.SEVERE, null, ex);
-            return ex.getMessage();
+            return "Opertaion unsuccessful, please try again later.";
         }
     }
 

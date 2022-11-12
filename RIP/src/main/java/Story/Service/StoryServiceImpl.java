@@ -78,12 +78,38 @@ public class StoryServiceImpl implements StoryService {
 
     @Override
     public Story viewDraft(Story story) {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+        try {
+            Story draft = storyRepo.retrieveStory(story);
+            if (draft.getIsDraft() == false) {
+                return null;
+            } else {
+                return draft;
+            }
+        } catch (SQLException ex) {
+            Logger.getLogger(StoryServiceImpl.class.getName()).log(Level.SEVERE, null, ex);
+            return null;
+        }
     }
 
     @Override
     public List<Story> searchForStory(String storyParameter) {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+        
+        List<Story> allStoriesLike = new ArrayList<>();
+        
+        if (storyParameter.isBlank()) {
+            return null;
+        }
+        
+        try {
+            if (storyRepo.searchForStory(storyParameter) != null) {
+                allStoriesLike = storyRepo.searchForStory(storyParameter);
+            } else {
+                return null;
+            }
+        } catch (SQLException ex) {
+            Logger.getLogger(StoryServiceImpl.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return allStoriesLike;
     }
 
     @Override
