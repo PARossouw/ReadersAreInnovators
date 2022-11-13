@@ -23,7 +23,7 @@ public interface UserController {
 
     List<Writer> topWriters();
 
-    List<Writer> topRejectedWritersForMonth(Calendar calendar);
+    List<Writer> topRejectedWritersForMonth();
 
     List<Editor> topApprovingEditors();
 

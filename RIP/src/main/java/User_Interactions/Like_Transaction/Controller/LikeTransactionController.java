@@ -7,7 +7,7 @@ import java.util.Map;
 
 public interface LikeTransactionController {
     
-    Integer likeStory(Story story);
+    Integer likeStory(Reader reader, Story story);
     
     String changeLike(Reader reader, Story story);
     

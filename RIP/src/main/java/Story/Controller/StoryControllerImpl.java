@@ -27,6 +27,11 @@ public class StoryControllerImpl implements StoryController{
         return storyService.saveStory(story);
     }
 
+    @Override
+    public Story viewStoryDescription(Story story) {
+        return storyService.viewStoryDescription(story);
+    }
+
    
 
 }
