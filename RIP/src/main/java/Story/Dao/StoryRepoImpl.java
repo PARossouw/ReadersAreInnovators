@@ -8,7 +8,6 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
-
 import User.Model.Reader;
 import User.Model.Writer;
 import java.util.Collections;
@@ -56,6 +55,8 @@ public class StoryRepoImpl extends JDBCConfig implements StoryRepo {
                         imagePath, body, isDraft, isActive,
                         calendar, allowComments, isApproved,
                         views, likes, avgRating);
+                
+                allApprovedStories.add(story);
             }
         }
         closeConnection();
@@ -104,6 +105,7 @@ public class StoryRepoImpl extends JDBCConfig implements StoryRepo {
                         imagePath, body, isDraft, isActive,
                         calendar, allowComments, isApproved,
                         views, likes, avgRating);
+                allRejectedStories.add(story);
             }
         }
         closeConnection();
@@ -152,6 +154,7 @@ public class StoryRepoImpl extends JDBCConfig implements StoryRepo {
                         imagePath, body, isDraft, isActive,
                         calendar, allowComments, isApproved,
                         views, likes, avgRating);
+                readersLikesStories.add(story);
             }
         }
         closeConnection();

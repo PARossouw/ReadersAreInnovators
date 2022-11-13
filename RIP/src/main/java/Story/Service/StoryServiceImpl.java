@@ -6,7 +6,6 @@ import Story.Model.Story;
 import User.Model.Writer;
 import java.sql.SQLException;
 import java.util.ArrayList;
-
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -24,9 +23,7 @@ public class StoryServiceImpl implements StoryService {
         } catch (SQLException ex) {
             Logger.getLogger(StoryServiceImpl.class.getName()).log(Level.SEVERE, null, ex);
         }
-
         return storyList;
-
     }
 
     @Override
@@ -40,7 +37,6 @@ public class StoryServiceImpl implements StoryService {
         }
 
         return storyList;
-
     }
 
     @Override
@@ -102,12 +98,38 @@ public class StoryServiceImpl implements StoryService {
 
     @Override
     public Story viewDraft(Story story) {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+        try {
+            Story draft = storyRepo.retrieveStory(story);
+            if (draft.getIsDraft() == false) {
+                return null;
+            } else {
+                return draft;
+            }
+        } catch (SQLException ex) {
+            Logger.getLogger(StoryServiceImpl.class.getName()).log(Level.SEVERE, null, ex);
+            return null;
+        }
     }
 
     @Override
     public List<Story> searchForStory(String storyParameter) {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+        
+        List<Story> allStoriesLike = new ArrayList<>();
+        
+        if (storyParameter.isBlank()) {
+            return null;
+        }
+        
+        try {
+            if (storyRepo.searchForStory(storyParameter) != null) {
+                allStoriesLike = storyRepo.searchForStory(storyParameter);
+            } else {
+                return null;
+            }
+        } catch (SQLException ex) {
+            Logger.getLogger(StoryServiceImpl.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return allStoriesLike;
     }
 
     @Override

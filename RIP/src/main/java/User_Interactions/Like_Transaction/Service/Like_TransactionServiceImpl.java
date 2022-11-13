@@ -85,7 +85,7 @@ public class Like_TransactionServiceImpl implements Like_TransactionService {
     }
 
     @Override
-    public Map<Story, Integer> getAllLikesInPeriod(Calendar startDate, Calendar endDate) {
+    public Map<Story, Integer> getAllLikesInPeriod(Calendar startDate) {
        
         Boolean dateCheck = false;
          Map<Story, Integer> storyLikesMap = new HashMap<Story, Integer>();
@@ -97,10 +97,10 @@ public class Like_TransactionServiceImpl implements Like_TransactionService {
              int startYear = startDate.get(Calendar.YEAR);
              int startDay = startDate.get(Calendar.DATE);
              
-             startDate  = Calendar.getInstance();
-             int endMonth = startDate.get(Calendar.MONTH);
-             int endYear = startDate.get(Calendar.YEAR);
-             int endDay = startDate.get(Calendar.DATE);
+             Calendar endDate  = Calendar.getInstance();
+             int endMonth = endDate.get(Calendar.MONTH);
+             int endYear = endDate.get(Calendar.YEAR);
+             int endDay = endDate.get(Calendar.DATE);
              
              if(endYear > startYear)
              {

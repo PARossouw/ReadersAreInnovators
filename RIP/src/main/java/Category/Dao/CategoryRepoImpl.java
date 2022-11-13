@@ -168,13 +168,13 @@ public class CategoryRepoImpl extends JDBCConfig implements CategoryRepo {
     public List<Category> topCategoriesForMonth() throws SQLException {
 
         List<Category> topCategories = new ArrayList<>();
-
+        
         if (getConnection() != null) {
-            ps = getConnection().prepareStatement("select distinct c.category from category c "
+            ps = getConnection().prepareStatement("select categoryID, category, dateAdded, count(vt.story) as categoryViews from category c "
                     + "inner join story_category sc on c.categoryID = sc.category "
-                    + "inner join story s on sc.story = s.storyID order by views desc "
-                    + "where month(dateViewed) = month(current_timestamp) and "
-                    + "year(dateViewed) = year(current_timestamp)");
+                    + "inner join story s on sc.story = s.storyID "
+                    + "inner join view_transaction vt on s.storyID = vt.story "
+                    + "where month(dateViewed) = month(current_timestamp) and year(dateViewed) = year(current_timestamp) order by categoryViews desc");
             rs = ps.executeQuery();
 
             while (rs.next()) {
@@ -187,5 +187,21 @@ public class CategoryRepoImpl extends JDBCConfig implements CategoryRepo {
         }
         closeConnection();
         return topCategories;
+    }
+
+    @Override
+    public Boolean addCategoriesToStory(Story story, List<Category> categories) throws SQLException {
+        
+        if (getConnection()!=null) {
+            for (Category category : categories) {
+                rowsAffected = 0;
+                ps = getConnection().prepareStatement("insert into story_category (story, category) values (?,?)");
+                ps.setInt(1, story.getStoryID());
+                ps.setInt(2, category.getCategoryID());
+                rowsAffected = ps.executeUpdate();
+            }
+        }
+        closeConnection();
+        return rowsAffected == 1;
     }
 }

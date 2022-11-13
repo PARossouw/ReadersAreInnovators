@@ -14,7 +14,7 @@ public interface Like_TransactionService {
     
     String changeLike(Reader reader, Story story);
     
-    Map<Story, Integer> getAllLikesInPeriod(Calendar startDate, Calendar endDate);
+    Map<Story, Integer> getAllLikesInPeriod(Calendar startDate);
     
     
     
