@@ -48,7 +48,7 @@ public class StoryControllerImpl implements StoryController {
 
     @Override
     public Story viewStoryDescription(Story story) {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+        return storyService.viewStoryDescription(story);
     }
 
 }

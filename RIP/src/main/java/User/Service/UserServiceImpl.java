@@ -52,6 +52,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public String registerUser(User user) {
+
         try {
             if (userRepo.getUser(user) != null) {
                 return "This username or email is already in use.";
@@ -66,6 +67,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public String blockWriter(Writer writer) {
+    
         try {
             if (userRepo.getUser(writer) == null) {
                 return "No such user exists.";
@@ -74,6 +76,20 @@ public class UserServiceImpl implements UserService {
             } else {
                 return userRepo.blockWriter(writer) ? "Writer status removed." : "Could not removed writer status from this account at this time.";
             }
+    }
+
+    @Override
+    public String addNewEditor(Editor editor) {
+        try {
+            User u = null;
+            if (editor instanceof User) {
+                u = (User) editor;
+            }
+            if (userRepo.getUser(u) != null) {
+                return "This username or email is already in use.";
+            } else {
+                return userRepo.createUser(editor) ? "Editor created successfully." : "Could not complete creation of a new editor at this time.";
+            }
         } catch (SQLException ex) {
             Logger.getLogger(UserServiceImpl.class.getName()).log(Level.SEVERE, null, ex);
             return "Opertaion unsuccessful, please try again later.";
@@ -81,13 +97,21 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public String addNewEditor(Editor Editor) {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
-    }
+    public String removeEditor(Editor editor) {
+        try {
+            User u = null;
+            if (editor instanceof User) {
+                u = (User) editor;
+            }
+            if (userRepo.getUser(u) == null) {
+                return "This editor does not exist.";
+            } else {
+                return userRepo.deleteUser(editor) ? "Editor deleted successfully." : "Could not delete editor at this time.";
 
-    @Override
-    public String removeEditor(Editor Editor) {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
-    }
+            }
+        } catch (SQLException ex) {
+            Logger.getLogger(UserServiceImpl.class.getName()).log(Level.SEVERE, null, ex);
+            return "Opertaion unsuccessful, please try again later.";
+        }
 
 }

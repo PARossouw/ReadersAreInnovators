@@ -23,7 +23,6 @@ public class StoryServiceImpl implements StoryService {
         } catch (SQLException ex) {
             Logger.getLogger(StoryServiceImpl.class.getName()).log(Level.SEVERE, null, ex);
         }
-
         return storyList;
     }
 
@@ -68,12 +67,33 @@ public class StoryServiceImpl implements StoryService {
 
     @Override
     public String submitCompletedStory(Story story) {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+        boolean b = false;
+        try {
+            if (story.getStoryID() != null
+                    && story.getTitle() != null
+                    && story.getWriter() != null
+                    && story.getDescription() != null
+                    && story.getImagePath() != null
+                    && story.getBody() != null
+                    && story.getCreatedOn() != null
+                    && story.getCategoryList() != null) {
+                b = storyRepo.submitStory(story);
+            }
+        } catch (SQLException ex) {
+            Logger.getLogger(StoryServiceImpl.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return b ? "successfully submitted story" : "unsuccessful operation";
     }
 
     @Override
     public Story viewSubmittedStory(Story story) {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+        Story s = null;
+        try {
+            s = storyRepo.retrieveStory(story);
+        } catch (SQLException ex) {
+            Logger.getLogger(StoryServiceImpl.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return s;
     }
 
     @Override
