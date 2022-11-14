@@ -35,7 +35,7 @@ public class UserRepoImp extends JDBCConfig implements UserRepo {
             rowsAffected = ps.executeUpdate();
 
         }
-        closeConnection();
+        close();
 
         return rowsAffected == 1;
     }
@@ -99,7 +99,7 @@ public class UserRepoImp extends JDBCConfig implements UserRepo {
 
         }
 
-        closeConnection();
+        close();
         return u;
     }
 
@@ -112,7 +112,7 @@ public class UserRepoImp extends JDBCConfig implements UserRepo {
             rowsAffected = ps.executeUpdate();
 
         }
-        closeConnection();
+        close();
 
         return rowsAffected == 1;
     }
@@ -126,7 +126,7 @@ public class UserRepoImp extends JDBCConfig implements UserRepo {
             rowsAffected = ps.executeUpdate();
 
         }
-        closeConnection();
+        close();
 
         return rowsAffected == 1;
     }
@@ -169,7 +169,7 @@ public class UserRepoImp extends JDBCConfig implements UserRepo {
                     }
                 }
             }
-            closeConnection();
+            close();
 
         }
 
@@ -213,7 +213,7 @@ public class UserRepoImp extends JDBCConfig implements UserRepo {
                     }
                 }
             }
-            closeConnection();
+            close();
 
         }
 
@@ -257,7 +257,7 @@ public class UserRepoImp extends JDBCConfig implements UserRepo {
                     }
                 }
             }
-            closeConnection();
+            close();
 
         }
 
@@ -273,7 +273,7 @@ public class UserRepoImp extends JDBCConfig implements UserRepo {
             rowsAffected = ps.executeUpdate();
 
         }
-        closeConnection();
+        close();
 
         return rowsAffected == 1;
     }
