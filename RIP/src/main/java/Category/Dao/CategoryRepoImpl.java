@@ -6,56 +6,42 @@ import Story.Model.Story;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.Date;
 import java.util.List;
 import User.Model.Reader;
 
 public class CategoryRepoImpl extends JDBCConfig implements CategoryRepo {
 
-    public static void main(String[] args) throws SQLException {
-        CategoryRepoImpl cri = new CategoryRepoImpl();
-
-        cri.createCategory(new Category("Test category Anton"));
-    }
-
     @Override
     public Boolean createCategory(Category category) throws SQLException {
 
-        if (getConnection() != null) {//this null check okay?
+        if (getConnection() != null) {
 
             ps = getConnection().prepareStatement("insert into Category (Category) values(?)");
             ps.setString(1, category.getName());
             rowsAffected = ps.executeUpdate();
-
         }
-        closeConnection();
-
+        close();
         return rowsAffected == 1;
     }
 
     @Override
-    public Category retrieveCategory(int CategoryID) throws SQLException {
-
-        Category category = new Category();
+    public Category retrieveCategory(Category category) throws SQLException {
 
         if (getConnection() != null) {
             ps = getConnection().prepareStatement("select Category, dateAdded from Category where categoryID = ?");
-            ps.setInt(1, CategoryID);
-
+            ps.setInt(1, category.getCategoryID());
             rs = ps.executeQuery();
 
             if (rs.next()) {
-                category.setCategoryID(CategoryID);
                 category.setName(rs.getString("Category"));
 
-                Date createdOn = rs.getDate("dateAdded");
                 Calendar calendar = Calendar.getInstance();
-                calendar.setTime(createdOn);
+                calendar.setTime(rs.getDate("dateAdded"));
                 category.setDateAdded(calendar);
 
             }
         }
-        closeConnection();
+        close();
         return category;
     }
 
@@ -71,7 +57,7 @@ public class CategoryRepoImpl extends JDBCConfig implements CategoryRepo {
             rowsAffected = ps.executeUpdate();
 
         }
-        closeConnection();
+        close();
         return rowsAffected == 1;
     }
 
@@ -86,14 +72,14 @@ public class CategoryRepoImpl extends JDBCConfig implements CategoryRepo {
 
             while (rs.next()) {
 
-                Date createdOn = rs.getDate("dateAdded");
                 Calendar calendar = Calendar.getInstance();
-                calendar.setTime(createdOn);
+                calendar.setTime(rs.getDate("dateAdded"));
 
                 categoryList.add(new Category(rs.getInt("categoryid"), rs.getString("category"), calendar));
 
             }
         }
+        close();
         return categoryList;
     }
 
@@ -103,23 +89,21 @@ public class CategoryRepoImpl extends JDBCConfig implements CategoryRepo {
         List<Category> categoryList = new ArrayList<>();
 
         if (getConnection() != null) {
-            ps = getConnection().prepareStatement("select categoryID, category, dateAdded from Category where CategoryID IN (select category from reader_category where readerID = ?)");
+            ps = getConnection().prepareStatement("select categoryID, category, dateAdded from Category where CategoryID IN (select category from user_category where user = ?)");
             ps.setInt(1, reader.getUserID());
             rs = ps.executeQuery();
 
             while (rs.next()) {
 
-                Date createdOn = rs.getDate("dateAdded");
                 Calendar calendar = Calendar.getInstance();
-                calendar.setTime(createdOn);
+                calendar.setTime(rs.getDate("dateAdded"));
 
                 categoryList.add(new Category(rs.getInt("categoryID"), rs.getString("category"), calendar));
 
             }
 
-            closeConnection();
-
         }
+        close();
         return categoryList;
     }
 
@@ -133,11 +117,9 @@ public class CategoryRepoImpl extends JDBCConfig implements CategoryRepo {
                 ps.setInt(reader.getUserID(), categories.get(i).getCategoryID());
 
             }
-
             rowsAffected = ps.executeBatch().length;
-
         }
-        closeConnection();
+        close();
         return rowsAffected == categories.size();
     }
 
@@ -153,55 +135,53 @@ public class CategoryRepoImpl extends JDBCConfig implements CategoryRepo {
 
             while (rs.next()) {
 
-                Date createdOn = rs.getDate("dateAdded");
                 Calendar calendar = Calendar.getInstance();
-                calendar.setTime(createdOn);
+                calendar.setTime(rs.getDate("dateAdded"));
 
                 categories.add(new Category(rs.getInt("categoryID"), rs.getString("category"), calendar));
             }
         }
-        closeConnection();
+        close();
         return categories;
     }
 
     @Override
-    public List<Category> topCategoriesForMonth() throws SQLException {
+    public List<Category> topCategoriesForMonth() throws SQLException { //DISCUSS WITH GROUP
 
         List<Category> topCategories = new ArrayList<>();
-        
+
         if (getConnection() != null) {
-            ps = getConnection().prepareStatement("select categoryID, category, dateAdded, count(vt.story) as categoryViews from category c "
+            ps = getConnection().prepareStatement("select categoryID, c.category, count(vt.story) as categoryViews from category c "
                     + "inner join story_category sc on c.categoryID = sc.category "
                     + "inner join story s on sc.story = s.storyID "
                     + "inner join view_transaction vt on s.storyID = vt.story "
-                    + "where month(dateViewed) = month(current_timestamp) and year(dateViewed) = year(current_timestamp) order by categoryViews desc");
+                    + "where month(dateViewed) = month(current_timestamp) and year(dateViewed) = year(current_timestamp) group by c.category order by categoryViews desc");
             rs = ps.executeQuery();
 
             while (rs.next()) {
-                Date createdOn = rs.getDate("dateAdded");
                 Calendar calendar = Calendar.getInstance();
-                calendar.setTime(createdOn);
+                calendar.setTime(rs.getDate("dateAdded"));
 
                 topCategories.add(new Category(rs.getInt("categoryID"), rs.getString("category"), calendar));
             }
         }
-        closeConnection();
+        close();
         return topCategories;
     }
 
     @Override
     public Boolean addCategoriesToStory(Story story, List<Category> categories) throws SQLException {
-        
-        if (getConnection()!=null) {
+
+        if (getConnection() != null) {
+            ps = getConnection().prepareStatement("insert into story_category (story, category) values (?,?)");
             for (Category category : categories) {
-                rowsAffected = 0;
-                ps = getConnection().prepareStatement("insert into story_category (story, category) values (?,?)");
                 ps.setInt(1, story.getStoryID());
                 ps.setInt(2, category.getCategoryID());
-                rowsAffected = ps.executeUpdate();
+                ps.addBatch();
             }
+            rowsAffected = ps.executeBatch().length;
         }
-        closeConnection();
-        return rowsAffected == 1;
+        close();
+        return rowsAffected == categories.size();
     }
 }

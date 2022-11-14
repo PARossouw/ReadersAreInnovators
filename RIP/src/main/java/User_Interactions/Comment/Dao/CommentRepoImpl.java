@@ -24,7 +24,7 @@ public class CommentRepoImpl extends JDBCConfig implements CommentRepo {
 
             rowsAffected = ps.executeUpdate();
         }
-        closeConnection();
+        close();
         return rowsAffected == 1;
     }
 
@@ -52,7 +52,7 @@ public class CommentRepoImpl extends JDBCConfig implements CommentRepo {
                         story));
             }
         }
-        closeConnection();
+        close();
         return storyComments;
     }
 }
