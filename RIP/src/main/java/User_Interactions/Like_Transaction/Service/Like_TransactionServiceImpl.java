@@ -91,6 +91,12 @@ public class Like_TransactionServiceImpl implements Like_TransactionService {
          Map<Story, Integer> storyLikesMap = new HashMap<Story, Integer>();
         try {
 
+            if(startDate == null)
+            {
+                dateCheck = false;
+            }
+            
+            
             // Check to ensure that endDate is after the start date             
              startDate  = Calendar.getInstance();
              int startMonth = startDate.get(Calendar.MONTH);
