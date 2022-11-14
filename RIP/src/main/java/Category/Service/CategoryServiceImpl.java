@@ -11,12 +11,12 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 public class CategoryServiceImpl extends JDBCConfig implements CategoryService {
-    
+
     private CategoryRepo categoryRepo;
 
     @Override
     public List<Category> displayAllCategories() {
-        
+
         try {
             return categoryRepo.getAllCategories();
         } catch (SQLException ex) {
@@ -26,30 +26,35 @@ public class CategoryServiceImpl extends JDBCConfig implements CategoryService {
     }
 
     @Override
-    public String addCategoriesToStory(List<Category> categories, Story story) {//I can't find the repo method to call over here
-        
-        if(categoryRepo.addCategoriesToStory(categories, story)){
-            return "Successfully added";
-        }
-        else{
-            return "Unsuccessful operation";
+    public String addCategoriesToStory(List<Category> categories, Story story) {
+        try {
+            //I can't find the repo method to call over here
+
+            if (categoryRepo.addCategoriesToStory(story, categories)) {
+                return "Successfully added";
+            } else {
+                return "Unsuccessful operation";
+            }
+        } catch (SQLException ex) {
+            Logger.getLogger(CategoryServiceImpl.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
 
     @Override
     public List<Category> topCategoriesForTheMonth() {
-        
+
         List<Category> categoryList = new ArrayList<>();
-        categoryList = categoryRepo.topCategoriesForMonth();
-        
-        if(categoryList != null){
-            return categoryList;
+        try {
+            categoryList = categoryRepo.topCategoriesForMonth();
+        } catch (SQLException ex) {
+            Logger.getLogger(CategoryServiceImpl.class.getName()).log(Level.SEVERE, null, ex);
         }
-        else{
+
+        if (categoryList != null) {
+            return categoryList;
+        } else {
             return null;
         }
     }
-
-   
 
 }

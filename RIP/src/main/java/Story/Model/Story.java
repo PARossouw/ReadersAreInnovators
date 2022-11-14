@@ -172,6 +172,14 @@ public class Story {
         this.avgRating = avgRating;
     }
 
+    public List<Category> getCategoryList() {
+        return categoryList;
+    }
+
+    public void setCategoryList(List<Category> categoryList) {
+        this.categoryList = categoryList;
+    }
+
     @Override
     public String toString() {
         return "Story{" + "storyID=" + storyID + ", title=" + title + ", writer=" + writer + ", description=" + description + ", imagePath=" + imagePath + ", body=" + body + ", isDraft=" + isDraft + ", isActive=" + isActive + ", createdOn=" + createdOn + ", allowComments=" + allowComments + ", isApproved=" + isApproved + ", views=" + views + ", likes=" + likes + ", avgRating=" + avgRating + '}';

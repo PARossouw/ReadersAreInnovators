@@ -21,4 +21,9 @@ public interface UserService {
 
     String removeEditor(Editor Editor);
 
+    List<Writer> TopWriters() ;
+
+    List<Writer> TopRejectedWritersForMonth();
+
+    List<Editor> topApprovingEditors();
 }
