@@ -36,7 +36,7 @@ public class LiketransactionRepoImpl extends JDBCConfig implements LikeTransacti
         if (getConnection() != null) {
 
             //ps = getConnection().prepareStatement("update like_Transaction set isLiked = 0 where reader = ? and story = ?");
-            ps = getConnection().prepareStatement("insert into like_Transaction (reader, story, isLiked) values (?, ?, IF( (select MAX(isLiked) from like_Transaction where reader = ? and story = ?) = 0, 1, 0))");
+            ps = getConnection().prepareStatement("insert into like_Transaction (reader, story, isLiked) values (?, ?, IF( (select isLiked from like_Transaction where MAX(likeId) and reader = ? and story = ?) = 0, 1, 0))");
             ps.setInt(1, reader.getUserID());
             ps.setInt(2, story.getStoryID());
             ps.setInt(3, reader.getUserID());
@@ -47,6 +47,24 @@ public class LiketransactionRepoImpl extends JDBCConfig implements LikeTransacti
         }
         close();
         return rowsAffected == 1;
+    }
+
+    @Override
+    public Boolean getLike(Reader reader, Story story) throws SQLException {
+
+        if (getConnection() != null) {
+
+            ps = getConnection().prepareStatement("select likeid  from like_transaction where reader = ? and story = ?");
+            ps.setInt(1, reader.getUserID());
+            ps.setInt(2, story.getStoryID());
+
+            rs = ps.executeQuery();
+
+            return rs.next();
+
+        }
+        close();
+        return false;
     }
 
     @Override//supposed to get the total number of likes for each book - so you a map(key = story, value = amount of likes in that period)
@@ -61,7 +79,7 @@ public class LiketransactionRepoImpl extends JDBCConfig implements LikeTransacti
             ps = getConnection().prepareStatement("select storyID, title, "
                     + "writer, description, imagePath, body, isDraft, isActive, "
                     + "createdOn, allowComments, isApproved, views, likes, "
-                    + "avgRating from Story where storyID IN (select storyID from like_Transaction where month(likedOn) = ? and isLiked = 1)");
+                    + "avgRating from Story where storyID IN (select distinct reader, story from like_Transaction where month(likedOn) = ? and isLiked = 1)");
 
             ps.setDate(1, (java.sql.Date) month.getTime());
             rs = ps.executeQuery();
@@ -99,7 +117,7 @@ public class LiketransactionRepoImpl extends JDBCConfig implements LikeTransacti
             for (int i = 0; i < storyList.size(); i++) {
                 int count = 1;
 
-                for (int j = i + 1; j < 10; j++) {
+                for (int j = i + 1; j < storyList.size(); j++) {
                     if (storyList.get(i).getStoryID() == storyList.get(j).getStoryID()) {
                         count++;
                         storyList.remove(j);

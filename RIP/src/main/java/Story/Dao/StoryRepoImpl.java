@@ -74,8 +74,8 @@ public class StoryRepoImpl extends JDBCConfig implements StoryRepo {
 
             ps = getConnection().prepareStatement("select storyID, title, "
                     + "writer, description, imagePath, body, isDraft, isActive, "
-                    + "createdOn, allowComments, isApproved, views, likes, "
-                    + "avgRating from story where isApproved = ?");
+                    + "createdOn, allowComment, isApproved, views, likes, "
+                    + "avgRating from story s inner join story_transaction st on s.storyid = st.story where storyid = story and isApproved = ? ");
 
             ps.setInt(1, 0);
             rs = ps.executeQuery();
@@ -126,7 +126,7 @@ public class StoryRepoImpl extends JDBCConfig implements StoryRepo {
                     + "createdOn, allowComments, isApproved, views, likes, "
                     + "avgRating from story s inner join like_transaction lt on s.storyID = lt.story where lt.reader = ?");
 
-            ps.setInt(1, 1);
+            ps.setInt(1, reader.getUserID());
             rs = ps.executeQuery();
 
             while (rs.next()) {
@@ -185,7 +185,7 @@ public class StoryRepoImpl extends JDBCConfig implements StoryRepo {
             ps = getConnection().prepareStatement("select storyID, title, writer,description, imagePath, body, isDraft, isActive , createdOn, allowComments, isApproved, views, likes, avgRating from story where writer = ?");
 
             ps.setInt(1, writer.getUserID());
-            ps.setInt(2, 1);
+           
 
             rs = ps.executeQuery();
 
@@ -200,9 +200,9 @@ public class StoryRepoImpl extends JDBCConfig implements StoryRepo {
                 boolean isDraft = rs.getBoolean("isDraft");
                 boolean isActive = rs.getBoolean("isActive");
 
-                Date createdOn = rs.getDate("createdOn");
+               
                 Calendar calendar = Calendar.getInstance();
-                calendar.setTime(createdOn);
+                calendar.setTime(rs.getDate("createdOn"));
 
                 boolean allowComments = rs.getBoolean("allowComments");
                 boolean isApproved = rs.getBoolean("isApproved");
@@ -226,8 +226,9 @@ public class StoryRepoImpl extends JDBCConfig implements StoryRepo {
         Story storyObj;
 
         if (getConnection() != null) {
-            ps = getConnection().prepareStatement("select storyID, title, writer,description, imagePath, body, isDraft, isActive , createdOn, allowComments, isApproved, views, likes, avgRating from story where isApproved = ? ");
+            ps = getConnection().prepareStatement("select storyID, title, writer,description, imagePath, body, isDraft, isActive , createdOn, allowComments, isApproved, views, likes, avgRating from story where isApproved = ? and isDraft = ? ");
             ps.setInt(1, 0);
+            
 
             rs = ps.executeQuery();
 
@@ -303,7 +304,7 @@ public class StoryRepoImpl extends JDBCConfig implements StoryRepo {
                     storiesByCategory.add(storyObj);
                 }
             }
-        }
+        
         close();
         return storiesByCategory;
     }
