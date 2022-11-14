@@ -12,10 +12,10 @@ import java.util.Map;
  */
 public interface LikeTransactionRepo {
     
-    boolean createLike(Reader reader, Story story) throws SQLException;
+    Boolean createLike(Reader reader, Story story) throws SQLException;
     
-    boolean updateLike(Reader reader, Story story) throws SQLException;
+    Boolean updateLike(Reader reader, Story story) throws SQLException;
     
-    Map<Story, Integer> getAllLikesInPeriod(Calendar startDate, Calendar endDate) throws SQLException;
+    Map<Story, Integer> getAllLikesInPeriod(Calendar month) throws SQLException;
     
 }

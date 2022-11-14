@@ -433,17 +433,18 @@ public class StoryRepoImpl extends JDBCConfig implements StoryRepo {
 
     }
 
-    @Override//change the sql statement to getting the stories for that particular month
-    public List<Story> getHighestRatedStoriesForMonth(Calendar calendar) throws SQLException {
+    @Override//change the sql statement to getting the stories for that particular month - take out category
+    public List<Story> getHighestRatedStoriesForMonth() throws SQLException {
 
         List<Story> storyList = new ArrayList<>();
 
         if (getConnection() != null) {
 
-            ps = getConnection().prepareStatement("select storyID, title, "
-                    + "writer, description, imagePath, body, isDraft, isActive, "
-                    + "createdOn, allowComments, isApproved, views, likes, "
-                    + "avgRating from Story where storyID IN (select storyID from rating_Transaction where ratedOn DATE_SUB( (select CURRENT_TIMESTAMP), INTERVAL 1 MONTH ))");
+            ps = getConnection().prepareStatement("select storyID, title, writer, description, "
+                    + "imagePath, body, isDraft, isActive, createdOn, allowComment, isApproved, "
+                    + "views, likes, avgRating from Story where storyID IN "
+                    + "(select story from rating_Transaction where ratedOn > "
+                    + "(SELECT DATE_SUB(CURRENT_TIMESTAMP, INTERVAL DAYOFMONTH(@date)-1 DAY)))");
 
             while (rs.next()) {
 
@@ -457,7 +458,7 @@ public class StoryRepoImpl extends JDBCConfig implements StoryRepo {
                 boolean isActive = rs.getBoolean("isActive");
 
                 Date createdOn = rs.getDate("createdOn");
-                calendar = Calendar.getInstance();
+                Calendar calendar = Calendar.getInstance();
                 calendar.setTime(createdOn);
 
                 boolean allowComments = rs.getBoolean("allowComments");
