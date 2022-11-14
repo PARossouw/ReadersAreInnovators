@@ -6,7 +6,6 @@ import Story.Model.Story;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.Date;
 import java.util.List;
 import User.Model.Reader;
 
@@ -20,10 +19,8 @@ public class CategoryRepoImpl extends JDBCConfig implements CategoryRepo {
             ps = getConnection().prepareStatement("insert into Category (Category) values(?)");
             ps.setString(1, category.getName());
             rowsAffected = ps.executeUpdate();
-
         }
         close();
-
         return rowsAffected == 1;
     }
 
@@ -106,7 +103,7 @@ public class CategoryRepoImpl extends JDBCConfig implements CategoryRepo {
             }
 
         }
-            close();
+        close();
         return categoryList;
     }
 
@@ -120,9 +117,7 @@ public class CategoryRepoImpl extends JDBCConfig implements CategoryRepo {
                 ps.setInt(reader.getUserID(), categories.get(i).getCategoryID());
 
             }
-
             rowsAffected = ps.executeBatch().length;
-
         }
         close();
         return rowsAffected == categories.size();
@@ -156,11 +151,11 @@ public class CategoryRepoImpl extends JDBCConfig implements CategoryRepo {
         List<Category> topCategories = new ArrayList<>();
 
         if (getConnection() != null) {
-            ps = getConnection().prepareStatement("select categoryID, category, dateAdded, count(vt.story) as categoryViews from category c "
+            ps = getConnection().prepareStatement("select categoryID, c.category, count(vt.story) as categoryViews from category c "
                     + "inner join story_category sc on c.categoryID = sc.category "
                     + "inner join story s on sc.story = s.storyID "
                     + "inner join view_transaction vt on s.storyID = vt.story "
-                    + "where month(dateViewed) = month(current_timestamp) and year(dateViewed) = year(current_timestamp) order by categoryViews desc");
+                    + "where month(dateViewed) = month(current_timestamp) and year(dateViewed) = year(current_timestamp) group by c.category order by categoryViews desc");
             rs = ps.executeQuery();
 
             while (rs.next()) {
@@ -178,17 +173,15 @@ public class CategoryRepoImpl extends JDBCConfig implements CategoryRepo {
     public Boolean addCategoriesToStory(Story story, List<Category> categories) throws SQLException {
 
         if (getConnection() != null) {
+            ps = getConnection().prepareStatement("insert into story_category (story, category) values (?,?)");
             for (Category category : categories) {
-                rowsAffected = 0;
-                ps = getConnection().prepareStatement("insert into story_category (story, category) values (?,?)");
                 ps.setInt(1, story.getStoryID());
                 ps.setInt(2, category.getCategoryID());
-                rowsAffected = ps.executeUpdate();
-                
-               
+                ps.addBatch();
             }
+            rowsAffected = ps.executeBatch().length;
         }
         close();
-        return rowsAffected == 1;
+        return rowsAffected == categories.size();
     }
 }
