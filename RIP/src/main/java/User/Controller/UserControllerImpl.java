@@ -9,8 +9,9 @@ import User.Service.UserService;
 import java.util.Calendar;
 import java.util.List;
 
+public class UserControllerImpl implements UserController {
 
-public class UserControllerImpl implements UserController{
+    private UserService userService;
 
     private UserService userService;
     
@@ -34,39 +35,55 @@ public class UserControllerImpl implements UserController{
     
     @Override
     public String blockWriter(Writer writer) {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+        return userService.blockWriter(writer);
     }
 
     @Override
     public String addNewEditor(Editor editor) {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+        return userService.addNewEditor(editor);
     }
 
     @Override
     public String removeEditor(Editor editor) {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+        return userService.removeEditor(editor);
     }
 
     @Override
     public List<Writer> topWriters() {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+        List<Writer> writers = userService.TopWriters();
+        if (writers.size() > 30) {
+            for (int i = 30; i < writers.size(); i++) {
+                writers.remove(i);
+            }
+        }
+        return writers;
     }
 
     @Override
-    public List<Writer> topRejectedWritersForMonth(Calendar calendar) {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+    public List<Writer> topRejectedWritersForMonth() {
+        List<Writer> writers = userService.TopRejectedWritersForMonth();
+        if (writers.size() > 5) {
+            for (int i = 5; i < writers.size(); i++) {
+                writers.remove(i);
+            }
+        }
+        return writers;
     }
 
     @Override
     public List<Editor> topApprovingEditors() {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+        List<Editor> editors = userService.topApprovingEditors();
+        if (editors.size() > 3) {
+            for (int i = 3; i < editors.size(); i++) {
+                editors.remove(i);
+            }
+        }
+        return editors;
     }
 
     @Override
     public String BlockWriter(Writer writer) {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+        return userService.blockWriter(writer);
     }
-    
-    
 
 }
