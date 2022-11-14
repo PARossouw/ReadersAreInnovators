@@ -20,7 +20,7 @@ public class CommentServiceImpl implements CommentService{
             if(comment == null || comment.getCommentBody().length() == 0){
                 return "An empty comment was entered, please try again";//the textField should make it so this is impossible
             }
-            if(commentRepo.createComment()){
+            if(commentRepo.createComment(comment)){
                 
                 return "Comment successfully added";
             }

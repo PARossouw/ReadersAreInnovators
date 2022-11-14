@@ -18,11 +18,18 @@ public class StoryServiceImpl implements StoryService {
     public List<Story> searchStoriesByCategories(List<Category> categories) {
 
         List<Story> storyList = new ArrayList<>();
+        
+        if(categories == null)
+        {
+            return null;
+        }
+        
         try {
             storyList = storyRepo.getStoryByCategory(categories);
         } catch (SQLException ex) {
             Logger.getLogger(StoryServiceImpl.class.getName()).log(Level.SEVERE, null, ex);
         }
+        
         return storyList;
     }
 
@@ -30,6 +37,11 @@ public class StoryServiceImpl implements StoryService {
     public List<Story> viewStoriesByWriter(Writer writer) {
 
         List<Story> storyList = new ArrayList<>();
+        if(writer == null)
+        {
+            return null;
+        }
+        
         try {
             storyList = storyRepo.getWriterStories(writer);
         } catch (SQLException ex) {
@@ -46,7 +58,7 @@ public class StoryServiceImpl implements StoryService {
         String successMessage = "";
 
         if (story == null) {
-            successMessage = "The story is empty and thus could not be saved.";
+            successMessage = "The story is empty and could not be saved.";
         } else {
 
             try {
@@ -55,7 +67,7 @@ public class StoryServiceImpl implements StoryService {
                 if (storySuccessfullySaved) {
                     successMessage = "Story has been successfully saved.";
                 } else {
-                    successMessage = "unfotunetly, the story has not been saved successfully.";
+                    successMessage = "unfotunetely, the story has not been saved successfully.";
                 }
 
             } catch (SQLException ex) {
