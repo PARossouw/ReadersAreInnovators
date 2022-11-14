@@ -16,6 +16,8 @@ public interface LikeTransactionRepo {
     
     Boolean updateLike(Reader reader, Story story) throws SQLException;
     
+    Boolean getLike(Reader reader, Story story) throws SQLException;
+    
     Map<Story, Integer> getAllLikesInPeriod(Calendar month) throws SQLException;
     
 }
