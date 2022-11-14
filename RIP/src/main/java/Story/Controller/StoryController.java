@@ -15,12 +15,8 @@ public interface StoryController {
 
     String submitCompletedStory(Story story);
 
-    Story viewSubmittedStory(Story story);
-
-    Story viewDraft(Story story);
+    Story retrieveStory(Story story);
 
     List<Story> searchForStory(String StoryParameter);
-
-    Story viewStoryDescription(Story story);
 
 }
