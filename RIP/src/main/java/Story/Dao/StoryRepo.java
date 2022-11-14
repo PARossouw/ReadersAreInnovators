@@ -32,7 +32,7 @@ public interface StoryRepo {
     
     Boolean createStory(Story story) throws SQLException ;
      
-    List<Story> getHighestRatedStoriesForMonth(Calendar calendar) throws SQLException;
+    List<Story> getHighestRatedStoriesForMonth() throws SQLException;
 
     List<Story> searchForStory(String text) throws SQLException;
 

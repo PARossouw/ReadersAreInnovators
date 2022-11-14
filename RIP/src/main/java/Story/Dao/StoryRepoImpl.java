@@ -59,7 +59,7 @@ public class StoryRepoImpl extends JDBCConfig implements StoryRepo {
                 allApprovedStories.add(story);
             }
         }
-        closeConnection();
+        close();
 
         return allApprovedStories;
     }
@@ -108,7 +108,7 @@ public class StoryRepoImpl extends JDBCConfig implements StoryRepo {
                 allRejectedStories.add(story);
             }
         }
-        closeConnection();
+        close();
 
         return allRejectedStories;
     }
@@ -157,7 +157,7 @@ public class StoryRepoImpl extends JDBCConfig implements StoryRepo {
                 readersLikesStories.add(story);
             }
         }
-        closeConnection();
+        close();
 
         return readersLikesStories;
     }
@@ -170,7 +170,7 @@ public class StoryRepoImpl extends JDBCConfig implements StoryRepo {
             ps.setInt(1, story.getStoryID());
             rowsAffected = ps.executeUpdate();
         }
-        closeConnection();
+        close();
 
         return rowsAffected == 1;
     }
@@ -214,7 +214,7 @@ public class StoryRepoImpl extends JDBCConfig implements StoryRepo {
                 draftStories.add(storyObj);
             }
         }
-        closeConnection();
+        close();
 
         return draftStories;
     }
@@ -256,7 +256,7 @@ public class StoryRepoImpl extends JDBCConfig implements StoryRepo {
                 pendingStories.add(storyObj);
             }
         }
-        closeConnection();
+        close();
 
         return pendingStories;
     }
@@ -304,7 +304,7 @@ public class StoryRepoImpl extends JDBCConfig implements StoryRepo {
                 }
             }
         }
-        closeConnection();
+        close();
         return storiesByCategory;
     }
 
@@ -333,7 +333,7 @@ public class StoryRepoImpl extends JDBCConfig implements StoryRepo {
 
             createdStory = true;
         }
-        closeConnection();
+        close();
         return createdStory;
 
     }
@@ -376,7 +376,7 @@ public class StoryRepoImpl extends JDBCConfig implements StoryRepo {
 
             }
         }
-        closeConnection();
+        close();
         return storyObj;
 
     }
@@ -409,7 +409,7 @@ public class StoryRepoImpl extends JDBCConfig implements StoryRepo {
             storyUpdated = true;
 
         }
-        closeConnection();
+        close();
 
         return storyUpdated;
     }
@@ -428,22 +428,23 @@ public class StoryRepoImpl extends JDBCConfig implements StoryRepo {
             storyDeleted = true;
 
         }
-        closeConnection();
+        close();
         return storyDeleted;
 
     }
 
-    @Override//change the sql statement to getting the stories for that particular month
-    public List<Story> getHighestRatedStoriesForMonth(Calendar calendar) throws SQLException {
+    @Override//change the sql statement to getting the stories for that particular month - take out category
+    public List<Story> getHighestRatedStoriesForMonth() throws SQLException {
 
         List<Story> storyList = new ArrayList<>();
 
         if (getConnection() != null) {
 
-            ps = getConnection().prepareStatement("select storyID, title, "
-                    + "writer, description, imagePath, body, isDraft, isActive, "
-                    + "createdOn, allowComments, isApproved, views, likes, "
-                    + "avgRating from Story where storyID IN (select storyID from rating_Transaction where ratedOn DATE_SUB( (select CURRENT_TIMESTAMP), INTERVAL 1 MONTH ))");
+            ps = getConnection().prepareStatement("select storyID, title, writer, description, "
+                    + "imagePath, body, isDraft, isActive, createdOn, allowComment, isApproved, "
+                    + "views, likes, avgRating from Story where storyID IN "
+                    + "(select story from rating_Transaction where ratedOn > "
+                    + "(SELECT DATE_SUB(CURRENT_TIMESTAMP, INTERVAL DAYOFMONTH(@date)-1 DAY)))");
 
             while (rs.next()) {
 
@@ -457,7 +458,7 @@ public class StoryRepoImpl extends JDBCConfig implements StoryRepo {
                 boolean isActive = rs.getBoolean("isActive");
 
                 Date createdOn = rs.getDate("createdOn");
-                calendar = Calendar.getInstance();
+                Calendar calendar = Calendar.getInstance();
                 calendar.setTime(createdOn);
 
                 boolean allowComments = rs.getBoolean("allowComments");
@@ -535,7 +536,7 @@ public class StoryRepoImpl extends JDBCConfig implements StoryRepo {
             }
         }
 
-        closeConnection();
+        close();
         return stories;
     }
 

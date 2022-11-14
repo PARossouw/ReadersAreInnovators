@@ -27,7 +27,7 @@ public class StoryTransactionRepoImpl extends JDBCConfig implements StoryTransac
             createdEvent = true;
             }    
     
-           closeConnection();
+           close();
            return createdEvent ;
         
         

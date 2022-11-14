@@ -67,7 +67,7 @@ public class ViewTransactionRepoImpl extends JDBCConfig implements ViewTransacti
                         views, likes, avgRating), rs.getInt("viewsInPeriod"));
             }
         }
-        closeConnection();
+        close();
         return allStoryViews;
     }
 
