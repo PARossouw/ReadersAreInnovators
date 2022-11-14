@@ -18,18 +18,17 @@ public class StoryServiceImpl implements StoryService {
     public List<Story> searchStoriesByCategories(List<Category> categories) {
 
         List<Story> storyList = new ArrayList<>();
-        
-        if(categories == null)
-        {
+
+        if (categories == null) {
             return null;
         }
-        
+
         try {
             storyList = storyRepo.getStoryByCategory(categories);
         } catch (SQLException ex) {
             Logger.getLogger(StoryServiceImpl.class.getName()).log(Level.SEVERE, null, ex);
         }
-        
+
         return storyList;
     }
 
@@ -37,11 +36,10 @@ public class StoryServiceImpl implements StoryService {
     public List<Story> viewStoriesByWriter(Writer writer) {
 
         List<Story> storyList = new ArrayList<>();
-        if(writer == null)
-        {
+        if (writer == null) {
             return null;
         }
-        
+
         try {
             storyList = storyRepo.getWriterStories(writer);
         } catch (SQLException ex) {
@@ -55,31 +53,27 @@ public class StoryServiceImpl implements StoryService {
     public String saveStory(Story story) {
 
         Boolean storySuccessfullySaved = false;
-        String successMessage = "";
 
         if (story == null) {
-            successMessage = "The story is empty and could not be saved.";
+            return "The story is empty and could not be saved.";
         } else {
-
             try {
                 storySuccessfullySaved = storyRepo.updateStory(story);
 
                 if (storySuccessfullySaved) {
-                    successMessage = "Story has been successfully saved.";
-                } else {
-                    successMessage = "unfotunetely, the story has not been saved successfully.";
+                    return "Story has been successfully saved.";
                 }
 
             } catch (SQLException ex) {
                 Logger.getLogger(StoryServiceImpl.class.getName()).log(Level.SEVERE, null, ex);
             }
         }
-        return successMessage;
+        return "Unfortunetely, the story has not been saved successfully.";
     }
 
     @Override
     public String submitCompletedStory(Story story) {
-        boolean b = false;
+
         try {
             if (story.getStoryID() != null
                     && story.getTitle() != null
@@ -89,34 +83,20 @@ public class StoryServiceImpl implements StoryService {
                     && story.getBody() != null
                     && story.getCreatedOn() != null
                     && story.getCategoryList() != null) {
-                b = storyRepo.submitStory(story);
+                return storyRepo.submitStory(story) ? "successfully submitted story" : "unsuccessful operation";
+
             }
         } catch (SQLException ex) {
             Logger.getLogger(StoryServiceImpl.class.getName()).log(Level.SEVERE, null, ex);
         }
-        return b ? "successfully submitted story" : "unsuccessful operation";
+        return "Unsuccessful operation";
     }
 
     @Override
-    public Story viewSubmittedStory(Story story) {
-        Story s = null;
+    public Story retrieveStory(Story story) {
         try {
-            s = storyRepo.retrieveStory(story);
-        } catch (SQLException ex) {
-            Logger.getLogger(StoryServiceImpl.class.getName()).log(Level.SEVERE, null, ex);
-        }
-        return s;
-    }
+            return storyRepo.retrieveStory(story);
 
-    @Override
-    public Story viewDraft(Story story) {
-        try {
-            Story draft = storyRepo.retrieveStory(story);
-            if (draft.getIsDraft() == false) {
-                return null;
-            } else {
-                return draft;
-            }
         } catch (SQLException ex) {
             Logger.getLogger(StoryServiceImpl.class.getName()).log(Level.SEVERE, null, ex);
             return null;
@@ -125,41 +105,19 @@ public class StoryServiceImpl implements StoryService {
 
     @Override
     public List<Story> searchForStory(String storyParameter) {
-        
-        List<Story> allStoriesLike = new ArrayList<>();
-        
+
         if (storyParameter.isBlank()) {
             return null;
         }
-        
+
         try {
-            if (storyRepo.searchForStory(storyParameter) != null) {
-                allStoriesLike = storyRepo.searchForStory(storyParameter);
-            } else {
-                return null;
-            }
+
+            return storyRepo.searchForStory(storyParameter);
+
         } catch (SQLException ex) {
             Logger.getLogger(StoryServiceImpl.class.getName()).log(Level.SEVERE, null, ex);
         }
-        return allStoriesLike;
-    }
-
-    @Override
-    public Story viewStoryDescription(Story story) {
-
-        try {
-            Story myStory = storyRepo.retrieveStory(story);
-
-            if (myStory != null) {
-                return myStory;
-            } else {
-                return null;
-            }
-        } catch (SQLException ex) {
-            Logger.getLogger(StoryServiceImpl.class.getName()).log(Level.SEVERE, null, ex);
-            return null;
-        }
-
+        return null;
     }
 
 }

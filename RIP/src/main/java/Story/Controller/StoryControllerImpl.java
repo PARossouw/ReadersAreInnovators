@@ -32,23 +32,13 @@ public class StoryControllerImpl implements StoryController {
     }
 
     @Override
-    public Story viewSubmittedStory(Story story) {
-        return storyService.viewSubmittedStory(story);
-    }
-
-    @Override
-    public Story viewDraft(Story story) {
-        return storyService.viewDraft(story);
+    public Story retrieveStory(Story story) {
+        return storyService.retrieveStory(story);
     }
 
     @Override
     public List<Story> searchForStory(String StoryParameter) {
         return storyService.searchForStory(StoryParameter);
-    }
-
-    @Override
-    public Story viewStoryDescription(Story story) {
-        return storyService.viewStoryDescription(story);
     }
 
 }
