@@ -5,9 +5,8 @@ import Category.Service.CategoryService;
 import Story.Model.Story;
 import java.util.List;
 
+public class CategoryControllerImpl implements CategoryController {
 
-public class CategoryControllerImpl implements CategoryController{
-    
     CategoryService categoryService;
 
     @Override

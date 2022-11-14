@@ -6,33 +6,28 @@ import User.Model.Reader;
 import User.Model.User;
 import User.Model.Writer;
 import User.Service.UserService;
-import java.util.Calendar;
 import java.util.List;
+import java.util.Map;
 
 public class UserControllerImpl implements UserController {
 
     private UserService userService;
 
-    private UserService userService;
-    
     @Override
-    public User login(User user) 
-    {
-    return userService.login(user);
+    public User login(User user) {
+        return userService.login(user);
     }
 
     @Override
-    public String addPreferredCategriesToUser(Reader reader,List<Category> categories) 
-    {
-        return userService.addPreferredCategoriesToUser(reader,categories);
+    public String addPreferredCategriesToUser(Reader reader, List<Category> categories) {
+        return userService.addPreferredCategoriesToUser(reader, categories);
     }
 
     @Override
-    public String registerUser(User user) 
-    {
+    public String registerUser(User user) {
         return userService.registerUser(user);
     }
-    
+
     @Override
     public String blockWriter(Writer writer) {
         return userService.blockWriter(writer);
@@ -49,36 +44,21 @@ public class UserControllerImpl implements UserController {
     }
 
     @Override
-    public List<Writer> topWriters() {
-        List<Writer> writers = userService.TopWriters();
-        if (writers.size() > 30) {
-            for (int i = 30; i < writers.size(); i++) {
-                writers.remove(i);
-            }
-        }
-        return writers;
+    public Map<Writer, Integer> topWriters() {
+        Map<Writer, Integer> topWriters = userService.topWriters();
+        return topWriters;
     }
 
     @Override
-    public List<Writer> topRejectedWritersForMonth() {
-        List<Writer> writers = userService.TopRejectedWritersForMonth();
-        if (writers.size() > 5) {
-            for (int i = 5; i < writers.size(); i++) {
-                writers.remove(i);
-            }
-        }
-        return writers;
+    public Map<Writer, Integer> topRejectedWritersForMonth() {
+        Map<Writer, Integer> topRejectedWriters = userService.topRejectedWritersForMonth();
+        return topRejectedWriters;
     }
 
     @Override
-    public List<Editor> topApprovingEditors() {
-        List<Editor> editors = userService.topApprovingEditors();
-        if (editors.size() > 3) {
-            for (int i = 3; i < editors.size(); i++) {
-                editors.remove(i);
-            }
-        }
-        return editors;
+    public Map<Writer, Integer> topApprovingEditors() {
+        Map<Writer, Integer> topApprovingEditors = userService.topApprovingEditors();
+        return topApprovingEditors;
     }
 
     @Override

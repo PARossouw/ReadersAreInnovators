@@ -46,16 +46,11 @@ public class CategoryServiceImpl extends JDBCConfig implements CategoryService {
 
         List<Category> categoryList = new ArrayList<>();
         try {
-            categoryList = categoryRepo.topCategoriesForMonth();
+            return categoryList = categoryRepo.topCategoriesForMonth();
         } catch (SQLException ex) {
             Logger.getLogger(CategoryServiceImpl.class.getName()).log(Level.SEVERE, null, ex);
         }
-
-        if (categoryList != null) {
-            return categoryList;
-        } else {
-            return null;
-        }
+        return categoryList;
     }
 
 }
