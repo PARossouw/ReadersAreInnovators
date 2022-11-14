@@ -4,11 +4,9 @@ import JDBCConfig.JDBCConfig;
 import Story.Model.Story;
 import User.Model.Reader;
 import java.sql.SQLException;
-import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.Date;
+import java.sql.Date;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 public class LiketransactionRepoImpl extends JDBCConfig implements LikeTransactionRepo {
@@ -30,12 +28,11 @@ public class LiketransactionRepoImpl extends JDBCConfig implements LikeTransacti
 
     }
 
-    @Override//double check if this is an update or not - I think this needs to be an insert because we need to track the likes of a specific month
+    @Override
     public Boolean updateLike(Reader reader, Story story) throws SQLException {
 
         if (getConnection() != null) {
 
-            //ps = getConnection().prepareStatement("update like_Transaction set isLiked = 0 where reader = ? and story = ?");
             ps = getConnection().prepareStatement("insert into like_Transaction (reader, story, isLiked) values (?, ?, IF( (select isLiked from like_Transaction where MAX(likeId) and reader = ? and story = ?) = 0, 1, 0))");
             ps.setInt(1, reader.getUserID());
             ps.setInt(2, story.getStoryID());
@@ -71,17 +68,15 @@ public class LiketransactionRepoImpl extends JDBCConfig implements LikeTransacti
     //getting top 20 ,most liked books of a certain period
     public Map<Story, Integer> getAllLikesInPeriod(Calendar month) throws SQLException {
 
-        List<Story> storyList = new ArrayList<>();
         Map<Story, Integer> likeMap = new HashMap<>();
 
         if (getConnection() != null) {
 
-            ps = getConnection().prepareStatement("select storyID, title, "
-                    + "writer, description, imagePath, body, isDraft, isActive, "
-                    + "createdOn, allowComments, isApproved, views, likes, "
-                    + "avgRating from Story where storyID IN (select distinct reader, story from like_Transaction where month(likedOn) = ? and isLiked = 1)");
+            ps = getConnection().prepareStatement("select storyID, title, count(distinct lt.reader) as likes from story s "
+                    + "inner join like_transaction lt on s.storyID = lt.story "
+                    + "where month(likedOn) = ? and isLiked = 1 group by storyId order by likes desc");
 
-            ps.setDate(1, (java.sql.Date) month.getTime());
+            ps.setDate(1, (Date) month.getTime());
             rs = ps.executeQuery();
 
             while (rs.next()) {
@@ -95,9 +90,8 @@ public class LiketransactionRepoImpl extends JDBCConfig implements LikeTransacti
                 boolean isDraft = rs.getBoolean("isDraft");
                 boolean isActive = rs.getBoolean("isActive");
 
-                Date createdOn = rs.getDate("createdOn");
                 Calendar calendar = Calendar.getInstance();
-                calendar.setTime(createdOn);
+                calendar.setTime(rs.getDate("createdOn"));
 
                 boolean allowComments = rs.getBoolean("allowComments");
                 boolean isApproved = rs.getBoolean("isApproved");
@@ -110,30 +104,15 @@ public class LiketransactionRepoImpl extends JDBCConfig implements LikeTransacti
                         calendar, allowComments, isApproved,
                         views, likes, avgRating);
 
-                storyList.add(story);
+                likeMap.put(story, rs.getInt("likes"));
 
-            }
-
-            for (int i = 0; i < storyList.size(); i++) {
-                int count = 1;
-
-                for (int j = i + 1; j < storyList.size(); j++) {
-                    if (storyList.get(i).getStoryID() == storyList.get(j).getStoryID()) {
-                        count++;
-                        storyList.remove(j);
-                        j--;
-
-                    }
+                if (likeMap.size() == 20) {
+                    break;
                 }
-
-                likeMap.put(storyList.get(i), count);
             }
-
         }
         close();
-
         return likeMap;
-
     }
 
 }
