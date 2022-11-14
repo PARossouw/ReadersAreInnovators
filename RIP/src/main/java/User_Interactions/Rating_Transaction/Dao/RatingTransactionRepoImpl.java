@@ -22,7 +22,7 @@ public class RatingTransactionRepoImpl extends JDBCConfig implements RatingTrans
             rowsAffected = ps.executeUpdate();
 
         }
-        closeConnection();
+        close();
         return rowsAffected == 1;
     }
     
@@ -49,7 +49,7 @@ public class RatingTransactionRepoImpl extends JDBCConfig implements RatingTrans
                 rating.setStory(story);
             }
         }
-        closeConnection();
+        close();
         return rating;
     }
 
@@ -67,7 +67,7 @@ public class RatingTransactionRepoImpl extends JDBCConfig implements RatingTrans
             rowsAffected = ps.executeUpdate();
 
         }
-        closeConnection();
+        close();
         return rowsAffected == 1;
     }
 }

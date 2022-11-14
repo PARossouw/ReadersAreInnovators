@@ -34,14 +34,23 @@ public class JDBCConfig {
         return connection;
     }
 
-    public void closeConnection() throws SQLException {
+    public void close() throws SQLException {
 
-        if (connection != null) {
-            connection.close();
-            ps.close();
+        if (rs != null) {
             rs.close();
         }
+        if (ps != null) {
+            ps.close();
+        }
 
+    }
+    
+    public void closeConnection()throws SQLException {
+        
+        if(connection != null){
+            connection.close();
+        }
+        
     }
 
 }

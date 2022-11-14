@@ -59,7 +59,7 @@ public class StoryRepoImpl extends JDBCConfig implements StoryRepo {
                 allApprovedStories.add(story);
             }
         }
-        closeConnection();
+        close();
 
         return allApprovedStories;
     }
@@ -108,7 +108,7 @@ public class StoryRepoImpl extends JDBCConfig implements StoryRepo {
                 allRejectedStories.add(story);
             }
         }
-        closeConnection();
+        close();
 
         return allRejectedStories;
     }
@@ -157,7 +157,7 @@ public class StoryRepoImpl extends JDBCConfig implements StoryRepo {
                 readersLikesStories.add(story);
             }
         }
-        closeConnection();
+        close();
 
         return readersLikesStories;
     }
@@ -170,7 +170,7 @@ public class StoryRepoImpl extends JDBCConfig implements StoryRepo {
             ps.setInt(1, story.getStoryID());
             rowsAffected = ps.executeUpdate();
         }
-        closeConnection();
+        close();
 
         return rowsAffected == 1;
     }
@@ -214,7 +214,7 @@ public class StoryRepoImpl extends JDBCConfig implements StoryRepo {
                 draftStories.add(storyObj);
             }
         }
-        closeConnection();
+        close();
 
         return draftStories;
     }
@@ -256,7 +256,7 @@ public class StoryRepoImpl extends JDBCConfig implements StoryRepo {
                 pendingStories.add(storyObj);
             }
         }
-        closeConnection();
+        close();
 
         return pendingStories;
     }
@@ -304,7 +304,7 @@ public class StoryRepoImpl extends JDBCConfig implements StoryRepo {
                 }
             }
         }
-        closeConnection();
+        close();
         return storiesByCategory;
     }
 
@@ -333,7 +333,7 @@ public class StoryRepoImpl extends JDBCConfig implements StoryRepo {
 
             createdStory = true;
         }
-        closeConnection();
+        close();
         return createdStory;
 
     }
@@ -376,7 +376,7 @@ public class StoryRepoImpl extends JDBCConfig implements StoryRepo {
 
             }
         }
-        closeConnection();
+        close();
         return storyObj;
 
     }
@@ -409,7 +409,7 @@ public class StoryRepoImpl extends JDBCConfig implements StoryRepo {
             storyUpdated = true;
 
         }
-        closeConnection();
+        close();
 
         return storyUpdated;
     }
@@ -428,7 +428,7 @@ public class StoryRepoImpl extends JDBCConfig implements StoryRepo {
             storyDeleted = true;
 
         }
-        closeConnection();
+        close();
         return storyDeleted;
 
     }
@@ -536,7 +536,7 @@ public class StoryRepoImpl extends JDBCConfig implements StoryRepo {
             }
         }
 
-        closeConnection();
+        close();
         return stories;
     }
 

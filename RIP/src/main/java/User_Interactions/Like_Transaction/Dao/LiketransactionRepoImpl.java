@@ -25,7 +25,7 @@ public class LiketransactionRepoImpl extends JDBCConfig implements LikeTransacti
             rowsAffected = ps.executeUpdate();
 
         }
-        closeConnection();
+        close();
         return rowsAffected == 1;
 
     }
@@ -45,7 +45,7 @@ public class LiketransactionRepoImpl extends JDBCConfig implements LikeTransacti
             rowsAffected = ps.executeUpdate();
 
         }
-        closeConnection();
+        close();
         return rowsAffected == 1;
     }
 
@@ -112,7 +112,7 @@ public class LiketransactionRepoImpl extends JDBCConfig implements LikeTransacti
             }
 
         }
-        closeConnection();
+        close();
 
         return likeMap;
 
