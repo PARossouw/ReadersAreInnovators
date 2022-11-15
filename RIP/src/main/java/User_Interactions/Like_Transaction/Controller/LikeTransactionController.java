@@ -7,10 +7,10 @@ import java.util.Map;
 
 public interface LikeTransactionController {
     
-    Integer likeStory(Reader reader, Story story);
+    String likeStory(Reader reader, Story story);
     
     String changeLike(Reader reader, Story story);
     
-    Map<Story, Integer> getAllLikesInPeriod(Calendar startDate, Calendar endDate);
+    Map<Story, Integer> getAllLikesInPeriod(Calendar month);
     
 }
