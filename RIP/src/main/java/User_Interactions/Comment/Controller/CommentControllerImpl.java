@@ -1,23 +1,40 @@
 package User_Interactions.Comment.Controller;
 
 import Story.Model.Story;
+import User_Interactions.Comment.Dao.CommentRepoImpl;
 import User_Interactions.Comment.Model.Comment;
 import User_Interactions.Comment.Service.CommentService;
-import java.util.List;
+import User_Interactions.Comment.Service.CommentServiceImpl;
+import jakarta.ws.rs.Consumes;
+import jakarta.ws.rs.POST;
+import jakarta.ws.rs.Path;
+import jakarta.ws.rs.Produces;
+import jakarta.ws.rs.core.MediaType;
+import jakarta.ws.rs.core.Response;
 
-
-public class CommentControllerImpl implements CommentController{
+@Path("/Comment")
+public class CommentControllerImpl{
     
-    private CommentService commentService;
+    private final CommentService commentService;
 
-    @Override
-    public String commentOnAStory(Comment comment) {
-        return commentService.commentOnAStory(comment);
+    public CommentControllerImpl() {
+        this.commentService = new CommentServiceImpl(new CommentRepoImpl());
     }
 
-    @Override
-    public List<Comment> getAllComments(Story story) {
-        return commentService.getAllComments(story);
+    @Path("/add")
+    @POST
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response commentOnAStory(Comment comment) {
+        return Response.status(Response.Status.OK).entity(commentService.commentOnAStory(comment)).build();
+    }
+
+    @Path("/getAll")
+    @POST
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response getAllComments(Story story) {
+        return Response.status(Response.Status.OK).entity(commentService.getAllComments(story)).build();
     }
 
 }

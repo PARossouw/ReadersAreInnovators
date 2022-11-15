@@ -11,7 +11,11 @@ import java.util.logging.Logger;
 
 public class ViewTransactionServiceImpl implements ViewTransactionService {
 
-    private ViewTransactionRepo viewRepo;
+    private final ViewTransactionRepo viewRepo;
+
+    public ViewTransactionServiceImpl(ViewTransactionRepo viewRepo) {
+        this.viewRepo = viewRepo;
+    }
 
     @Override
     public String viewStory(Story story, Reader reader) {

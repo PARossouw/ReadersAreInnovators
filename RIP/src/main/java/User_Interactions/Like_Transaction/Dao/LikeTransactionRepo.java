@@ -6,10 +6,6 @@ import java.sql.SQLException;
 import java.util.Calendar;
 import java.util.Map;
 
-/**
- *
- * @author piete
- */
 public interface LikeTransactionRepo {
     
     Boolean createLike(Reader reader, Story story) throws SQLException;

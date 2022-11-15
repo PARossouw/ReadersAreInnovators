@@ -12,7 +12,11 @@ import java.util.logging.Logger;
 
 public class StoryServiceImpl implements StoryService {
 
-    private StoryRepo storyRepo;
+    private final StoryRepo storyRepo;
+
+    public StoryServiceImpl(StoryRepo storyRepo) {
+        this.storyRepo = storyRepo;
+    }
 
     @Override
     public List<Story> searchStoriesByCategories(List<Category> categories) {
