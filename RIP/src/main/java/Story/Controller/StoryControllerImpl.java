@@ -1,44 +1,73 @@
 package Story.Controller;
 
 import Category.Model.Category;
+import Story.Dao.StoryRepoImpl;
 import Story.Model.Story;
 import Story.Service.StoryService;
+import Story.Service.StoryServiceImpl;
 import User.Model.Writer;
+import jakarta.ws.rs.Consumes;
+import jakarta.ws.rs.POST;
+import jakarta.ws.rs.Path;
+import jakarta.ws.rs.Produces;
+import jakarta.ws.rs.core.MediaType;
+import jakarta.ws.rs.core.Response;
 import java.util.List;
 
-public class StoryControllerImpl implements StoryController {
+@Path("/Story")
+public class StoryControllerImpl {
 
-    private StoryService storyService;
+    private final StoryService storyService;
 
-    @Override
-    public List<Story> searchStoriesByCategories(List<Category> categories) {
-        return storyService.searchStoriesByCategories(categories);
-
+    public StoryControllerImpl() {
+        this.storyService = new StoryServiceImpl(new StoryRepoImpl());
     }
 
-    @Override
-    public List<Story> viewStoriesByWriter(Writer writer) {
-        return storyService.viewStoriesByWriter(writer);
+    @Path("/search/categories")
+    @POST
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response searchStoriesByCategories(List<Category> categories) {
+        return Response.status(Response.Status.OK).entity(storyService.searchStoriesByCategories(categories)).build();
     }
 
-    @Override
-    public String saveStory(Story story) {
-        return storyService.saveStory(story);
+    @Path("/viewByWriter")
+    @POST
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response viewStoriesByWriter(Writer writer) {
+        return Response.status(Response.Status.OK).entity(storyService.viewStoriesByWriter(writer)).build();
     }
 
-    @Override
-    public String submitCompletedStory(Story story) {
-        return storyService.submitCompletedStory(story);
+    @Path("/save")
+    @POST
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response saveStory(Story story) {
+        return Response.status(Response.Status.OK).entity(storyService.saveStory(story)).build();
     }
 
-    @Override
-    public Story retrieveStory(Story story) {
-        return storyService.retrieveStory(story);
+    @Path("/submit")
+    @POST
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response submitCompletedStory(Story story) {
+        return Response.status(Response.Status.OK).entity(storyService.submitCompletedStory(story)).build();
     }
 
-    @Override
-    public List<Story> searchForStory(String StoryParameter) {
-        return storyService.searchForStory(StoryParameter);
+    @Path("/retrieve")
+    @POST
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response retrieveStory(Story story) {
+        return Response.status(Response.Status.OK).entity(storyService.retrieveStory(story)).build();
     }
 
+    @Path("/search")
+    @POST
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response searchForStory(String StoryParameter) {
+        return Response.status(Response.Status.OK).entity(storyService.searchForStory(StoryParameter)).build();
+    }
 }

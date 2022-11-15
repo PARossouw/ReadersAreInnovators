@@ -11,7 +11,11 @@ import java.util.logging.Logger;
 
 public class CommentServiceImpl implements CommentService{
     
-    private CommentRepo commentRepo;
+    private final CommentRepo commentRepo;
+
+    public CommentServiceImpl(CommentRepo commentRepo) {
+        this.commentRepo = commentRepo;
+    }
 
     @Override
     public String commentOnAStory(Comment comment) {

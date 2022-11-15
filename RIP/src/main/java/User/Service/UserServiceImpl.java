@@ -16,9 +16,14 @@ import java.util.logging.Logger;
 
 public class UserServiceImpl implements UserService {
 
-    private UserRepo userRepo;
-    private CategoryRepo categoryRepo;
+    private final UserRepo userRepo;
+    private final CategoryRepo categoryRepo;
 
+    public UserServiceImpl(UserRepo userRepo, CategoryRepo categoryRepo) {
+        this.userRepo = userRepo;
+        this.categoryRepo = categoryRepo;
+    }
+    
     @Override
     public User login(User user) {
 
