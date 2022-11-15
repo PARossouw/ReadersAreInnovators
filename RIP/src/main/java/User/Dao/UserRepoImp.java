@@ -175,7 +175,7 @@ public class UserRepoImp extends JDBCConfig implements UserRepo {
                     + "inner join story_transaction st on s.storyID = st.story "
                     + "where st.action like '%rejected%' and "
                     + "month(actionperformedon) = month(current_timestamp) and year(actionperformedon) = year(current_timestamp) "
-                    + "order by timesRejected desc");
+                    + "order by timesRejected desc limit 30");
             rs = ps.executeQuery();
 
             while (rs.next()) {
@@ -205,10 +205,6 @@ public class UserRepoImp extends JDBCConfig implements UserRepo {
                     writer.setDateAdded(date);
                     topRejectedWriters.put(writer, rejectedCount);
                 }
-
-                if (topRejectedWriters.size() == 30) {
-                    break;
-                }
             }
         }
         close();
@@ -220,7 +216,10 @@ public class UserRepoImp extends JDBCConfig implements UserRepo {
         Map<Editor, Integer> editorList = new HashMap<>();
 
         if (getConnection() != null) {
-            ps = getConnection().prepareStatement("select u.userid, username, email, phonenumber, password, u.isactive, dateadded, role, count(action) as timesApproved from user u inner join story_transaction st on u.userid = st.user where st.action like '%approved%' order by timesApproved desc");
+            ps = getConnection().prepareStatement("select u.userid, username, email, phonenumber, password, "
+                    + "u.isactive, dateadded, role, count(action) as timesApproved from user u "
+                    + "inner join story_transaction st on u.userid = st.user "
+                    + "where st.action like '%approved%' order by timesApproved desc limit 3");
             rs = ps.executeQuery();
 
             while (rs.next()) {
@@ -248,10 +247,6 @@ public class UserRepoImp extends JDBCConfig implements UserRepo {
                     editor.setIsActive(isActive);
                     editor.setDateAdded(date);
                     editorList.put(editor, timesApproved);
-                }
-
-                if (editorList.size() == 3) {
-                    break;
                 }
             }
         }
