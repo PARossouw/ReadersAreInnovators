@@ -1,7 +1,3 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
- */
 package User_Interactions.Like_Transaction.Controller;
 
 import Story.Model.Story;
@@ -15,18 +11,18 @@ public class LikeTransactionControllerImpl implements LikeTransactionController 
     private Like_TransactionService likeTransactionService;
 
     @Override
-    public Integer likeStory(Reader reader, Story story) {
+    public String likeStory(Reader reader, Story story) {
         return likeTransactionService.likeStory(reader, story);
     }
 
     @Override
     public String changeLike(Reader reader, Story story) {
-        return likeTransactionService.changeLike(reader, story);
+        return likeTransactionService.likeStory(reader, story);
     }
 
     @Override
-    public Map<Story, Integer> getAllLikesInPeriod(Calendar startDate, Calendar endDate) {
-        return likeTransactionService.getAllLikesInPeriod(startDate, endDate);
+    public Map<Story, Integer> getAllLikesInPeriod(Calendar month) {
+        return likeTransactionService.getAllLikesInPeriod(month);
     }
 
 }
