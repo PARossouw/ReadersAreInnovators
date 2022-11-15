@@ -12,7 +12,11 @@ import java.util.logging.Logger;
 
 public class CategoryServiceImpl extends JDBCConfig implements CategoryService {
 
-    private CategoryRepo categoryRepo;
+    private final CategoryRepo categoryRepo;
+
+    public CategoryServiceImpl(CategoryRepo categoryRepo) {
+        this.categoryRepo = categoryRepo;
+    }
 
     @Override
     public List<Category> displayAllCategories() {

@@ -10,8 +10,13 @@ import java.util.logging.Logger;
 
 public class RatingTransactionServiceImpl implements RatingTransactionService {
 
-    private RatingTransactionRepo ratingRepo;
-    private StoryRepo storyRepo;
+    private final RatingTransactionRepo ratingRepo;
+    private final StoryRepo storyRepo;
+
+    public RatingTransactionServiceImpl(RatingTransactionRepo ratingRepo, StoryRepo storyRepo) {
+        this.ratingRepo = ratingRepo;
+        this.storyRepo = storyRepo;
+    }
 
     @Override
     public Double rateStory(Story story, Reader reader, Integer rating) {

@@ -9,7 +9,7 @@ import java.sql.Date;
 import java.util.HashMap;
 import java.util.Map;
 
-public class LiketransactionRepoImpl extends JDBCConfig implements LikeTransactionRepo {
+public class LikeTransactionRepoImpl extends JDBCConfig implements LikeTransactionRepo {
 
     @Override
     public Boolean createLike(Reader reader, Story story) throws SQLException {

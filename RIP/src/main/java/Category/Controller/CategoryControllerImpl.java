@@ -1,27 +1,48 @@
 package Category.Controller;
 
+import Category.Dao.CategoryRepoImpl;
 import Category.Model.Category;
 import Category.Service.CategoryService;
+import Category.Service.CategoryServiceImpl;
 import Story.Model.Story;
+import jakarta.ws.rs.Consumes;
+import jakarta.ws.rs.GET;
+import jakarta.ws.rs.POST;
+import jakarta.ws.rs.Path;
+import jakarta.ws.rs.Produces;
+import jakarta.ws.rs.core.MediaType;
+import jakarta.ws.rs.core.Response;
 import java.util.List;
 
-public class CategoryControllerImpl implements CategoryController {
+@Path("/Category")
+public class CategoryControllerImpl{
 
-    CategoryService categoryService;
+    private final CategoryService categoryService;
 
-    @Override
-    public List<Category> displayAllCategories() {
-        return categoryService.displayAllCategories();
+    public CategoryControllerImpl() {
+        this.categoryService = new CategoryServiceImpl(new CategoryRepoImpl());
     }
 
-    @Override
-    public String addCategoriesToStory(List<Category> categories, Story story) {
-        return categoryService.addCategoriesToStory(categories, story);
+    @Path("/displayAll")
+    @GET
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response displayAllCategories() {
+        return Response.status(Response.Status.OK).entity(categoryService.displayAllCategories()).build();
     }
 
-    @Override
-    public List<Category> topCategoriesForMonth() {
-        return categoryService.topCategoriesForTheMonth();
+    @Path("/addToStory")
+    @POST
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response addCategoriesToStory(List<Category> categories, Story story) {
+        return Response.status(Response.Status.OK).entity(categoryService.addCategoriesToStory(categories, story)).build();
+    }
+
+    @Path("/topForMonth")
+    @GET
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response topCategoriesForMonth() {
+        return Response.status(Response.Status.OK).entity(categoryService.topCategoriesForTheMonth()).build();
     }
 
 }
