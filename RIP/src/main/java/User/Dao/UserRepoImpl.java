@@ -11,7 +11,7 @@ import User.Model.Writer;
 import java.util.HashMap;
 import java.util.Map;
 
-public class UserRepoImp extends JDBCConfig implements UserRepo {
+public class UserRepoImpl extends JDBCConfig implements UserRepo {
 
     @Override
     public Boolean createUser(User user) throws SQLException {

@@ -10,22 +10,19 @@ import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-public class Like_TransactionServiceImpl implements Like_TransactionService {
+public class LikeTransactionServiceImpl implements LikeTransactionService {
 
-    private LikeTransactionRepo likeTransactionRepo;
+    private final LikeTransactionRepo likeTransactionRepo;
 
-    
-    
-    
-    
-    
-    
+    public LikeTransactionServiceImpl(LikeTransactionRepo likeTransactionRepo) {
+        this.likeTransactionRepo = likeTransactionRepo;
+    }
+
     @Override
     public String likeStory(Reader reader, Story story) {
 
         if(reader != null && story != null)
         {
-        
             try {
                 if (likeTransactionRepo.getLike(reader, story)) {
                     likeTransactionRepo.updateLike(reader, story);
@@ -35,14 +32,11 @@ public class Like_TransactionServiceImpl implements Like_TransactionService {
                     likeTransactionRepo.createLike(reader, story);
                     return  "The story like status has been successfully updated ";
                     
-                    
-                    
                 }   } catch (SQLException ex) {
-                Logger.getLogger(Like_TransactionServiceImpl.class.getName()).log(Level.SEVERE, null, ex);
+                Logger.getLogger(LikeTransactionServiceImpl.class.getName()).log(Level.SEVERE, null, ex);
             }
         }
         return "The story like status has not been updated";
-       
     }
 
     @Override
@@ -55,8 +49,6 @@ public class Like_TransactionServiceImpl implements Like_TransactionService {
             if (month == null) {
                 dateCheck = false;
             }
-
-            // Check to ensure that endDate is after the start date             
             month = Calendar.getInstance();
             int startMonth = month.get(Calendar.MONTH);
             int startYear = month.get(Calendar.YEAR);
@@ -80,10 +72,8 @@ public class Like_TransactionServiceImpl implements Like_TransactionService {
             }
 
         } catch (SQLException ex) {
-            Logger.getLogger(Like_TransactionServiceImpl.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(LikeTransactionServiceImpl.class.getName()).log(Level.SEVERE, null, ex);
         }
-
         return storyLikesMap;
     }
-
 }
