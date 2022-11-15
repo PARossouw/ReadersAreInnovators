@@ -18,9 +18,9 @@ public interface UserService {
 
     String blockWriter(Writer writer);
 
-    String addNewEditor(Editor Editor);
+    String addNewEditor(Editor editor);
 
-    String removeEditor(Editor Editor);
+    String removeEditor(Editor editor);
 
     Map<Writer, Integer> topWriters() ;
 
