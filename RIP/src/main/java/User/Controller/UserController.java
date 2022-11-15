@@ -5,8 +5,8 @@ import User.Model.Editor;
 import User.Model.Reader;
 import User.Model.User;
 import User.Model.Writer;
-import java.util.Calendar;
 import java.util.List;
+import java.util.Map;
 
 public interface UserController {
 
@@ -22,11 +22,11 @@ public interface UserController {
 
     String removeEditor(Editor editor);
 
-    List<Writer> topWriters();
+    Map<Writer, Integer> topWriters();
 
-    List<Writer> topRejectedWritersForMonth();
+    Map<Writer, Integer> topRejectedWritersForMonth();
 
-    List<Editor> topApprovingEditors();
+    Map<Writer, Integer> topApprovingEditors();
 
     String BlockWriter(Writer writer);
 
