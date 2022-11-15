@@ -25,23 +25,23 @@ public class ViewTransactionRepoImpl extends JDBCConfig implements ViewTransacti
 
     @Override
     public Map<Story, Integer> getAllStoryViewsInPeriod(Calendar startDate, Calendar endDate) throws SQLException {
-        
+
         Map<Story, Integer> allStoryViews = new HashMap<>();
-        
-        if (getConnection()!=null) {
-            
+
+        if (getConnection() != null) {
+
             ps = getConnection().prepareStatement("select storyID, title, writer, description, "
                     + "imagePath, body, isDraft, isActive, createdOn, allowComment, isApproved, "
                     + "views, avgRating, likes, count(vt.story) as viewsInPeriod from story s "
                     + "inner join view_transaction vt on s.storyID = vt.story where vt.dateViewed "
                     + "between ? and ? order by count(vt.story) desc");
-            
+
             ps.setDate(1, (Date) startDate.getTime());
             ps.setDate(2, (Date) endDate.getTime());
             rs = ps.executeQuery();
-            
+
             while (rs.next()) {
-                
+
                 int storyID = rs.getInt("storyID");
                 String title = rs.getString("title");
                 String writer = rs.getString("writer");
@@ -67,7 +67,7 @@ public class ViewTransactionRepoImpl extends JDBCConfig implements ViewTransacti
                         views, likes, avgRating), rs.getInt("viewsInPeriod"));
             }
         }
-        closeConnection();
+        close();
         return allStoryViews;
     }
 

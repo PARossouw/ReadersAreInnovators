@@ -10,7 +10,7 @@ public interface CategoryRepo {
 
     Boolean createCategory(Category category) throws SQLException;
 
-    Category retrieveCategory(int CategoryID) throws SQLException;
+    Category retrieveCategory(Category category) throws SQLException;
 
     List<Category> getAllCategories() throws SQLException;
 

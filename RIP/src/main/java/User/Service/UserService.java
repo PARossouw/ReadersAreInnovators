@@ -6,6 +6,7 @@ import User.Model.Reader;
 import User.Model.User;
 import User.Model.Writer;
 import java.util.List;
+import java.util.Map;
 
 public interface UserService {
 
@@ -21,9 +22,9 @@ public interface UserService {
 
     String removeEditor(Editor Editor);
 
-    List<Writer> TopWriters() ;
+    Map<Writer, Integer> topWriters() ;
 
-    List<Writer> TopRejectedWritersForMonth();
+    Map<Writer, Integer> topRejectedWritersForMonth();
 
-    List<Editor> topApprovingEditors();
+    Map<Writer, Integer> topApprovingEditors();
 }

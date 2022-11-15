@@ -17,27 +17,28 @@ public class CategoryServiceImpl extends JDBCConfig implements CategoryService {
     @Override
     public List<Category> displayAllCategories() {
 
+        List<Category> allCategories = new ArrayList<>();
         try {
-            return categoryRepo.getAllCategories();
+            return allCategories = categoryRepo.getAllCategories();
+            
         } catch (SQLException ex) {
             Logger.getLogger(CategoryServiceImpl.class.getName()).log(Level.SEVERE, null, ex);
-            return null;
         }
+        return allCategories;
     }
 
     @Override
     public String addCategoriesToStory(List<Category> categories, Story story) {
         try {
-            //I can't find the repo method to call over here
-
-            if (categoryRepo.addCategoriesToStory(story, categories)) {
-                return "Successfully added";
-            } else {
-                return "Unsuccessful operation";
+            if(categories.isEmpty()){
+                return "No categories provided. Provide categories to add to story";
             }
+            return categoryRepo.addCategoriesToStory(story, categories)?"Categories successfully added to Story":"Unable to add Categories";
+            
         } catch (SQLException ex) {
             Logger.getLogger(CategoryServiceImpl.class.getName()).log(Level.SEVERE, null, ex);
         }
+        return "Could not complete the request at the moment, please try again later.";
     }
 
     @Override
@@ -45,16 +46,11 @@ public class CategoryServiceImpl extends JDBCConfig implements CategoryService {
 
         List<Category> categoryList = new ArrayList<>();
         try {
-            categoryList = categoryRepo.topCategoriesForMonth();
+            return categoryList = categoryRepo.topCategoriesForMonth();
         } catch (SQLException ex) {
             Logger.getLogger(CategoryServiceImpl.class.getName()).log(Level.SEVERE, null, ex);
         }
-
-        if (categoryList != null) {
-            return categoryList;
-        } else {
-            return null;
-        }
+        return categoryList;
     }
 
 }

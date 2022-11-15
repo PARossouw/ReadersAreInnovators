@@ -8,7 +8,9 @@ import User.Model.Reader;
 import User.Model.User;
 import User.Model.Writer;
 import java.sql.SQLException;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -20,34 +22,29 @@ public class UserServiceImpl implements UserService {
     @Override
     public User login(User user) {
 
+        User currentUser = null;
         try {
-            User userloggingIn = userRepo.getUser(user);
+            return currentUser = userRepo.getUser(user);
 
-            if (userloggingIn != null) {
-                return userloggingIn;
-            } else {
-                return null;
-            }
-        } catch (SQLException ex) {
+        } catch (SQLException ex) { //Maybe throw a custom exception if the user can't login
             Logger.getLogger(UserServiceImpl.class.getName()).log(Level.SEVERE, null, ex);
-            return null;
         }
-
+        return currentUser;
     }
 
     @Override
     public String addPreferredCategoriesToUser(Reader reader, List<Category> categories) {
 
         try {
-            if (categoryRepo.addPreferredCategories(reader, categories)) {
-                return "successfully added categories";
-            } else {
-                return "unsuccessful operation";
+            if (reader == null || categories == null) {
+                return "Something went wrong, please try again.";
             }
+            return categoryRepo.addPreferredCategories(reader, categories) ? "Successfully added categories." : "Could not add categories at this time.";
+
         } catch (SQLException ex) {
             Logger.getLogger(UserServiceImpl.class.getName()).log(Level.SEVERE, null, ex);
-            return "unsuccessful operation";
         }
+        return "Operation unsuccessful, please try again later.";
     }
 
     @Override
@@ -61,13 +58,13 @@ public class UserServiceImpl implements UserService {
             }
         } catch (SQLException ex) {
             Logger.getLogger(UserServiceImpl.class.getName()).log(Level.SEVERE, null, ex);
-            return "Opertaion unsuccessful, please try again later.";
         }
+        return "Operation unsuccessful, please try again later.";
     }
 
     @Override
     public String blockWriter(Writer writer) {
-    
+
         try {
             if (userRepo.getUser(writer) == null) {
                 return "No such user exists.";
@@ -76,42 +73,73 @@ public class UserServiceImpl implements UserService {
             } else {
                 return userRepo.blockWriter(writer) ? "Writer status removed." : "Could not removed writer status from this account at this time.";
             }
+        } catch (SQLException ex) {
+            Logger.getLogger(UserServiceImpl.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return "Opertaion unsuccessful, please try again later.";
     }
 
     @Override
     public String addNewEditor(Editor editor) {
         try {
-            User u = null;
-            if (editor instanceof User) {
-                u = (User) editor;
-            }
-            if (userRepo.getUser(u) != null) {
-                return "This username or email is already in use.";
+            if (userRepo.getUser(editor) != null) {
+                return "The username or email is already in use.";
             } else {
                 return userRepo.createUser(editor) ? "Editor created successfully." : "Could not complete creation of a new editor at this time.";
             }
         } catch (SQLException ex) {
             Logger.getLogger(UserServiceImpl.class.getName()).log(Level.SEVERE, null, ex);
-            return "Opertaion unsuccessful, please try again later.";
         }
+        return "Operation unsuccessful, please try again later.";
     }
 
     @Override
     public String removeEditor(Editor editor) {
         try {
-            User u = null;
-            if (editor instanceof User) {
-                u = (User) editor;
-            }
-            if (userRepo.getUser(u) == null) {
+            if (userRepo.getUser(editor) == null) {
                 return "This editor does not exist.";
             } else {
                 return userRepo.deleteUser(editor) ? "Editor deleted successfully." : "Could not delete editor at this time.";
-
             }
         } catch (SQLException ex) {
             Logger.getLogger(UserServiceImpl.class.getName()).log(Level.SEVERE, null, ex);
-            return "Opertaion unsuccessful, please try again later.";
         }
+        return "Operation unsuccessful, please try again later.";
+    }
 
+    @Override
+    public Map<Writer, Integer> topWriters() {
+        Map<Writer, Integer> topWriters = new HashMap<>();
+
+        try {
+            topWriters = userRepo.topWriters();
+        } catch (SQLException ex) {
+            Logger.getLogger(UserServiceImpl.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return topWriters;
+    }
+
+    @Override
+    public Map<Writer, Integer> topRejectedWritersForMonth() {
+        Map<Writer, Integer> topRejectedWriters = new HashMap<>();
+
+        try {
+            userRepo.topRejectedWritersForMonth();
+        } catch (SQLException ex) {
+            Logger.getLogger(UserServiceImpl.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return topRejectedWriters;
+    }
+
+    @Override
+    public Map<Writer, Integer> topApprovingEditors() {
+        Map<Writer, Integer> topApprovingEditors = new HashMap<>();
+
+        try {
+            userRepo.topApprovingEditors();
+        } catch (SQLException ex) {
+            Logger.getLogger(UserServiceImpl.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return topApprovingEditors;
+    }
 }

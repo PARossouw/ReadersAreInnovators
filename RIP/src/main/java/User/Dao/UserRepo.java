@@ -4,8 +4,7 @@ import User.Model.Editor;
 import User.Model.User;
 import User.Model.Writer;
 import java.sql.SQLException;
-import java.util.Calendar;
-import java.util.List;
+import java.util.Map;
 
 public interface UserRepo {
 
@@ -17,11 +16,11 @@ public interface UserRepo {
 
     Boolean deleteUser(User user) throws SQLException;
 
-    List<Writer> TopWriters() throws SQLException;
+    Map<Writer, Integer> topWriters() throws SQLException;
 
-    List<Writer> TopRejectedWritersForMonth() throws SQLException;
+    Map<Writer, Integer> topRejectedWritersForMonth() throws SQLException;
 
-    List<Editor> topApprovingEditors() throws SQLException;
+    Map<Editor, Integer> topApprovingEditors() throws SQLException;
 
     Boolean blockWriter(Writer writer) throws SQLException;
 

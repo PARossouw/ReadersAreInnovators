@@ -5,12 +5,11 @@ import User.Model.AdminEditor;
 import User.Model.User;
 import java.sql.SQLException;
 import java.util.Calendar;
-import java.util.Date;
 import User.Model.Editor;
 import User.Model.Reader;
 import User.Model.Writer;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.HashMap;
+import java.util.Map;
 
 public class UserRepoImp extends JDBCConfig implements UserRepo {
 
@@ -26,7 +25,7 @@ public class UserRepoImp extends JDBCConfig implements UserRepo {
             ps.setInt(4, 3);
             rowsAffected = ps.executeUpdate();
 
-        } else if (user instanceof Editor && getConnection() != null) {
+        } else if (user instanceof Reader && getConnection() != null) {
 
             ps = getConnection().prepareStatement("insert into User (username, email, password) values (?, ?, ?)");
             ps.setString(1, user.getUsername());
@@ -35,8 +34,7 @@ public class UserRepoImp extends JDBCConfig implements UserRepo {
             rowsAffected = ps.executeUpdate();
 
         }
-        closeConnection();
-
+        close();
         return rowsAffected == 1;
     }
 
@@ -63,9 +61,10 @@ public class UserRepoImp extends JDBCConfig implements UserRepo {
                 String phoneNumber = (rs.getString("phonenumber"));
                 String password = (rs.getString("password"));
                 boolean isActive = (rs.getBoolean("isactive"));
-                Date dateAdded = rs.getDate("dateadded");
+
                 Calendar calendar = Calendar.getInstance();
-                calendar.setTime(dateAdded);
+                calendar.setTime(rs.getDate("dateadded"));
+
                 int role = (rs.getInt("role"));
 
                 switch (role) {
@@ -83,8 +82,7 @@ public class UserRepoImp extends JDBCConfig implements UserRepo {
                         u = new AdminEditor();
                         break;
                     default:
-
-                        break;
+                        u = new Reader();
                 }
 
                 u.setUserID(userID);
@@ -93,13 +91,10 @@ public class UserRepoImp extends JDBCConfig implements UserRepo {
                 u.setPhoneNumber(phoneNumber);
                 u.setPassword(password);
                 u.setIsActive(isActive);
-                // u.setDateAdded();
-
+                u.setDateAdded(calendar);
             }
-
         }
-
-        closeConnection();
+        close();
         return u;
     }
 
@@ -110,10 +105,8 @@ public class UserRepoImp extends JDBCConfig implements UserRepo {
             ps = getConnection().prepareStatement("update user set role = 2 where userid = ?");
             ps.setInt(1, user.getUserID());
             rowsAffected = ps.executeUpdate();
-
         }
-        closeConnection();
-
+        close();
         return rowsAffected == 1;
     }
 
@@ -124,143 +117,145 @@ public class UserRepoImp extends JDBCConfig implements UserRepo {
             ps = getConnection().prepareStatement("update user set isActive = 0 where userid = ?");
             ps.setInt(1, user.getUserID());
             rowsAffected = ps.executeUpdate();
-
         }
-        closeConnection();
-
+        close();
         return rowsAffected == 1;
     }
 
     @Override
-    public List<Writer> TopWriters() throws SQLException {
-        List<Writer> writerList = new ArrayList<>();
+    public Map<Writer, Integer> topWriters() throws SQLException {
+        Map<Writer, Integer> topWriters = new HashMap<>();
 
-        if (getConnection() != null) {
-            ps = getConnection().prepareStatement("select userid, username, email, phonenumber, password, u.isactive, dateadded, role, sum(views) as views from user u inner join story s on u.userid = s.writer order by count(views) desc");
+        if (getConnection() != null) {  //Confirm sql call once database is populated
+            ps = getConnection().prepareStatement("select userid, username, email, phonenumber, password, "
+                    + "u.isactive, dateadded, role, sum(views) as allViews from user u "
+                    + "inner join story s on u.userid = s.writer order by allViews desc");
             rs = ps.executeQuery();
 
             while (rs.next()) {
 
-                rs = ps.executeQuery();
+                int userID = (rs.getInt("userid"));
+                String username = (rs.getString("username"));
+                String email = (rs.getString("email"));
+                String phoneNumber = (rs.getString("phonenumber"));
+                String password = (rs.getString("password"));
+                boolean isActive = (rs.getBoolean("isactive"));
 
-                while (rs.next()) {
-                    int userID = (rs.getInt("userid"));
-                    String username = (rs.getString("username"));
-                    String email = (rs.getString("email"));
-                    String phoneNumber = (rs.getString("phonenumber"));
-                    String password = (rs.getString("password"));
-                    boolean isActive = (rs.getBoolean("isactive"));
-                    Date dateAdded = rs.getDate("dateadded");
-                    Calendar calendar = Calendar.getInstance();
-                    calendar.setTime(dateAdded);
-                    int role = (rs.getInt("role"));
-                    int views = rs.getInt("views");
+                Calendar calendar = Calendar.getInstance();
+                calendar.setTime(rs.getDate("dateadded"));
 
-                    if (role == 2) {
-                        Writer w = new Writer();
-                        w.setUserID(userID);
-                        w.setUsername(username);
-                        w.setEmail(email);
-                        w.setPhoneNumber(phoneNumber);
-                        w.setPassword(password);
-                        w.setIsActive(isActive);
-                        w.setDateAdded(calendar);
-                        writerList.add(w);
-                    }
+                int role = (rs.getInt("role"));
+                int views = rs.getInt("allViews");
+
+                if (role == 2) {
+                    Writer writer = new Writer();
+                    writer.setUserID(userID);
+                    writer.setUsername(username);
+                    writer.setEmail(email);
+                    writer.setPhoneNumber(phoneNumber);
+                    writer.setPassword(password);
+                    writer.setIsActive(isActive);
+                    writer.setDateAdded(calendar);
+                    topWriters.put(writer, views);
                 }
             }
-            closeConnection();
-
         }
-
-        return writerList;
+        close();
+        return topWriters;
     }
 
     @Override
-    public List<Writer> TopRejectedWritersForMonth() throws SQLException {
-        List<Writer> writerList = new ArrayList<>();
+    public Map<Writer, Integer> topRejectedWritersForMonth() throws SQLException {
+        Map<Writer, Integer> topRejectedWriters = new HashMap<>();
 
         if (getConnection() != null) {
-            ps = getConnection().prepareStatement("select userid, username, email, phonenumber, password, u.isactive, dateadded, role, count(action) as amount from user u inner join story s on u.userid = s.writer inner join story_transaction st on s.writer = st.story where st.action like '%rejected%' and month(actionperformedon) = month(current_timestamp) and year(actionperformedon) = year(current_timestamp) order by count(action) desc");
+            ps = getConnection().prepareStatement("select userid, username, email, phonenumber, password, "
+                    + "u.isactive, dateadded, role, count(action) as timesRejected from user u "
+                    + "inner join story s on u.userid = s.writer "
+                    + "inner join story_transaction st on s.storyID = st.story "
+                    + "where st.action like '%rejected%' and "
+                    + "month(actionperformedon) = month(current_timestamp) and year(actionperformedon) = year(current_timestamp) "
+                    + "order by timesRejected desc");
             rs = ps.executeQuery();
+
             while (rs.next()) {
 
                 rs = ps.executeQuery();
+                int userID = (rs.getInt("userid"));
+                String username = (rs.getString("username"));
+                String email = (rs.getString("email"));
+                String phoneNumber = (rs.getString("phonenumber"));
+                String password = (rs.getString("password"));
+                boolean isActive = (rs.getBoolean("isactive"));
 
-                while (rs.next()) {
-                    int userID = (rs.getInt("userid"));
-                    String username = (rs.getString("username"));
-                    String email = (rs.getString("email"));
-                    String phoneNumber = (rs.getString("phonenumber"));
-                    String password = (rs.getString("password"));
-                    boolean isActive = (rs.getBoolean("isactive"));
-                    Date dateAdded = rs.getDate("dateadded");
-                    Calendar date = Calendar.getInstance();
-                    date.setTime(dateAdded);
-                    int role = (rs.getInt("role"));
-                    int amount = rs.getInt("amount");
+                Calendar date = Calendar.getInstance();
+                date.setTime(rs.getDate("dateadded"));
 
-                    if (role == 2) {
-                        Writer w = new Writer();
-                        w.setUserID(userID);
-                        w.setUsername(username);
-                        w.setEmail(email);
-                        w.setPhoneNumber(phoneNumber);
-                        w.setPassword(password);
-                        w.setIsActive(isActive);
-                        w.setDateAdded(date);
-                        writerList.add(w);
-                    }
+                int role = (rs.getInt("role"));
+                int rejectedCount = rs.getInt("timesRejected");
+
+                if (role == 2) {
+                    Writer writer = new Writer();
+                    writer.setUserID(userID);
+                    writer.setUsername(username);
+                    writer.setEmail(email);
+                    writer.setPhoneNumber(phoneNumber);
+                    writer.setPassword(password);
+                    writer.setIsActive(isActive);
+                    writer.setDateAdded(date);
+                    topRejectedWriters.put(writer, rejectedCount);
+                }
+
+                if (topRejectedWriters.size() == 30) {
+                    break;
                 }
             }
-            closeConnection();
-
         }
-
-        return writerList;
+        close();
+        return topRejectedWriters;
     }
 
     @Override
-    public List<Editor> topApprovingEditors() throws SQLException {
-        List<Editor> editorList = new ArrayList<>();
+    public Map<Editor, Integer> topApprovingEditors() throws SQLException {
+        Map<Editor, Integer> editorList = new HashMap<>();
 
         if (getConnection() != null) {
-            ps = getConnection().prepareStatement("select u.userid, username, email, phonenumber, password, u.isactive, dateadded, role, count(action) as amount from user u inner join story_transaction st on u.userid = st.user where st.action like '%approved%' order by count(action) desc");
+            ps = getConnection().prepareStatement("select u.userid, username, email, phonenumber, password, u.isactive, dateadded, role, count(action) as timesApproved from user u inner join story_transaction st on u.userid = st.user where st.action like '%approved%' order by timesApproved desc");
             rs = ps.executeQuery();
+
             while (rs.next()) {
 
-                rs = ps.executeQuery();
+                int userID = (rs.getInt("userid"));
+                String username = (rs.getString("username"));
+                String email = (rs.getString("email"));
+                String phoneNumber = (rs.getString("phonenumber"));
+                String password = (rs.getString("password"));
+                boolean isActive = (rs.getBoolean("isactive"));
 
-                while (rs.next()) {
-                    int userID = (rs.getInt("userid"));
-                    String username = (rs.getString("username"));
-                    String email = (rs.getString("email"));
-                    String phoneNumber = (rs.getString("phonenumber"));
-                    String password = (rs.getString("password"));
-                    boolean isActive = (rs.getBoolean("isactive"));
-                    Date dateAdded = rs.getDate("dateadded");
-                    Calendar date = Calendar.getInstance();
-                    date.setTime(dateAdded);
-                    int role = (rs.getInt("role"));
-                    int amount = rs.getInt("amount");
+                Calendar date = Calendar.getInstance();
+                date.setTime(rs.getDate("dateadded"));
 
-                    if (role == 2) {
-                        Editor e = new Editor();
-                        e.setUserID(userID);
-                        e.setUsername(username);
-                        e.setEmail(email);
-                        e.setPhoneNumber(phoneNumber);
-                        e.setPassword(password);
-                        e.setIsActive(isActive);
-                        e.setDateAdded(date);
-                        editorList.add(e);
-                    }
+                int role = (rs.getInt("role"));
+                int timesApproved = rs.getInt("timesApproved");
+
+                if (role == 2) {
+                    Editor editor = new Editor();
+                    editor.setUserID(userID);
+                    editor.setUsername(username);
+                    editor.setEmail(email);
+                    editor.setPhoneNumber(phoneNumber);
+                    editor.setPassword(password);
+                    editor.setIsActive(isActive);
+                    editor.setDateAdded(date);
+                    editorList.put(editor, timesApproved);
+                }
+
+                if (editorList.size() == 3) {
+                    break;
                 }
             }
-            closeConnection();
-
         }
-
+        close();
         return editorList;
     }
 
@@ -271,10 +266,8 @@ public class UserRepoImp extends JDBCConfig implements UserRepo {
             ps = getConnection().prepareStatement("update user set role = 1, isBlocked = 1 where userid = ?");
             ps.setInt(1, writer.getUserID());
             rowsAffected = ps.executeUpdate();
-
         }
-        closeConnection();
-
+        close();
         return rowsAffected == 1;
     }
 
