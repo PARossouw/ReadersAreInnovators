@@ -32,14 +32,6 @@ public class LikeTransactionControllerImpl {
         return Response.status(Response.Status.OK).entity(likeTransactionService.likeStory(reader, story)).build();
     }
 
-    @Path("/change")
-    @POST
-    @Consumes(MediaType.APPLICATION_JSON)
-    @Produces(MediaType.APPLICATION_JSON)
-    public Response changeLike(Reader reader, Story story) {
-        return Response.status(Response.Status.OK).entity(likeTransactionService.likeStory(reader, story)).build();
-    }
-
     @Path("/allLikes")
     @GET
     @Consumes(MediaType.APPLICATION_JSON)
