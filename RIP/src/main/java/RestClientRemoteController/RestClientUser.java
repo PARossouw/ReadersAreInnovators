@@ -1,11 +1,13 @@
 package RestClientRemoteController;
 
 import Category.Model.Category;
+
+
 import User.Model.Editor;
 import User.Model.Reader;
 import User.Model.User;
 import User.Model.Writer;
-import jakarta.ws.rs.FormParam;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.ws.rs.client.Client;
 import jakarta.ws.rs.client.ClientBuilder;
 import jakarta.ws.rs.client.Entity;
