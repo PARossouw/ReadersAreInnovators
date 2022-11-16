@@ -8,12 +8,9 @@ import jakarta.ws.rs.client.Entity;
 import jakarta.ws.rs.client.WebTarget;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
-import java.sql.SQLException;
-import java.util.HashMap;
+
 import java.util.List;
-import java.util.Map;
-import java.util.logging.Level;
-import java.util.logging.Logger;
+
 
 
 public class RestClientComment {
@@ -52,6 +49,10 @@ public class RestClientComment {
                 webTarget.request().accept(MediaType.APPLICATION_JSON).get(String.class), new TypeReference<List<Comment>>() {
         });
         return comments;
+    }
+    
+    private String toJsonString(Object o) {
+        return mapper.writeValueAsString(o);
     }
     
 }
