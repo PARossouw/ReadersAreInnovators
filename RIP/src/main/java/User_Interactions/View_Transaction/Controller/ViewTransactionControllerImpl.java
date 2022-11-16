@@ -10,6 +10,8 @@ import jakarta.ws.rs.Path;
 import jakarta.ws.rs.Produces;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
+import java.util.Calendar;
+import java.util.Map;
 
 @Path("/View")
 public class ViewTransactionControllerImpl {
@@ -27,5 +29,14 @@ public class ViewTransactionControllerImpl {
     public Response viewStory(Story story, Reader reader) {
         return Response.status(Response.Status.OK).entity(view_transaction_service.viewStory(story, reader)).build();
     }
+
+    @Path("/AllStoryViewsInPeriod")
+    @POST
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response getAllStoryViewsInPeriod(Calendar startDate, Calendar endDate) {
+        return Response.status(Response.Status.OK).entity(view_transaction_service.getAllStoryViewsInPeriod(startDate, endDate)).build();
+    }
+    
     
 }
