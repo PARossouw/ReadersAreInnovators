@@ -12,7 +12,6 @@ import jakarta.ws.rs.core.Response;
 import java.util.Calendar;
 import java.util.HashMap;
 import java.util.Map;
-import jdk.internal.org.objectweb.asm.TypeReference;
 
 public class RestClientLike {
 
