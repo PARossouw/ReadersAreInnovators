@@ -36,7 +36,7 @@ public class UserRestControllerImpl{
         return Response.status(Response.Status.OK).entity(userService.login(user)).build();
     }
 
-    @Path("/Categories/add")
+    @Path("/categories/add")
     @POST
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
