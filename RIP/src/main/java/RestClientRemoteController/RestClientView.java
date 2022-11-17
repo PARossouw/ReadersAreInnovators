@@ -11,7 +11,6 @@ import jakarta.ws.rs.core.Response;
 import java.util.Calendar;
 import java.util.HashMap;
 import java.util.Map;
-import jdk.internal.org.objectweb.asm.TypeReference;
 
 public class RestClientView {
 
@@ -37,20 +36,19 @@ public class RestClientView {
         return response.readEntity(String.class);
     }
 
-    //not sure about this one
     //@FormParam must be put in the aruguments on the rest controller side
     public Map<Story, Integer> getAllStoryViewsInPeriod(Calendar startDate, Calendar endDate) {
-        String uri = url + "/AllStoryViewsInPeriod";
+        String uri = url + "/AllStoryViewsInPeriod/{periodInfo}";
         restClient = ClientBuilder.newClient();
-        webTarget = restClient.target(uri);
         HashMap<Calendar, Calendar> periodInfo = new HashMap();
         periodInfo.put(startDate, endDate);
+        webTarget = restClient.target(uri).resolveTemplate("periodInfo", periodInfo);
 
         Map<Story, Integer> stories = null;
-        stories = mapper.readValue(
+        Response response = mapper.readValue(
                 webTarget.request().accept(MediaType.APPLICATION_JSON).get(String.class), new TypeReference<Map<Story, Integer>>() {
         });
-        return stories;
+        return response.readEntity(Map.class);
     }
 
     private String toJsonString(Object o) {
