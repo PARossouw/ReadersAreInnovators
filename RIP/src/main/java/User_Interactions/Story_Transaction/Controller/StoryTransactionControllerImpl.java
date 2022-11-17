@@ -11,6 +11,7 @@ import jakarta.ws.rs.Path;
 import jakarta.ws.rs.Produces;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
+import org.json.simple.JSONObject;
 
 @Path("/StoryTransaction")
 public class StoryTransactionControllerImpl {
@@ -25,24 +26,24 @@ public class StoryTransactionControllerImpl {
     @POST
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
-    public Response approvePendingStory(Editor editor, Story story) {
-        return Response.status(Response.Status.OK).entity(storyService.approvePendingStory(editor, story)).build();
+    public Response approvePendingStory(JSONObject jsonObject) {
+        return Response.status(Response.Status.OK).entity(storyService.approvePendingStory((Editor)jsonObject.get("editor"), (Story)jsonObject.get("story"))).build();
     }
 
     @Path("/reject")
     @POST
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
-    public Response rejectPendingStory(Editor editor, Story story) {
-        return Response.status(Response.Status.OK).entity(storyService.rejectPendingStory(editor, story)).build();
+    public Response rejectPendingStory(JSONObject jsonObject) {
+        return Response.status(Response.Status.OK).entity(storyService.rejectPendingStory((Editor)jsonObject.get("editor"), (Story)jsonObject.get("story"))).build();
     }
 
     @Path("/removeWriter")
     @POST
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
-    public Response removeStoryByWriter(Writer writer, Story story) {
-        return Response.status(Response.Status.OK).entity(storyService.removeStoryByWriter(writer, story)).build();
+    public Response removeStoryByWriter(JSONObject jsonObject) {
+        return Response.status(Response.Status.OK).entity(storyService.removeStoryByWriter((Writer)jsonObject.get("writer"), (Story)jsonObject.get("story"))).build();
     }
     
 }

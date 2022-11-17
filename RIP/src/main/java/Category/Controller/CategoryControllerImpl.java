@@ -13,6 +13,7 @@ import jakarta.ws.rs.Produces;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
 import java.util.List;
+import org.json.simple.JSONObject;
 
 @Path("/Category")
 public class CategoryControllerImpl{
@@ -34,8 +35,8 @@ public class CategoryControllerImpl{
     @POST
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
-    public Response addCategoriesToStory(List<Category> categories, Story story) {
-        return Response.status(Response.Status.OK).entity(categoryService.addCategoriesToStory(categories, story)).build();
+    public Response addCategoriesToStory(JSONObject jsonObject) {
+        return Response.status(Response.Status.OK).entity(categoryService.addCategoriesToStory((List)jsonObject.get("categories"), (Story)jsonObject.get("story"))).build();
     }
 
     @Path("/topForMonth")

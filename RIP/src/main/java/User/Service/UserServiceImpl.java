@@ -39,6 +39,10 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public String addPreferredCategoriesToUser(Reader reader, List<Category> categories) {
+        
+        if(1<2){
+            return "yes";
+        }
 
         try {
             if (reader == null || categories == null) {
