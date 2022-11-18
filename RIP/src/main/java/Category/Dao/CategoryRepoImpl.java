@@ -151,7 +151,7 @@ public class CategoryRepoImpl extends JDBCConfig implements CategoryRepo {
         List<Category> topCategories = new ArrayList<>();
 
         if (getConnection() != null) {
-            ps = getConnection().prepareStatement("select categoryID, c.category, count(vt.story) as categoryViews from category c "
+            ps = getConnection().prepareStatement("select categoryID, c.category, dateAdded, count(vt.story) as categoryViews from category c "
                     + "inner join story_category sc on c.categoryID = sc.category "
                     + "inner join story s on sc.story = s.storyID "
                     + "inner join view_transaction vt on s.storyID = vt.story "
@@ -166,6 +166,8 @@ public class CategoryRepoImpl extends JDBCConfig implements CategoryRepo {
             }
         }
         close();
+        
+        
         return topCategories;
     }
 
