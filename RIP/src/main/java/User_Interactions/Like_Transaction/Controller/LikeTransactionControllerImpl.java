@@ -14,6 +14,7 @@ import jakarta.ws.rs.Path;
 import jakarta.ws.rs.Produces;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
+import org.json.simple.JSONObject;
 
 @Path("/Like")
 public class LikeTransactionControllerImpl {
@@ -28,8 +29,8 @@ public class LikeTransactionControllerImpl {
     @POST
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
-    public Response likeStory(Reader reader, Story story) {
-        return Response.status(Response.Status.OK).entity(likeTransactionService.likeStory(reader, story)).build();
+    public Response likeStory(JSONObject jsonObject) {
+        return Response.status(Response.Status.OK).entity(likeTransactionService.likeStory((Reader)jsonObject.get("reader"), (Story)jsonObject.get("story"))).build();
     }
 
     @Path("/allLikes")
