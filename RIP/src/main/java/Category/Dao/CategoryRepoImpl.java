@@ -155,7 +155,8 @@ public class CategoryRepoImpl extends JDBCConfig implements CategoryRepo {
                     + "inner join story_category sc on c.categoryID = sc.category "
                     + "inner join story s on sc.story = s.storyID "
                     + "inner join view_transaction vt on s.storyID = vt.story "
-                    + "where month(dateViewed) = month(current_timestamp) and year(dateViewed) = year(current_timestamp) group by c.category order by categoryViews desc");
+                    + "where month(dateViewed) = month(current_timestamp) and year(dateViewed) = year(current_timestamp) "
+                    + "group by c.category order by categoryViews desc limit 5");
             rs = ps.executeQuery();
 
             while (rs.next()) {
