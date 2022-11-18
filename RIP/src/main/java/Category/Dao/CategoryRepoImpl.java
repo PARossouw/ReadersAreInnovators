@@ -167,6 +167,8 @@ public class CategoryRepoImpl extends JDBCConfig implements CategoryRepo {
             }
         }
         close();
+        
+        
         return topCategories;
     }
 

@@ -28,6 +28,7 @@ public class CategoryControllerImpl{
     @GET
     @Produces(MediaType.APPLICATION_JSON)
     public Response displayAllCategories() {
+        
         return Response.status(Response.Status.OK).entity(categoryService.displayAllCategories()).build();
     }
 
@@ -36,7 +37,8 @@ public class CategoryControllerImpl{
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
     public Response addCategoriesToStory(JSONObject jsonObject) {
-        return Response.status(Response.Status.OK).entity(categoryService.addCategoriesToStory((List)jsonObject.get("categories"), (Story)jsonObject.get("story"))).build();
+        //return Response.status(Response.Status.OK).entity(categoryService.addCategoriesToStory((List)jsonObject.get("categories"), (Story)jsonObject.get("story"))).build();
+        return Response.status(Response.Status.OK).entity("the test string").build();
     }
 
     @Path("/topForMonth")
