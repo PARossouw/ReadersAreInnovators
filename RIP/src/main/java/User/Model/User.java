@@ -2,7 +2,7 @@ package User.Model;
 
 import java.util.Calendar;
 
-public abstract class User {
+public class User {
 
     private Integer UserID;
     private String username;
