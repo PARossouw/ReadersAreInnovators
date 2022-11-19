@@ -40,7 +40,7 @@ public class UserRepoImpl extends JDBCConfig implements UserRepo {
 
     @Override
     public User getUser(User user) throws SQLException {
-        User u = null;
+        User u = new User();
 
         if (getConnection() != null) {
             ps = getConnection().prepareStatement("select userid, username, email, phonenumber, password, isactive, dateadded, role from user where ? = ?");
@@ -65,7 +65,7 @@ public class UserRepoImpl extends JDBCConfig implements UserRepo {
 //                Calendar calendar = Calendar.getInstance();
 //                calendar.setTime(rs.getDate("dateadded"));
 
-                int role = (rs.getInt("role"));
+                Integer role = (rs.getInt("role"));
 
                 switch (role) {
 
