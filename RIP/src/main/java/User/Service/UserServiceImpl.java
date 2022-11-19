@@ -27,19 +27,24 @@ public class UserServiceImpl implements UserService {
     @Override
     public User login(User user) {
 
-        User currentUser = null;
+        User currentUser = new User();
         try {
-            return currentUser = userRepo.getUser(user);
+            //this should check if the user password equals the password
+            currentUser = userRepo.getUser(user);
+            return currentUser;
 
         } catch (SQLException ex) { //Maybe throw a custom exception if the user can't login
             Logger.getLogger(UserServiceImpl.class.getName()).log(Level.SEVERE, null, ex);
         }
+        
+//        currentUser.setUsername("amet");
+//        currentUser.setPassword("password");
         return currentUser;
     }
 
     @Override
     public String addPreferredCategoriesToUser(Reader reader, List<Category> categories) {
-
+        
         try {
             if (reader == null || categories == null) {
                 return "Something went wrong, please try again.";

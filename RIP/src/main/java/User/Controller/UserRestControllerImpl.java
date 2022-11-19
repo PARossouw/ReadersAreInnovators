@@ -16,8 +16,10 @@ import jakarta.ws.rs.Path;
 import jakarta.ws.rs.Produces;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import org.json.simple.JSONObject;
 
 @Path("/User")
 public class UserRestControllerImpl{
@@ -33,15 +35,46 @@ public class UserRestControllerImpl{
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
     public Response login(User user) {
+        
         return Response.status(Response.Status.OK).entity(userService.login(user)).build();
+        
+        //User user2 = userService.login(user);
+//        User user2 = new User(1, "amet", "amet@gmail.com", "password", true, null);
+//        return Response.status(Response.Status.OK).entity(user2).build();
     }
 
     @Path("/categories/add")
     @POST
-    @Consumes(MediaType.APPLICATION_JSON)
+    //@Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
-    public Response addPreferredCategoriesToUser(Reader reader, List<Category> categories) {
-        return Response.status(Response.Status.OK).entity(userService.addPreferredCategoriesToUser(reader, categories)).build();
+    public Response addPreferredCategoriesToUser(/*JSONObject jsonObject*/) {
+        //return Response.status(Response.Status.OK).entity(userService.addPreferredCategoriesToUser((Reader)jsonObject.get("reader"), (List)jsonObject.get("categories"))).build();
+        
+        //just for testing the JSONObject
+        JSONObject jsonObject = new JSONObject();
+        
+        
+        Reader reader = new Reader();
+        reader.setUsername("username is Anton");
+        List<Category> categories = new ArrayList<>();
+        categories.add(new Category("sex"));
+        categories.add(new Category("drugs"));
+        categories.add(new Category("alcohol"));
+        
+        jsonObject.put("message", userService.addPreferredCategoriesToUser(reader, categories));
+        
+        return Response.status(Response.Status.OK).entity(jsonObject).build();
+        
+//        jsonObject.put("name", reader.getUsername());
+//        
+//        
+//        jsonObject.put("categories", categories);
+//        
+//        List<Category> c = (List)jsonObject.get("categories");
+//        c.add(new Category("Ryan"));
+//        
+//        jsonObject.put("c", c);
+//            return Response.status(Response.Status.OK).entity(jsonObject).build();
     }
 
     @Path("/register")
@@ -49,7 +82,8 @@ public class UserRestControllerImpl{
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
     public Response registerUser(User user) {
-        return Response.status(Response.Status.OK).entity(userService.registerUser(user)).build();
+        return Response.status(Response.Status.OK).entity("hello again").build();
+//        return Response.status(Response.Status.OK).entity(userService.registerUser(user)).build();
     }
 
     @Path("/writer/block")
