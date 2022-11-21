@@ -31,14 +31,21 @@ public class UserServiceImpl implements UserService {
         try {
             //this should check if the user password equals the password
             currentUser = userRepo.getUser(user);
-            return currentUser;
-
-        } catch (SQLException ex) { //Maybe throw a custom exception if the user can't login
+            
+            if(currentUser.getPassword().equals(user.getPassword()) && (currentUser.getUsername().equals(user.getUsername()) || 
+                    currentUser.getEmail().equals(user.getEmail())) )
+            {
+                return currentUser;
+            }
+            else
+            {
+                return null;
+            }
+        } catch (SQLException ex) { 
+           currentUser = null;
             Logger.getLogger(UserServiceImpl.class.getName()).log(Level.SEVERE, null, ex);
         }
         
-//        currentUser.setUsername("amet");
-//        currentUser.setPassword("password");
         return currentUser;
     }
 
@@ -61,10 +68,13 @@ public class UserServiceImpl implements UserService {
     public String registerUser(User user) {
 
         try {
-            if (userRepo.getUser(user) != null) {
+            if (!userRepo.getUser(user).getUsername().isEmpty()) {
                 return "This username or email is already in use.";
             } else {
-                return userRepo.createUser(user) ? "User registered successfully." : "Could not complete registration at this time.";
+                
+                
+               // return userRepo.createUser(user) ? "User registered successfully." : "Could not complete registration at this time.";
+                return "good stuff ";
             }
         } catch (SQLException ex) {
             Logger.getLogger(UserServiceImpl.class.getName()).log(Level.SEVERE, null, ex);
