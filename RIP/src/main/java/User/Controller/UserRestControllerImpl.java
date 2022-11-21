@@ -82,8 +82,8 @@ public class UserRestControllerImpl{
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
     public Response registerUser(User user) {
-        return Response.status(Response.Status.OK).entity("hello again").build();
-//        return Response.status(Response.Status.OK).entity(userService.registerUser(user)).build();
+      //  return Response.status(Response.Status.OK).entity("hello again").build();
+        return Response.status(Response.Status.OK).entity(userService.registerUser(user)).build();
     }
 
     @Path("/writer/block")

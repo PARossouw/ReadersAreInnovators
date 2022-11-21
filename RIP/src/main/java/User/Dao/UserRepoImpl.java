@@ -43,10 +43,12 @@ public class UserRepoImpl extends JDBCConfig implements UserRepo {
         User u = new User();
 
         if (getConnection() != null) {
-            ps = getConnection().prepareStatement("select userid, username, email, phonenumber, password, isactive, dateadded, role from user where ? = ?");
+            ps = getConnection().prepareStatement("select userid, username, email, phonenumber, password, isactive, dateadded, role from user where ? = ? or ? = ?");
             if (user.getUsername() != null) {
                 ps.setString(1, "Username");
                 ps.setString(2, user.getUsername());
+                ps.setString(3, "email");
+                ps.setString(4, user.getEmail());
             } //else if (user.getEmail() != null) {
 //                ps.setString(1, "Email");
 //                ps.setString(2, user.getEmail());
@@ -93,9 +95,11 @@ public class UserRepoImpl extends JDBCConfig implements UserRepo {
                 u.setIsActive(isActive);
 //                u.setDateAdded(calendar);
             }
+  
         }
         close();
         u.setUsername("amet");
+        u.setEmail("amet1@gmail.com");
         u.setPassword("password");
         
         return u;

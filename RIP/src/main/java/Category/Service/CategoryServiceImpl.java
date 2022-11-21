@@ -4,6 +4,7 @@ import Category.Dao.CategoryRepo;
 import Category.Model.Category;
 import JDBCConfig.JDBCConfig;
 import Story.Model.Story;
+import User.Model.Reader;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
@@ -59,6 +60,17 @@ public class CategoryServiceImpl extends JDBCConfig implements CategoryService {
 //            return listCat;
         }
         return categoryList;
+    }
+
+    @Override
+    public List<Category> getPreferredCategories(Reader reader) {
+        List<Category> preferredCategories = new ArrayList<>();
+        try {
+            return preferredCategories = categoryRepo.getPreferredCategories(reader);
+        } catch (SQLException ex) {
+            Logger.getLogger(CategoryServiceImpl.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return preferredCategories;
     }
 
 }
