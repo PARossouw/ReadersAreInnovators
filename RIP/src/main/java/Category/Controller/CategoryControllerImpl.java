@@ -5,6 +5,7 @@ import Category.Model.Category;
 import Category.Service.CategoryService;
 import Category.Service.CategoryServiceImpl;
 import Story.Model.Story;
+import User.Model.Reader;
 import jakarta.ws.rs.Consumes;
 import jakarta.ws.rs.GET;
 import jakarta.ws.rs.POST;
@@ -37,8 +38,8 @@ public class CategoryControllerImpl{
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
     public Response addCategoriesToStory(JSONObject jsonObject) {
-        //return Response.status(Response.Status.OK).entity(categoryService.addCategoriesToStory((List)jsonObject.get("categories"), (Story)jsonObject.get("story"))).build();
-        return Response.status(Response.Status.OK).entity("the test string").build();
+        return Response.status(Response.Status.OK).entity(categoryService.addCategoriesToStory((List)jsonObject.get("categories"), (Story)jsonObject.get("story"))).build();
+        //return Response.status(Response.Status.OK).entity("the test string").build();
     }
 
     @Path("/topForMonth")
@@ -46,6 +47,14 @@ public class CategoryControllerImpl{
     @Produces(MediaType.APPLICATION_JSON)
     public Response topCategoriesForMonth() {
         return Response.status(Response.Status.OK).entity(categoryService.topCategoriesForTheMonth()).build();
+    }
+    
+    @Path("/preferredCategories")
+    @POST
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response getPreferredCategories(Reader reader) {
+        return Response.status(Response.Status.OK).entity(categoryService.getPreferredCategories(reader)).build();
     }
 
 }

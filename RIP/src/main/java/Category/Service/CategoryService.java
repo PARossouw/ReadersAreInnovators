@@ -2,8 +2,8 @@ package Category.Service;
 
 import Category.Model.Category;
 import Story.Model.Story;
+import User.Model.Reader;
 import java.util.List;
-
 
 public interface CategoryService {
     
@@ -11,6 +11,8 @@ public interface CategoryService {
     
     String addCategoriesToStory(List<Category> categories, Story story);
 
-    public List<Category> topCategoriesForTheMonth();
+    List<Category> topCategoriesForTheMonth();
+    
+    List<Category> getPreferredCategories(Reader reader);
 
 }
