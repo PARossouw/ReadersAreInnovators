@@ -4,6 +4,7 @@ import Category.Dao.CategoryRepo;
 import Category.Model.Category;
 import JDBCConfig.JDBCConfig;
 import Story.Model.Story;
+import User.Model.Reader;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
@@ -24,7 +25,7 @@ public class CategoryServiceImpl extends JDBCConfig implements CategoryService {
         List<Category> allCategories = new ArrayList<>();
         try {
             return allCategories = categoryRepo.getAllCategories();
-            
+
         } catch (SQLException ex) {
             Logger.getLogger(CategoryServiceImpl.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -34,11 +35,11 @@ public class CategoryServiceImpl extends JDBCConfig implements CategoryService {
     @Override
     public String addCategoriesToStory(List<Category> categories, Story story) {
         try {
-            if(categories.isEmpty()){
+            if (categories.isEmpty()) {
                 return "No categories provided. Provide categories to add to story";
             }
-            return categoryRepo.addCategoriesToStory(story, categories)?"Categories successfully added to Story":"Unable to add Categories";
-            
+            return categoryRepo.addCategoriesToStory(story, categories) ? "Categories successfully added to Story" : "Unable to add Categories";
+
         } catch (SQLException ex) {
             Logger.getLogger(CategoryServiceImpl.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -53,8 +54,23 @@ public class CategoryServiceImpl extends JDBCConfig implements CategoryService {
             return categoryList = categoryRepo.topCategoriesForMonth();
         } catch (SQLException ex) {
             Logger.getLogger(CategoryServiceImpl.class.getName()).log(Level.SEVERE, null, ex);
+//            List<Category> listCat = new ArrayList<>();
+//            listCat.add(new Category("Cat1"));
+//            listCat.add(new Category("Cat2"));
+//            return listCat;
         }
         return categoryList;
+    }
+
+    @Override
+    public List<Category> getPreferredCategories(Reader reader) {
+        List<Category> preferredCategories = new ArrayList<>();
+        try {
+            return preferredCategories = categoryRepo.getPreferredCategories(reader);
+        } catch (SQLException ex) {
+            Logger.getLogger(CategoryServiceImpl.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return preferredCategories;
     }
 
 }

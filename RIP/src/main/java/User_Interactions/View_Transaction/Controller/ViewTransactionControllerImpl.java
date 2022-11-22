@@ -12,6 +12,7 @@ import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
 import java.util.Calendar;
 import java.util.Map;
+import org.json.simple.JSONObject;
 
 @Path("/View")
 public class ViewTransactionControllerImpl {
@@ -26,16 +27,16 @@ public class ViewTransactionControllerImpl {
     @POST
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
-    public Response viewStory(Story story, Reader reader) {
-        return Response.status(Response.Status.OK).entity(view_transaction_service.viewStory(story, reader)).build();
+    public Response viewStory(JSONObject jsonObject) {
+        return Response.status(Response.Status.OK).entity(view_transaction_service.viewStory((Story)jsonObject.get("story"), (Reader) jsonObject.get("reader"))).build();
     }
 
     @Path("/AllStoryViewsInPeriod")
     @POST
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
-    public Response getAllStoryViewsInPeriod(Calendar startDate, Calendar endDate) {
-        return Response.status(Response.Status.OK).entity(view_transaction_service.getAllStoryViewsInPeriod(startDate, endDate)).build();
+    public Response getAllStoryViewsInPeriod(JSONObject jsonObject) {
+        return Response.status(Response.Status.OK).entity(view_transaction_service.getAllStoryViewsInPeriod((Calendar)jsonObject.get("startDate"), (Calendar)jsonObject.get("endDate"))).build();
     }
     
     

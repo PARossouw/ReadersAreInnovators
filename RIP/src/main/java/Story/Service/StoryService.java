@@ -19,4 +19,6 @@ public interface StoryService {
 
     List<Story> searchForStory(String storyParameter);
 
+    List<Story> getFiveStoriesForStoryOfTheDay();
+
 }

@@ -40,17 +40,19 @@ public class UserRepoImpl extends JDBCConfig implements UserRepo {
 
     @Override
     public User getUser(User user) throws SQLException {
-        User u = null;
+        User u = new User();
 
         if (getConnection() != null) {
-            ps = getConnection().prepareStatement("select userid, username, email, phonenumber, password, isactive, dateadded, role from user where ? = ?");
+            ps = getConnection().prepareStatement("select userid, username, email, phonenumber, password, isactive, dateadded, role from user where ? = ? or ? = ?");
             if (user.getUsername() != null) {
                 ps.setString(1, "Username");
                 ps.setString(2, user.getUsername());
-            } else if (user.getEmail() != null) {
-                ps.setString(1, "Email");
-                ps.setString(2, user.getEmail());
-            }
+                ps.setString(3, "email");
+                ps.setString(4, user.getEmail());
+            } //else if (user.getEmail() != null) {
+//                ps.setString(1, "Email");
+//                ps.setString(2, user.getEmail());
+//            }
 
             rs = ps.executeQuery();
 
@@ -58,14 +60,14 @@ public class UserRepoImpl extends JDBCConfig implements UserRepo {
                 int userID = (rs.getInt("userid"));
                 String username = (rs.getString("username"));
                 String email = (rs.getString("email"));
-                String phoneNumber = (rs.getString("phonenumber"));
+//                String phoneNumber = (rs.getString("phonenumber"));
                 String password = (rs.getString("password"));
-                boolean isActive = (rs.getBoolean("isactive"));
+                Boolean isActive = (rs.getBoolean("isactive"));
 
-                Calendar calendar = Calendar.getInstance();
-                calendar.setTime(rs.getDate("dateadded"));
+//                Calendar calendar = Calendar.getInstance();
+//                calendar.setTime(rs.getDate("dateadded"));
 
-                int role = (rs.getInt("role"));
+                Integer role = (rs.getInt("role"));
 
                 switch (role) {
 
@@ -88,14 +90,19 @@ public class UserRepoImpl extends JDBCConfig implements UserRepo {
                 u.setUserID(userID);
                 u.setUsername(username);
                 u.setEmail(email);
-                u.setPhoneNumber(phoneNumber);
+//                u.setPhoneNumber(phoneNumber);
                 u.setPassword(password);
                 u.setIsActive(isActive);
-                u.setDateAdded(calendar);
+//                u.setDateAdded(calendar);
             }
+  
         }
         close();
-        return u;
+        u.setUsername("amet");
+        u.setEmail("amet1@gmail.com");
+        u.setPassword("password");
+        //return null;
+        return null;
     }
 
     @Override

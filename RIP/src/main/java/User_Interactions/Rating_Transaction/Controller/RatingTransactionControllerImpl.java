@@ -12,6 +12,7 @@ import jakarta.ws.rs.Path;
 import jakarta.ws.rs.Produces;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
+import org.json.simple.JSONObject;
 
 @Path("/Rating")
 public class RatingTransactionControllerImpl {
@@ -26,8 +27,8 @@ public class RatingTransactionControllerImpl {
     @POST
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
-    public Response rateStory(Story story, Reader reader, Integer rating) {
-        return Response.status(Response.Status.OK).entity(rating_transaction_service.rateStory(story, reader, rating)).build();
+    public Response rateStory(JSONObject jsonObject) {
+        return Response.status(Response.Status.OK).entity(rating_transaction_service.rateStory((Story)jsonObject.get("story"), (Reader)jsonObject.get("reader"), (Integer)jsonObject.get("rating"))).build();
     }
 
 }
