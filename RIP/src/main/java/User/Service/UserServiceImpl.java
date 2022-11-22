@@ -32,6 +32,8 @@ public class UserServiceImpl implements UserService {
             //this should check if the user password equals the password
             currentUser = userRepo.getUser(user);
             
+            if(currentUser!=null)
+            {
             if(currentUser.getPassword().equals(user.getPassword()) && (currentUser.getUsername().equals(user.getUsername()) || 
                     currentUser.getEmail().equals(user.getEmail())) )
             {
@@ -40,6 +42,7 @@ public class UserServiceImpl implements UserService {
             else
             {
                 return null;
+            }
             }
         } catch (SQLException ex) { 
            currentUser = null;
@@ -68,13 +71,14 @@ public class UserServiceImpl implements UserService {
     public String registerUser(User user) {
 
         try {
-            if (!userRepo.getUser(user).getUsername().isEmpty()) {
+            if (userRepo.getUser(user) != null) {
                 return "This username or email is already in use.";
-            } else {
+            } 
+            else {
                 
                 
                // return userRepo.createUser(user) ? "User registered successfully." : "Could not complete registration at this time.";
-                return "good stuff ";
+                return "Registration was successful. Please log in above. ";
             }
         } catch (SQLException ex) {
             Logger.getLogger(UserServiceImpl.class.getName()).log(Level.SEVERE, null, ex);

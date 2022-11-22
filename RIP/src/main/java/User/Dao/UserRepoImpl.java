@@ -101,8 +101,8 @@ public class UserRepoImpl extends JDBCConfig implements UserRepo {
         u.setUsername("amet");
         u.setEmail("amet1@gmail.com");
         u.setPassword("password");
-        
-        return u;
+        //return null;
+        return null;
     }
 
     @Override
