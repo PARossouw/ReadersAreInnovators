@@ -5,6 +5,7 @@ import Story.Dao.StoryRepoImpl;
 import Story.Model.Story;
 import Story.Service.StoryService;
 import Story.Service.StoryServiceImpl;
+import User.Model.Reader;
 import User.Model.Writer;
 import jakarta.ws.rs.Consumes;
 import jakarta.ws.rs.POST;
@@ -71,9 +72,13 @@ public class StoryControllerImpl {
         return Response.status(Response.Status.OK).entity(storyService.searchForStory(StoryParameter)).build();
     }
     
-    
-    
-    
+    @Path("/viewLikedStories")
+    @POST
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response viewLikedStories(Reader reader){
+        return Response.status(Response.Status.OK).entity(storyService.getLikedStory(reader)).build();
+    }
     
     @Path("/getFiveStoriesForStoryOfTheDay")
     @POST

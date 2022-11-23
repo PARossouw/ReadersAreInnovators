@@ -1,6 +1,6 @@
 package User.Dao;
 
-import JDBCConfig.JDBCConfig;
+import DBManager.DBManager;
 import User.Model.AdminEditor;
 import User.Model.User;
 import java.sql.SQLException;
@@ -11,7 +11,7 @@ import User.Model.Writer;
 import java.util.HashMap;
 import java.util.Map;
 
-public class UserRepoImpl extends JDBCConfig implements UserRepo {
+public class UserRepoImpl extends DBManager implements UserRepo {
 
     @Override
     public Boolean createUser(User user) throws SQLException {
@@ -43,16 +43,11 @@ public class UserRepoImpl extends JDBCConfig implements UserRepo {
         User u = new User();
 
         if (getConnection() != null) {
-            ps = getConnection().prepareStatement("select userid, username, email, phonenumber, password, isactive, dateadded, role from user where ? = ? or ? = ?");
-            if (user.getUsername() != null) {
-                ps.setString(1, "Username");
-                ps.setString(2, user.getUsername());
-                ps.setString(3, "email");
-                ps.setString(4, user.getEmail());
-            } //else if (user.getEmail() != null) {
-//                ps.setString(1, "Email");
-//                ps.setString(2, user.getEmail());
-//            }
+            ps = getConnection().prepareStatement("select userid, username, email, "
+                    + "phonenumber, password, isactive, dateadded, role from user "
+                    + "where username = ? or email = ?");
+            ps.setString(1, user.getUsername());
+            ps.setString(2, user.getEmail());
 
             rs = ps.executeQuery();
 
@@ -66,7 +61,6 @@ public class UserRepoImpl extends JDBCConfig implements UserRepo {
 
 //                Calendar calendar = Calendar.getInstance();
 //                calendar.setTime(rs.getDate("dateadded"));
-
                 Integer role = (rs.getInt("role"));
 
                 switch (role) {
@@ -95,14 +89,15 @@ public class UserRepoImpl extends JDBCConfig implements UserRepo {
                 u.setIsActive(isActive);
 //                u.setDateAdded(calendar);
             }
-  
+
         }
         close();
-        u.setUsername("amet");
-        u.setEmail("amet1@gmail.com");
-        u.setPassword("password");
-        //return null;
-        return null;
+        
+//        u.setUsername("amet");
+//        u.setEmail("amet1@gmail.com");
+//        u.setPassword("password");
+        
+        return u;
     }
 
     @Override
