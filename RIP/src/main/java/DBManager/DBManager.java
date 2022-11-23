@@ -10,7 +10,7 @@ import java.sql.SQLException;
 public class DBManager {
 
     private static DataSource dSource;
-    private static final BasicDataSource dataSource;
+    private static BasicDataSource dataSource;
     protected PreparedStatement ps;
     protected ResultSet rs;
     protected Integer rowsAffected;
@@ -21,8 +21,8 @@ public class DBManager {
 
     static {
         dataSource = new BasicDataSource();
-        dataSource.setDriverClassName("com.mysql.cj.jdbc.Driver");
-        dataSource.setUrl("jdbc:mysql://localhost:3306/ripfinal");
+        dataSource.setDriverClassName("com.mysql.jdbc.Driver");
+        dataSource.setUrl("jdbc:mysql://localhost:3306/ripfinal?autoReconnect=true&useSSL=false");
         dataSource.setUsername("root");
         dataSource.setPassword("root");
         dataSource.setMinIdle(10);
