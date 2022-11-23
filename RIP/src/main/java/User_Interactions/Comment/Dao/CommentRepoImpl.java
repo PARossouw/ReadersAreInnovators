@@ -1,6 +1,6 @@
 package User_Interactions.Comment.Dao;
 
-import JDBCConfig.JDBCConfig;
+import DBManager.DBManager;
 import Story.Model.Story;
 import User.Model.Reader;
 import User_Interactions.Comment.Model.Comment;
@@ -10,7 +10,7 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
-public class CommentRepoImpl extends JDBCConfig implements CommentRepo {
+public class CommentRepoImpl extends DBManager implements CommentRepo {
 
     @Override
     public Boolean createComment(Comment comment) throws SQLException {

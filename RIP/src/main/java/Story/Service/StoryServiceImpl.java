@@ -3,6 +3,7 @@ package Story.Service;
 import Category.Model.Category;
 import Story.Dao.StoryRepo;
 import Story.Model.Story;
+import User.Model.Reader;
 import User.Model.Writer;
 import java.sql.SQLException;
 import java.util.ArrayList;
@@ -125,6 +126,7 @@ public class StoryServiceImpl implements StoryService {
     }
 
     @Override
+<<<<<<< Updated upstream
     public List<Story> getFiveStoriesForStoryOfTheDay() {
         List<Story> storyList = new ArrayList();
         try {
@@ -133,6 +135,22 @@ public class StoryServiceImpl implements StoryService {
             Logger.getLogger(StoryServiceImpl.class.getName()).log(Level.SEVERE, null, ex);
         }
         return storyList;
+=======
+    public List<Story> getLikedStory(Reader reader) {
+        
+        List<Story> likedStories = new ArrayList<>();
+        if (reader == null) {
+            return null;
+        }
+
+        try {
+            likedStories = storyRepo.getLikedStories(reader);
+        } catch (SQLException ex) {
+            Logger.getLogger(StoryServiceImpl.class.getName()).log(Level.SEVERE, null, ex);
+        }
+
+        return likedStories;
+>>>>>>> Stashed changes
     }
 
 }

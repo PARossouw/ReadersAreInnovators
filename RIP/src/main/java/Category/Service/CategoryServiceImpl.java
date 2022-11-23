@@ -2,7 +2,7 @@ package Category.Service;
 
 import Category.Dao.CategoryRepo;
 import Category.Model.Category;
-import JDBCConfig.JDBCConfig;
+import DBManager.DBManager;
 import Story.Model.Story;
 import User.Model.Reader;
 import java.sql.SQLException;
@@ -11,7 +11,7 @@ import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-public class CategoryServiceImpl extends JDBCConfig implements CategoryService {
+public class CategoryServiceImpl extends DBManager implements CategoryService {
 
     private final CategoryRepo categoryRepo;
 

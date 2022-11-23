@@ -1,12 +1,12 @@
 package User_Interactions.Story_Transaction.Dao;
 
-import JDBCConfig.JDBCConfig;
+import DBManager.DBManager;
 import Story.Model.Story;
 import User.Model.User;
 import java.sql.SQLException;
 
 //need to integrate the String action as an argument into this class
-public class StoryTransactionRepoImpl extends JDBCConfig implements StoryTransactionRepo {
+public class StoryTransactionRepoImpl extends DBManager implements StoryTransactionRepo {
 
     @Override
     public boolean createEvent(Story story, User user, String action) throws SQLException {
