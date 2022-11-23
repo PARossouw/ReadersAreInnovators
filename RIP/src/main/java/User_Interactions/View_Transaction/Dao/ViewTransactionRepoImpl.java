@@ -1,6 +1,6 @@
 package User_Interactions.View_Transaction.Dao;
 
-import JDBCConfig.JDBCConfig;
+import DBManager.DBManager;
 import Story.Model.Story;
 import User.Model.Reader;
 import java.sql.Date;
@@ -9,7 +9,7 @@ import java.util.Calendar;
 import java.util.HashMap;
 import java.util.Map;
 
-public class ViewTransactionRepoImpl extends JDBCConfig implements ViewTransactionRepo {
+public class ViewTransactionRepoImpl extends DBManager implements ViewTransactionRepo {
 
     @Override
     public Boolean createView(Story story, Reader reader) throws SQLException {
