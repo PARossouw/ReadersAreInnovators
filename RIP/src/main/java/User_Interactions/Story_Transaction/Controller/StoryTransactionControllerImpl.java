@@ -28,6 +28,18 @@ public class StoryTransactionControllerImpl {
     @Produces(MediaType.APPLICATION_JSON)
     public Response approvePendingStory(JSONObject jsonObject) {
         return Response.status(Response.Status.OK).entity(storyService.approvePendingStory((Editor)jsonObject.get("editor"), (Story)jsonObject.get("story"))).build();
+        
+        
+//        JSONObject jObject = new JSONObject();
+//        Editor editor = new Editor();
+//        Story story = new Story();
+//        
+//        jObject.put("editor", editor);
+//        jObject.put("story", story);
+//        return Response.status(Response.Status.OK).entity(storyService.approvePendingStory((Editor)jObject.get("editor"), (Story)jObject.get("story"))).build();
+        
+        
+        
     }
 
     @Path("/reject")

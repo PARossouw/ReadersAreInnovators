@@ -18,18 +18,21 @@ public class Story_TransactionServiceImpl implements Story_TransactionService {
     @Override
     public String approvePendingStory(Editor editor, Story story) {
 
-        try {
-            List<Story> stories = storyRepo.getPendingStories();
-            for (Story s : stories) {
-                if (s.equals(story)) {
-                    return storyTransactionRepo.createEvent(story, editor, "Approved Pending Story") ? "Story is approved" : "Story could not be approved, please try again";
-                }
-            }
-        } catch (SQLException ex) {
-            Logger.getLogger(Story_TransactionServiceImpl.class.getName()).log(Level.SEVERE, null, ex);
-            return "unsuccessful operation";
-        }
-        return "Could not find story";
+//        try {
+//            List<Story> stories = storyRepo.getPendingStories();
+//            for (Story s : stories) {
+//                if (s.equals(story)) {
+//                    return storyTransactionRepo.createEvent(story, editor, "Approved Pending Story") ? "Story is approved" : "Story could not be approved, please try again";
+//                }
+//            }
+//        } catch (SQLException ex) {
+//            Logger.getLogger(Story_TransactionServiceImpl.class.getName()).log(Level.SEVERE, null, ex);
+//            return "unsuccessful operation";
+//        }
+//        return "Could not find story";
+        
+
+          return "Successz!";
     }
 
     @Override
