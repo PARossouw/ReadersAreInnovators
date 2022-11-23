@@ -70,4 +70,16 @@ public class StoryControllerImpl {
     public Response searchForStory(String StoryParameter) {
         return Response.status(Response.Status.OK).entity(storyService.searchForStory(StoryParameter)).build();
     }
+    
+    
+    
+    
+    
+    @Path("/getFiveStoriesForStoryOfTheDay")
+    @POST
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response getFiveStoriesForStoryOfTheDay() {
+        return Response.status(Response.Status.OK).entity(storyService.getFiveStoriesForStoryOfTheDay()).build();
+    }
 }
