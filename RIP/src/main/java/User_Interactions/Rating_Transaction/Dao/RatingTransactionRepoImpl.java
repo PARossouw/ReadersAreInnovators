@@ -1,13 +1,13 @@
 package User_Interactions.Rating_Transaction.Dao;
 
-import JDBCConfig.JDBCConfig;
+import DBManager.DBManager;
 import Story.Model.Story;
 import User.Model.Reader;
 import User_Interactions.Rating_Transaction.Model.RatingTransaction;
 import java.sql.SQLException;
 import java.util.Calendar;
 
-public class RatingTransactionRepoImpl extends JDBCConfig implements RatingTransactionRepo {
+public class RatingTransactionRepoImpl extends DBManager implements RatingTransactionRepo {
 
     @Override
     public Boolean createRating(Story story, Reader reader, int rating) throws SQLException {

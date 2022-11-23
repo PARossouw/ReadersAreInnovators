@@ -1,6 +1,6 @@
 package User.Dao;
 
-import JDBCConfig.JDBCConfig;
+import DBManager.DBManager;
 import User.Model.AdminEditor;
 import User.Model.User;
 import java.sql.SQLException;
@@ -11,7 +11,7 @@ import User.Model.Writer;
 import java.util.HashMap;
 import java.util.Map;
 
-public class UserRepoImpl extends JDBCConfig implements UserRepo {
+public class UserRepoImpl extends DBManager implements UserRepo {
 
     @Override
     public Boolean createUser(User user) throws SQLException {
@@ -98,11 +98,19 @@ public class UserRepoImpl extends JDBCConfig implements UserRepo {
   
         }
         close();
+<<<<<<< Updated upstream
         u.setUsername("amet");
         u.setEmail("amet1@gmail.com");
         u.setPassword("password");
         //return null;
         return null;
+=======
+//        u.setUsername("amet");
+//        u.setEmail("amet1@gmail.com");
+//        u.setPassword("password");
+        
+        return u;
+>>>>>>> Stashed changes
     }
 
     @Override
