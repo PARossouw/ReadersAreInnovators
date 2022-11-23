@@ -143,13 +143,13 @@ public class StoryServiceImpl implements StoryService {
 
     @Override
     public List<Story> getFiveStoriesForStoryOfTheDay() {
-        List<Story> storyList = new ArrayList();
+        List<Story> stories = new ArrayList<>();
         try {
             return storyRepo.getFiveStoriesForStoryOfTheDay();
         } catch (SQLException ex) {
             Logger.getLogger(StoryServiceImpl.class.getName()).log(Level.SEVERE, null, ex);
         }
-        return storyList;
+        return stories;
     }
 
 }
