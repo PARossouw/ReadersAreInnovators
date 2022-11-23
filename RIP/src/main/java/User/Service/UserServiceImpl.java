@@ -23,7 +23,7 @@ public class UserServiceImpl implements UserService {
         this.userRepo = userRepo;
         this.categoryRepo = categoryRepo;
     }
-    
+
     @Override
     public User login(User user) {
 
@@ -31,30 +31,26 @@ public class UserServiceImpl implements UserService {
         try {
             //this should check if the user password equals the password
             currentUser = userRepo.getUser(user);
-            
-            if(currentUser!=null)
-            {
-            if(currentUser.getPassword().equals(user.getPassword()) && (currentUser.getUsername().equals(user.getUsername()) || 
-                    currentUser.getEmail().equals(user.getEmail())) )
-            {
-                return currentUser;
+
+            if (currentUser != null) {
+                if (currentUser.getPassword().equals(user.getPassword()) && (currentUser.getUsername().equals(user.getUsername())
+                        || currentUser.getEmail().equals(user.getEmail()))) {
+                    return currentUser;
+                } else {
+                    return null;
+                }
             }
-            else
-            {
-                return null;
-            }
-            }
-        } catch (SQLException ex) { 
-           currentUser = null;
+        } catch (SQLException ex) {
+            currentUser = null;
             Logger.getLogger(UserServiceImpl.class.getName()).log(Level.SEVERE, null, ex);
         }
-        
+
         return currentUser;
     }
 
     @Override
     public String addPreferredCategoriesToUser(Reader reader, List<Category> categories) {
-        
+
         try {
             if (reader == null || categories == null) {
                 return "Something went wrong, please try again.";
@@ -73,11 +69,9 @@ public class UserServiceImpl implements UserService {
         try {
             if (userRepo.getUser(user) != null) {
                 return "This username or email is already in use.";
-            } 
-            else {
-                
-                
-               // return userRepo.createUser(user) ? "User registered successfully." : "Could not complete registration at this time.";
+            } else {
+
+                // return userRepo.createUser(user) ? "User registered successfully." : "Could not complete registration at this time.";
                 return "Registration was successful. Please log in above. ";
             }
         } catch (SQLException ex) {
