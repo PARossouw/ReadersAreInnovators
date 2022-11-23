@@ -72,10 +72,13 @@ public class StoryControllerImpl {
         return Response.status(Response.Status.OK).entity(storyService.searchForStory(StoryParameter)).build();
     }
     
-<<<<<<< Updated upstream
-    
-    
-    
+    @Path("/viewLikedStories")
+    @POST
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response viewLikedStories(Reader reader){
+        return Response.status(Response.Status.OK).entity(storyService.getLikedStory(reader)).build();
+    }
     
     @Path("/getFiveStoriesForStoryOfTheDay")
     @POST
@@ -83,13 +86,5 @@ public class StoryControllerImpl {
     @Produces(MediaType.APPLICATION_JSON)
     public Response getFiveStoriesForStoryOfTheDay() {
         return Response.status(Response.Status.OK).entity(storyService.getFiveStoriesForStoryOfTheDay()).build();
-=======
-    @Path("/viewLikedStories")
-    @POST
-    @Consumes(MediaType.APPLICATION_JSON)
-    @Produces(MediaType.APPLICATION_JSON)
-    public Response viewLikedStories(Reader reader){
-        return Response.status(Response.Status.OK).entity(storyService.getLikedStory(reader)).build();
->>>>>>> Stashed changes
     }
 }

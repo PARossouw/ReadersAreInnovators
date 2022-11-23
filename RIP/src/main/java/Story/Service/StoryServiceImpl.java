@@ -126,18 +126,8 @@ public class StoryServiceImpl implements StoryService {
     }
 
     @Override
-<<<<<<< Updated upstream
-    public List<Story> getFiveStoriesForStoryOfTheDay() {
-        List<Story> storyList = new ArrayList();
-        try {
-            return storyRepo.getFiveStoriesForStoryOfTheDay();
-        } catch (SQLException ex) {
-            Logger.getLogger(StoryServiceImpl.class.getName()).log(Level.SEVERE, null, ex);
-        }
-        return storyList;
-=======
     public List<Story> getLikedStory(Reader reader) {
-        
+
         List<Story> likedStories = new ArrayList<>();
         if (reader == null) {
             return null;
@@ -148,9 +138,18 @@ public class StoryServiceImpl implements StoryService {
         } catch (SQLException ex) {
             Logger.getLogger(StoryServiceImpl.class.getName()).log(Level.SEVERE, null, ex);
         }
-
         return likedStories;
->>>>>>> Stashed changes
+    }
+
+    @Override
+    public List<Story> getFiveStoriesForStoryOfTheDay() {
+        List<Story> storyList = new ArrayList();
+        try {
+            return storyRepo.getFiveStoriesForStoryOfTheDay();
+        } catch (SQLException ex) {
+            Logger.getLogger(StoryServiceImpl.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return storyList;
     }
 
 }

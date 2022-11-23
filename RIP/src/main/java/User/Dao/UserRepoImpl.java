@@ -98,19 +98,7 @@ public class UserRepoImpl extends DBManager implements UserRepo {
   
         }
         close();
-<<<<<<< Updated upstream
-        u.setUsername("amet");
-        u.setEmail("amet1@gmail.com");
-        u.setPassword("password");
-        //return null;
-        return null;
-=======
-//        u.setUsername("amet");
-//        u.setEmail("amet1@gmail.com");
-//        u.setPassword("password");
-        
         return u;
->>>>>>> Stashed changes
     }
 
     @Override
