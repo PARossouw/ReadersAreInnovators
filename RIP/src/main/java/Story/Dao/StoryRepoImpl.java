@@ -1,7 +1,7 @@
 package Story.Dao;
 
 import Category.Model.Category;
-import JDBCConfig.JDBCConfig;
+import DBManager.DBManager;
 import Story.Model.Story;
 import java.sql.SQLException;
 import java.util.ArrayList;
@@ -12,7 +12,7 @@ import User.Model.Reader;
 import User.Model.Writer;
 import java.util.Collections;
 
-public class StoryRepoImpl extends JDBCConfig implements StoryRepo {
+public class StoryRepoImpl extends DBManager implements StoryRepo {
 
     @Override
     public List<Story> getApprovedStories() throws SQLException {
