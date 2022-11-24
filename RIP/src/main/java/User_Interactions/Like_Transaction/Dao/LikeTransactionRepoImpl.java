@@ -1,6 +1,6 @@
 package User_Interactions.Like_Transaction.Dao;
 
-import JDBCConfig.JDBCConfig;
+import DBManager.DBManager;
 import Story.Model.Story;
 import User.Model.Reader;
 import java.sql.SQLException;
@@ -9,7 +9,7 @@ import java.sql.Date;
 import java.util.HashMap;
 import java.util.Map;
 
-public class LikeTransactionRepoImpl extends JDBCConfig implements LikeTransactionRepo {
+public class LikeTransactionRepoImpl extends DBManager implements LikeTransactionRepo {
 
     @Override
     public Boolean createLike(Reader reader, Story story) throws SQLException {
