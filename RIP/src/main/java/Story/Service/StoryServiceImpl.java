@@ -7,6 +7,7 @@ import User.Model.Reader;
 import User.Model.Writer;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -143,13 +144,17 @@ public class StoryServiceImpl implements StoryService {
 
     @Override
     public List<Story> getFiveStoriesForStoryOfTheDay() {
+
         List<Story> stories = new ArrayList<>();
+
         try {
             return storyRepo.getFiveStoriesForStoryOfTheDay();
         } catch (SQLException ex) {
             Logger.getLogger(StoryServiceImpl.class.getName()).log(Level.SEVERE, null, ex);
         }
+
         return stories;
+
     }
 
 }

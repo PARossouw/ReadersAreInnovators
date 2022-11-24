@@ -553,13 +553,20 @@ public class StoryRepoImpl extends DBManager implements StoryRepo {
         List<Story> stories = new ArrayList<>();
 
         if (getConnection() != null) {
-            ps = getConnection().prepareStatement("select storyID, title, writer,description, imagePath, body, isDraft, isActive, createdOn, allowComment, isApproved, views, likes, avgRating from story where isApproved = 0 and isDraft = 0");
+//            ps = getConnection().prepareStatement("select storyID, title, writer,description, imagePath, body, isDraft, isActive, createdOn, allowComment, isApproved, views, likes, avgRating from story where isApproved = 0 and isDraft = 0");
+
+
+            ps = getConnection().prepareStatement("select storyID, title, writer, description, imagePath, "
+                    + "body, isDraft, isActive, createdOn, allowComment, isApproved, views, likes, avgRating "
+                    + "from story where isapproved = 0 and isdraft = 0 limit 6");
 
             rs = ps.executeQuery();
 
             while (rs.next()) {
 
-                int storyID = rs.getInt("storyID");
+
+                int storyID = rs.getInt("storyid");
+
                 String title = rs.getString("title");
                 String writer1 = rs.getString("writer");
                 String description = rs.getString("description");
@@ -577,6 +584,7 @@ public class StoryRepoImpl extends DBManager implements StoryRepo {
                 int views = rs.getInt("views");
                 int likes = rs.getInt("likes");
                 double avgRating = rs.getDouble("avgRating");
+
 
                 storyObj = new Story(storyID, title, writer1, description, imagePath, body, isDraft, isActive, null, allowComments, isApproved, views, likes, avgRating);
                 stories.add(storyObj);
