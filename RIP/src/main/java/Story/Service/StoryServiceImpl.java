@@ -1,5 +1,6 @@
 package Story.Service;
 
+import Category.Dao.CategoryRepo;
 import Category.Model.Category;
 import Story.Dao.StoryRepo;
 import Story.Model.Story;
@@ -14,9 +15,11 @@ import java.util.logging.Logger;
 public class StoryServiceImpl implements StoryService {
 
     private final StoryRepo storyRepo;
+    private final CategoryRepo categoryRepo;
 
-    public StoryServiceImpl(StoryRepo storyRepo) {
+    public StoryServiceImpl(StoryRepo storyRepo, CategoryRepo categoryRepo) {
         this.storyRepo = storyRepo;
+        this.categoryRepo = categoryRepo;
     }
 
     @Override
@@ -30,6 +33,9 @@ public class StoryServiceImpl implements StoryService {
 
         try {
             storyList = storyRepo.getStoryByCategory(categories);
+            for (Story s : storyList) {
+                s.setCategoryList(categoryRepo.getStoryCategories(s));
+            }
         } catch (SQLException ex) {
             Logger.getLogger(StoryServiceImpl.class.getName()).log(Level.SEVERE, null, ex);
         }
