@@ -385,6 +385,8 @@ public class StoryRepoImpl extends JDBCConfig implements StoryRepo {
 
             }
         }
+        
+        
         close();
         return storyObj;
 
