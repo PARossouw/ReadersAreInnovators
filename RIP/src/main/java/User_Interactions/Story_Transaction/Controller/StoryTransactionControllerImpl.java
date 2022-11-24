@@ -1,25 +1,33 @@
 package User_Interactions.Story_Transaction.Controller;
 
+import Story.Dao.StoryRepo;
+import Story.Dao.StoryRepoImpl;
 import Story.Model.Story;
 import User.Model.Editor;
 import User.Model.Writer;
+import User_Interactions.Story_Transaction.Dao.StoryTransactionRepo;
+import User_Interactions.Story_Transaction.Dao.StoryTransactionRepoImpl;
 import User_Interactions.Story_Transaction.Service.Story_TransactionService;
 import User_Interactions.Story_Transaction.Service.Story_TransactionServiceImpl;
+import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.ws.rs.Consumes;
 import jakarta.ws.rs.POST;
 import jakarta.ws.rs.Path;
 import jakarta.ws.rs.Produces;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
+import java.util.Map;
 import org.json.simple.JSONObject;
 
 @Path("/StoryTransaction")
 public class StoryTransactionControllerImpl {
-    
-    private final Story_TransactionService storyService;
+
+    private final Story_TransactionService storyTransactionService;
+    ObjectMapper mapper = new ObjectMapper();
 
     public StoryTransactionControllerImpl() {
-        this.storyService = new Story_TransactionServiceImpl();
+        this.storyTransactionService = new Story_TransactionServiceImpl(new StoryRepoImpl(), new StoryTransactionRepoImpl());
     }
 
     @Path("/approve")
@@ -27,7 +35,18 @@ public class StoryTransactionControllerImpl {
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
     public Response approvePendingStory(JSONObject jsonObject) {
-        return Response.status(Response.Status.OK).entity(storyService.approvePendingStory((Editor)jsonObject.get("editor"), (Story)jsonObject.get("story"))).build();
+
+//        return Response.status(Response.Status.OK).entity(storyService.approvePendingStory(editor, story)).build();
+
+        
+        
+        Editor editor = mapper.convertValue( jsonObject.get("editor"), Editor.class);
+        Story story = mapper.convertValue( jsonObject.get("story"), Story.class);
+        
+        
+  
+        return Response.status(Response.Status.OK).entity(storyTransactionService.approvePendingStory(editor, story)).build();
+
     }
 
     @Path("/reject")
@@ -35,7 +54,7 @@ public class StoryTransactionControllerImpl {
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
     public Response rejectPendingStory(JSONObject jsonObject) {
-        return Response.status(Response.Status.OK).entity(storyService.rejectPendingStory((Editor)jsonObject.get("editor"), (Story)jsonObject.get("story"))).build();
+        return Response.status(Response.Status.OK).entity(storyTransactionService.rejectPendingStory((Editor) jsonObject.get("editor"), (Story) jsonObject.get("story"))).build();
     }
 
     @Path("/removeWriter")
@@ -43,7 +62,7 @@ public class StoryTransactionControllerImpl {
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
     public Response removeStoryByWriter(JSONObject jsonObject) {
-        return Response.status(Response.Status.OK).entity(storyService.removeStoryByWriter((Writer)jsonObject.get("writer"), (Story)jsonObject.get("story"))).build();
+        return Response.status(Response.Status.OK).entity(storyTransactionService.removeStoryByWriter((Writer) jsonObject.get("writer"), (Story) jsonObject.get("story"))).build();
     }
-    
+
 }

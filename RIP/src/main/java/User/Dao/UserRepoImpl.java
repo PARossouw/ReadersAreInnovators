@@ -43,11 +43,13 @@ public class UserRepoImpl extends DBManager implements UserRepo {
         User u = new User();
 
         if (getConnection() != null) {
+            
             ps = getConnection().prepareStatement("select userid, username, email, "
                     + "phonenumber, password, isactive, dateadded, role from user "
                     + "where username = ? or email = ?");
             ps.setString(1, user.getUsername());
             ps.setString(2, user.getEmail());
+
 
             rs = ps.executeQuery();
 
@@ -92,11 +94,15 @@ public class UserRepoImpl extends DBManager implements UserRepo {
 
         }
         close();
-        
+
 //        u.setUsername("amet");
 //        u.setEmail("amet1@gmail.com");
 //        u.setPassword("password");
+//        u.setRoleID(3);
+        //return null;
+
         
+
         return u;
     }
 

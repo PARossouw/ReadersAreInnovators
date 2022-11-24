@@ -12,24 +12,50 @@ import java.util.logging.Logger;
 
 public class Story_TransactionServiceImpl implements Story_TransactionService {
 
-    private StoryRepo storyRepo;
-    private StoryTransactionRepo storyTransactionRepo;
+    private final StoryRepo storyRepo;
+    private final StoryTransactionRepo storyTransactionRepo;
+
+    public Story_TransactionServiceImpl(StoryRepo storyRepo, StoryTransactionRepo storyTransactionRepo) {
+        this.storyTransactionRepo = storyTransactionRepo;
+        this.storyRepo = storyRepo;
+    }
+    
+    
 
     @Override
     public String approvePendingStory(Editor editor, Story story) {
 
         try {
-            List<Story> stories = storyRepo.getPendingStories();
-            for (Story s : stories) {
-                if (s.equals(story)) {
-                    return storyTransactionRepo.createEvent(story, editor, "Approved Pending Story") ? "Story is approved" : "Story could not be approved, please try again";
-                }
+            if (storyTransactionRepo.createEvent(story, editor, "Approved Pending Story")) {
+                return "Story is approved";
+            } else {
+                return "unsuccessful operation";
             }
+//        try {
+//            //        try {
+////            List<Story> stories = storyRepo.getPendingStories();
+
+////            for (Story s : stories) {
+////                if (s.equals(story)) {
+////                    return storyTransactionRepo.createEvent(story, editor, "Approved Pending Story") ? "Story is approved" : "Story could not be approved, please try again";
+//
+////                }
+////            }
+////        } catch (SQLException ex) {
+////            Logger.getLogger(Story_TransactionServiceImpl.class.getName()).log(Level.SEVERE, null, ex);
+////            return "unsuccessful operation";
+////        }
+////        return "Something went wrong";
+////return "Successz!";
+//           // return storyTransactionRepo.createEvent(story, editor, "Approved Pending Story") ? "Story is approved" : "Story could not be approved, please try again";
+//        
+//        } catch (SQLException ex) {
+//            Logger.getLogger(Story_TransactionServiceImpl.class.getName()).log(Level.SEVERE, null, ex);
+//        }
         } catch (SQLException ex) {
             Logger.getLogger(Story_TransactionServiceImpl.class.getName()).log(Level.SEVERE, null, ex);
-            return "unsuccessful operation";
         }
-        return "Could not find story";
+        return "fuck";
     }
 
     @Override

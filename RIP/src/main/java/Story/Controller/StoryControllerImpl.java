@@ -16,6 +16,9 @@ import jakarta.ws.rs.Produces;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
 import java.util.ArrayList;
+
+import java.util.Calendar;
+
 import java.util.List;
 
 @Path("/Story")
@@ -85,12 +88,25 @@ public class StoryControllerImpl {
     }
     
 
-    @Path("/getFiveStoriesForStoryOfTheDay")
+    @Path("/getPendingStories")
     @GET
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
     public Response getFiveStoriesForStoryOfTheDay() {
         return Response.status(Response.Status.OK).entity(storyService.getFiveStoriesForStoryOfTheDay()).build();
+
+        
+//                Calendar cal = Calendar.getInstance();
+//                Story story = new Story(1, "mock titleexxxx", "mock writer", "mock description", "mock imagepath", "mock body", false, true, cal, true, true, 10, 57, 4.0);
+//                story.setCreatedOn(null);
+//                List<Story> sixStoryList = new ArrayList<>();
+//                sixStoryList.add(story);
+//                sixStoryList.add(story);
+//                sixStoryList.add(story);
+//                sixStoryList.add(story);
+//                sixStoryList.add(story);
+//                
+//        return Response.status(Response.Status.OK).entity(sixStoryList).build();
 
     }
 }
