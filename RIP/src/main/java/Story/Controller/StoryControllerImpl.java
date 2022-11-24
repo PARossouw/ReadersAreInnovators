@@ -1,5 +1,6 @@
 package Story.Controller;
 
+import Category.Dao.CategoryRepoImpl;
 import Category.Model.Category;
 import Story.Dao.StoryRepoImpl;
 import Story.Model.Story;
@@ -26,7 +27,7 @@ public class StoryControllerImpl {
     private final StoryService storyService;
 
     public StoryControllerImpl() {
-        this.storyService = new StoryServiceImpl(new StoryRepoImpl());
+        this.storyService = new StoryServiceImpl(new StoryRepoImpl(), new CategoryRepoImpl());
     }
 
     @Path("/search/categories")
