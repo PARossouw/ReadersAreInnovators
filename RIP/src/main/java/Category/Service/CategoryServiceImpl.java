@@ -2,15 +2,16 @@ package Category.Service;
 
 import Category.Dao.CategoryRepo;
 import Category.Model.Category;
-import JDBCConfig.JDBCConfig;
+import DBManager.DBManager;
 import Story.Model.Story;
+import User.Model.Reader;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-public class CategoryServiceImpl extends JDBCConfig implements CategoryService {
+public class CategoryServiceImpl extends DBManager implements CategoryService {
 
     private final CategoryRepo categoryRepo;
 
@@ -59,6 +60,17 @@ public class CategoryServiceImpl extends JDBCConfig implements CategoryService {
 //            return listCat;
         }
         return categoryList;
+    }
+
+    @Override
+    public List<Category> getPreferredCategories(Reader reader) {
+        List<Category> preferredCategories = new ArrayList<>();
+        try {
+            return preferredCategories = categoryRepo.getPreferredCategories(reader);
+        } catch (SQLException ex) {
+            Logger.getLogger(CategoryServiceImpl.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return preferredCategories;
     }
 
 }

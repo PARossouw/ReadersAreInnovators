@@ -1,7 +1,7 @@
 package Category.Dao;
 
 import Category.Model.Category;
-import JDBCConfig.JDBCConfig;
+import DBManager.DBManager;
 import Story.Model.Story;
 import java.sql.SQLException;
 import java.util.ArrayList;
@@ -9,7 +9,7 @@ import java.util.Calendar;
 import java.util.List;
 import User.Model.Reader;
 
-public class CategoryRepoImpl extends JDBCConfig implements CategoryRepo {
+public class CategoryRepoImpl extends DBManager implements CategoryRepo {
 
     @Override
     public Boolean createCategory(Category category) throws SQLException {

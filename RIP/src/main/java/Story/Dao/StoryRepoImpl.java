@@ -1,7 +1,7 @@
 package Story.Dao;
 
 import Category.Model.Category;
-import JDBCConfig.JDBCConfig;
+import DBManager.DBManager;
 import Story.Model.Story;
 import java.sql.SQLException;
 import java.util.ArrayList;
@@ -12,7 +12,7 @@ import User.Model.Reader;
 import User.Model.Writer;
 import java.util.Collections;
 
-public class StoryRepoImpl extends JDBCConfig implements StoryRepo {
+public class StoryRepoImpl extends DBManager implements StoryRepo {
 
     @Override
     public List<Story> getApprovedStories() throws SQLException {
@@ -546,6 +546,48 @@ public class StoryRepoImpl extends JDBCConfig implements StoryRepo {
 
         close();
         return stories;
+    }
+
+    @Override
+    public List<Story> getFiveStoriesForStoryOfTheDay() throws SQLException {
+        
+        Story storyObj = new Story();
+        List<Story> stories = new ArrayList<>();
+
+        if (getConnection() != null) {
+            ps = getConnection().prepareStatement("select storyID, title, writer,description, imagePath, body, isDraft, isActive, createdOn, allowComment, isApproved, views, likes, avgRating from story where isApproved = 0 and isDraft = 0");
+
+            rs = ps.executeQuery();
+
+            while (rs.next()) {
+
+                int storyID = rs.getInt("storyID");
+                String title = rs.getString("title");
+                String writer1 = rs.getString("writer");
+                String description = rs.getString("description");
+                String imagePath = rs.getString("imagePath");
+                String body = rs.getString("body");
+                boolean isDraft = rs.getBoolean("isDraft");
+                boolean isActive = rs.getBoolean("isActive");
+
+                Date createdOn = rs.getDate("createdOn");
+                Calendar calendar = Calendar.getInstance();
+                calendar.setTime(createdOn);
+
+                boolean allowComments = rs.getBoolean("allowComment");
+                boolean isApproved = rs.getBoolean("isApproved");
+                int views = rs.getInt("views");
+                int likes = rs.getInt("likes");
+                double avgRating = rs.getDouble("avgRating");
+
+                storyObj = new Story(storyID, title, writer1, description, imagePath, body, isDraft, isActive, null, allowComments, isApproved, views, likes, avgRating);
+                stories.add(storyObj);
+            }
+        }
+        close();
+
+        return stories;
+        
     }
 
 }

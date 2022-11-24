@@ -2,6 +2,7 @@ package Story.Service;
 
 import Category.Model.Category;
 import Story.Model.Story;
+import User.Model.Reader;
 import User.Model.Writer;
 import java.util.List;
 
@@ -18,5 +19,9 @@ public interface StoryService {
     Story retrieveStory(Story story);
 
     List<Story> searchForStory(String storyParameter);
+    
+    List<Story> getLikedStory(Reader reader);
+
+    List<Story> getFiveStoriesForStoryOfTheDay();
 
 }
