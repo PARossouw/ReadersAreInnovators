@@ -1,5 +1,6 @@
 package Story.Service;
 
+import Category.Dao.CategoryRepo;
 import Category.Model.Category;
 import Story.Dao.StoryRepo;
 import Story.Model.Story;
@@ -7,6 +8,7 @@ import User.Model.Reader;
 import User.Model.Writer;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -14,9 +16,11 @@ import java.util.logging.Logger;
 public class StoryServiceImpl implements StoryService {
 
     private final StoryRepo storyRepo;
+    private final CategoryRepo categoryRepo;
 
-    public StoryServiceImpl(StoryRepo storyRepo) {
+    public StoryServiceImpl(StoryRepo storyRepo, CategoryRepo categoryRepo) {
         this.storyRepo = storyRepo;
+        this.categoryRepo = categoryRepo;
     }
 
     @Override
@@ -30,6 +34,9 @@ public class StoryServiceImpl implements StoryService {
 
         try {
             storyList = storyRepo.getStoryByCategory(categories);
+            for (Story s : storyList) {
+                s.setCategoryList(categoryRepo.getStoryCategories(s));
+            }
         } catch (SQLException ex) {
             Logger.getLogger(StoryServiceImpl.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -143,13 +150,17 @@ public class StoryServiceImpl implements StoryService {
 
     @Override
     public List<Story> getFiveStoriesForStoryOfTheDay() {
-        List<Story> storyList = new ArrayList();
+
+        List<Story> stories = new ArrayList<>();
+
         try {
             return storyRepo.getFiveStoriesForStoryOfTheDay();
         } catch (SQLException ex) {
             Logger.getLogger(StoryServiceImpl.class.getName()).log(Level.SEVERE, null, ex);
         }
-        return storyList;
+
+        return stories;
+
     }
 
 }
