@@ -31,47 +31,26 @@ public class Story_TransactionServiceImpl implements Story_TransactionService {
             } else {
                 return "unsuccessful operation";
             }
-//        try {
-//            //        try {
-////            List<Story> stories = storyRepo.getPendingStories();
-
-////            for (Story s : stories) {
-////                if (s.equals(story)) {
-////                    return storyTransactionRepo.createEvent(story, editor, "Approved Pending Story") ? "Story is approved" : "Story could not be approved, please try again";
-//
-////                }
-////            }
-////        } catch (SQLException ex) {
-////            Logger.getLogger(Story_TransactionServiceImpl.class.getName()).log(Level.SEVERE, null, ex);
-////            return "unsuccessful operation";
-////        }
-////        return "Something went wrong";
-////return "Successz!";
-//           // return storyTransactionRepo.createEvent(story, editor, "Approved Pending Story") ? "Story is approved" : "Story could not be approved, please try again";
-//        
-//        } catch (SQLException ex) {
-//            Logger.getLogger(Story_TransactionServiceImpl.class.getName()).log(Level.SEVERE, null, ex);
-//        }
         } catch (SQLException ex) {
             Logger.getLogger(Story_TransactionServiceImpl.class.getName()).log(Level.SEVERE, null, ex);
         }
-        return "fuck";
+        return "Something went wrong";
     }
 
     @Override
     public String rejectPendingStory(Editor editor, Story story) {
+        
         try {
-            List<Story> stories = storyRepo.getPendingStories();
-            for (Story s : stories) {
-                if (s.equals(story)) {
-                    return storyTransactionRepo.createEvent(story, editor, "Rejected Pending Story") ? "Story is rejected" : "Story could not be rejected, please try again";
-                }
+            if (storyTransactionRepo.createEvent(story, editor, "Rejected Pending Story")) {
+                return "Story is rejected";
+            } else {
+                return "unsuccessful operation";
             }
         } catch (SQLException ex) {
             Logger.getLogger(Story_TransactionServiceImpl.class.getName()).log(Level.SEVERE, null, ex);
-            return "unsuccessful operation";
         }
-        return "Could not find story";
+        return "Something went wrong";
+        
     }
 
     @Override
