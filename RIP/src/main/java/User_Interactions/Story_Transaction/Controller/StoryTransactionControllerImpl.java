@@ -54,7 +54,11 @@ public class StoryTransactionControllerImpl {
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
     public Response rejectPendingStory(JSONObject jsonObject) {
-        return Response.status(Response.Status.OK).entity(storyTransactionService.rejectPendingStory((Editor) jsonObject.get("editor"), (Story) jsonObject.get("story"))).build();
+        Editor editor = mapper.convertValue( jsonObject.get("editor"), Editor.class);
+        Story story = mapper.convertValue( jsonObject.get("story"), Story.class);
+        
+        return Response.status(Response.Status.OK).entity(storyTransactionService.rejectPendingStory(editor, story)).build();
+        
     }
 
     @Path("/removeWriter")

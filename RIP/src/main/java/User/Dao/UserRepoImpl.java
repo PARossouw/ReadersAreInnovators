@@ -42,67 +42,67 @@ public class UserRepoImpl extends DBManager implements UserRepo {
     public User getUser(User user) throws SQLException {
         User u = new User();
 
-        if (getConnection() != null) {
-            
-            ps = getConnection().prepareStatement("select userid, username, email, "
-                    + "phonenumber, password, isactive, dateadded, role from user "
-                    + "where username = ? or email = ?");
-            ps.setString(1, user.getUsername());
-            ps.setString(2, user.getEmail());
+        try {
+            if (getConnection() != null) {
 
+                ps = getConnection().prepareStatement("select userid, username, email, "
+                        + "phonenumber, password, isactive, dateadded, role from user "
+                        + "where username = ? or email = ?");
+                ps.setString(1, user.getUsername());
+                ps.setString(2, user.getEmail());
 
-            rs = ps.executeQuery();
+                rs = ps.executeQuery();
 
-            if (rs.next()) {
-                int userID = (rs.getInt("userid"));
-                String username = (rs.getString("username"));
-                String email = (rs.getString("email"));
+                if (rs.next()) {
+                    int userID = (rs.getInt("userid"));
+                    String username = (rs.getString("username"));
+                    String email = (rs.getString("email"));
 //                String phoneNumber = (rs.getString("phonenumber"));
-                String password = (rs.getString("password"));
-                Boolean isActive = (rs.getBoolean("isactive"));
+                    String password = (rs.getString("password"));
+                    Boolean isActive = (rs.getBoolean("isactive"));
 
 //                Calendar calendar = Calendar.getInstance();
 //                calendar.setTime(rs.getDate("dateadded"));
-                Integer role = (rs.getInt("role"));
+                    Integer role = (rs.getInt("role"));
 
-                switch (role) {
+                    switch (role) {
 
-                    case 1:
-                        u = new Reader();
-                        break;
-                    case 2:
-                        u = new Writer();
-                        break;
-                    case 3:
-                        u = new Editor();
-                        break;
-                    case 4:
-                        u = new AdminEditor();
-                        break;
-                    default:
-                        u = new Reader();
-                }
+                        case 1:
+                            u = new Reader();
+                            break;
+                        case 2:
+                            u = new Writer();
+                            break;
+                        case 3:
+                            u = new Editor();
+                            break;
+                        case 4:
+                            u = new AdminEditor();
+                            break;
+                        default:
+                            u = new Reader();
+                    }
 
-                u.setUserID(userID);
-                u.setUsername(username);
-                u.setEmail(email);
+                    u.setUserID(userID);
+                    u.setUsername(username);
+                    u.setEmail(email);
 //                u.setPhoneNumber(phoneNumber);
-                u.setPassword(password);
-                u.setIsActive(isActive);
+                    u.setPassword(password);
+                    u.setIsActive(isActive);
 //                u.setDateAdded(calendar);
+                }
+                return u;
             }
-
+        } finally {
+            close();
         }
-        close();
+//        close();
 
 //        u.setUsername("amet");
 //        u.setEmail("amet1@gmail.com");
 //        u.setPassword("password");
 //        u.setRoleID(3);
         //return null;
-
-        
-
         return u;
     }
 
