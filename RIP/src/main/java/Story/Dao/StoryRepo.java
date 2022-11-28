@@ -35,6 +35,6 @@ public interface StoryRepo {
 
     List<Story> searchForStory(String text) throws SQLException;
 
-    public List<Story> getFiveStoriesForStoryOfTheDay() throws SQLException;
+    List<Story> getStoriesForStoryOfTheDay() throws SQLException;
 
 }
