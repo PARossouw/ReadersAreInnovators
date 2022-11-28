@@ -14,6 +14,7 @@ import jakarta.ws.rs.Consumes;
 import jakarta.ws.rs.GET;
 import jakarta.ws.rs.POST;
 import jakarta.ws.rs.Path;
+import jakarta.ws.rs.PathParam;
 import jakarta.ws.rs.Produces;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
@@ -91,12 +92,15 @@ public class StoryControllerImpl {
     }
 
     
-    @Path("/viewLikedStories")
+    @Path("/viewLikedStories/{readerID}")
     @GET
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
-    public Response viewLikedStories(User reader){
-        return Response.status(Response.Status.OK).entity(storyService.getLikedStory(reader)).build();
+    public Response viewLikedStories(@PathParam("readerID")Integer readerID){
+        User reader = new User();
+        reader.setUserID(readerID);
+        List<Story> likedStories = storyService.getLikedStory(reader);
+        return Response.status(Response.Status.OK).entity(likedStories).build();
     }
     
 

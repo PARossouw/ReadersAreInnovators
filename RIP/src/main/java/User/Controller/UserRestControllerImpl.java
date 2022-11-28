@@ -2,6 +2,7 @@ package User.Controller;
 
 import Category.Dao.CategoryRepoImpl;
 import Category.Model.Category;
+import Story.Dao.StoryRepoImpl;
 import User.Dao.UserRepoImpl;
 import User.Model.Editor;
 import User.Model.Reader;
@@ -28,7 +29,7 @@ public class UserRestControllerImpl{
     private final UserService userService;
 
     public UserRestControllerImpl() {
-        this.userService = new UserServiceImpl(new UserRepoImpl(), new CategoryRepoImpl());
+        this.userService = new UserServiceImpl(new UserRepoImpl(), new CategoryRepoImpl(), new StoryRepoImpl());
     }
 
     @Path("/login")
