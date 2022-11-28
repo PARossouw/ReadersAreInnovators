@@ -3,6 +3,7 @@ package Story.Controller;
 import Category.Model.Category;
 import Story.Model.Story;
 import User.Model.Reader;
+import User.Model.User;
 import User.Model.Writer;
 import java.util.List;
 
@@ -20,6 +21,6 @@ public interface StoryController {
 
     List<Story> searchForStory(String StoryParameter);
     
-    List<Story> viewLikedStories(Reader reader);
+    List<Story> viewLikedStories(User reader);
 
 }

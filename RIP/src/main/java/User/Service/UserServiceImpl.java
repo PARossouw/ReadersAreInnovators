@@ -8,6 +8,7 @@ import User.Model.Reader;
 import User.Model.User;
 import User.Model.Writer;
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -81,20 +82,20 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public String blockWriter(Writer writer) {
+    public String blockWriter(String[] results, ArrayList<Writer> writers) {
 
-        try {
-            if (userRepo.getUser(writer) == null) {
-                return "No such user exists.";
-            } else if (userRepo.getUser(writer).getRoleID() != 2) {
-                return "This user is not a writer.";
-            } else {
-                return userRepo.blockWriter(writer) ? "Writer status removed." : "Could not removed writer status from this account at this time.";
-            }
-        } catch (SQLException ex) {
-            Logger.getLogger(UserServiceImpl.class.getName()).log(Level.SEVERE, null, ex);
-        }
-        return "Opertaion unsuccessful, please try again later.";
+//        try {
+//            if (userRepo.getUser(writer) == null) {
+//                return "No such user exists.";
+//            } else if (userRepo.getUser(writer).getRoleID() != 2) {
+//                return "This user is not a writer.";
+//            } else {
+//                return userRepo.blockWriter(writer) ? "Writer status removed." : "Could not removed writer status from this account at this time.";
+//            }
+//        } catch (SQLException ex) {
+//            Logger.getLogger(UserServiceImpl.class.getName()).log(Level.SEVERE, null, ex);
+//        }
+//        return "Opertaion unsuccessful, please try again later.";
     }
 
     @Override
@@ -159,5 +160,18 @@ public class UserServiceImpl implements UserService {
             Logger.getLogger(UserServiceImpl.class.getName()).log(Level.SEVERE, null, ex);
         }
         return topApprovingEditors;
+    }
+
+    @Override
+    public List<Writer> writerSearch(String writerSearch) {
+        
+        List<Writer> writers = new ArrayList<>();
+        try {
+            writers = userRepo.writerSearch(writerSearch);
+            return writers;
+        } catch (SQLException ex) {
+            Logger.getLogger(UserServiceImpl.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return writers;
     }
 }

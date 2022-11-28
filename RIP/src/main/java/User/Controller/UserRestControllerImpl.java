@@ -13,6 +13,7 @@ import jakarta.ws.rs.Consumes;
 import jakarta.ws.rs.GET;
 import jakarta.ws.rs.POST;
 import jakarta.ws.rs.Path;
+import jakarta.ws.rs.PathParam;
 import jakarta.ws.rs.Produces;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
@@ -90,8 +91,11 @@ public class UserRestControllerImpl{
     @POST
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
-    public Response blockWriter(Writer writer) {
-        return Response.status(Response.Status.OK).entity(userService.blockWriter(writer)).build();
+    public Response blockWriter(JSONObject jsonObject) {
+        String[] results = (String[])jsonObject.get("results");
+        ArrayList<Writer> writers = (ArrayList<Writer>)jsonObject.get("writersSeacrched");
+        
+        return Response.status(Response.Status.OK).entity(userService.blockWriter(results, writers)).build();
     }
 
     @Path("/editor/add")
@@ -134,4 +138,13 @@ public class UserRestControllerImpl{
         return Response.status(Response.Status.OK).entity(topApprovingEditors).build();
     }
 
+    @Path("/searchWriter/{writerSearch}")
+    @GET
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response writerSearch(@PathParam("writerSearch")String writerSearch) {
+        List<Writer> writers = new ArrayList<>();
+        writers = userService.writerSearch(writerSearch);
+        return Response.status(Response.Status.OK).entity(writers).build();
+        
+    }
 }

@@ -8,6 +8,7 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
 import User.Model.Reader;
+import User.Model.User;
 
 public class CategoryRepoImpl extends DBManager implements CategoryRepo {
 
@@ -84,12 +85,13 @@ public class CategoryRepoImpl extends DBManager implements CategoryRepo {
     }
 
     @Override
-    public List<Category> getPreferredCategories(Reader reader) throws SQLException {
+    public List<Category> getPreferredCategories(User reader) throws SQLException {
 
         List<Category> categoryList = new ArrayList<>();
 
         if (getConnection() != null) {
-            ps = getConnection().prepareStatement("select categoryID, category, dateAdded from Category where CategoryID IN (select category from user_category where user = ?)");
+            ps = getConnection().prepareStatement("select categoryID, category, dateAdded from Category "
+                    + "where CategoryID IN (select category from user_category where user = ?)");
             ps.setInt(1, reader.getUserID());
             rs = ps.executeQuery();
 
@@ -99,9 +101,7 @@ public class CategoryRepoImpl extends DBManager implements CategoryRepo {
                 calendar.setTime(rs.getDate("dateAdded"));
 
                 categoryList.add(new Category(rs.getInt("categoryID"), rs.getString("category"), calendar));
-
             }
-
         }
         close();
         return categoryList;

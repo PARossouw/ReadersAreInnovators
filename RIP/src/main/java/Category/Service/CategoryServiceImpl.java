@@ -5,6 +5,7 @@ import Category.Model.Category;
 import DBManager.DBManager;
 import Story.Model.Story;
 import User.Model.Reader;
+import User.Model.User;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
@@ -63,7 +64,7 @@ public class CategoryServiceImpl extends DBManager implements CategoryService {
     }
 
     @Override
-    public List<Category> getPreferredCategories(Reader reader) {
+    public List<Category> getPreferredCategories(User reader) {
         List<Category> preferredCategories = new ArrayList<>();
         try {
             return preferredCategories = categoryRepo.getPreferredCategories(reader);

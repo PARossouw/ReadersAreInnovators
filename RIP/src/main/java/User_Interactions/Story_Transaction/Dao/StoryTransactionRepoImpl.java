@@ -10,23 +10,29 @@ public class StoryTransactionRepoImpl extends DBManager implements StoryTransact
 
     @Override
     public boolean createEvent(Story story, User user, String action) throws SQLException {
+        user.getUserID();
+        story.getStoryID();
+        return true;
 
-        Boolean createdEvent = false;
-
-        if (getConnection() != null) {
-
-            ps = getConnection().prepareStatement("insert into story_transaction (story, user, action) values (?, ?, ?)");
-            ps.setInt(1, story.getStoryID());
-            ps.setInt(2, user.getUserID());
-            ps.setString(3, action);
-
-            rowsAffected = ps.executeUpdate();
-
-            createdEvent = true;
-        }
-
-        close();
-        return createdEvent;
+//        try {
+//            if (getConnection() != null) {
+//
+//                ps = getConnection().prepareStatement("insert into story_transaction (story, user, action) values (?, ?, ?)");
+//                ps.setInt(1, 1);
+//                ps.setInt(2, 1);
+//                ps.setString(3, action);
+//
+//                rowsAffected = ps.executeUpdate();
+//
+//                //createdEvent = true;
+//                return rowsAffected == 1;
+//            }
+//        } finally {
+//
+//            close();
+//        }
+//
+//        return false;
 
     }
 
