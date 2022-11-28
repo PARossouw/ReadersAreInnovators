@@ -11,6 +11,7 @@ import jakarta.ws.rs.Consumes;
 import jakarta.ws.rs.GET;
 import jakarta.ws.rs.POST;
 import jakarta.ws.rs.Path;
+import jakarta.ws.rs.PathParam;
 import jakarta.ws.rs.Produces;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
@@ -50,12 +51,15 @@ public class CategoryControllerImpl{
         return Response.status(Response.Status.OK).entity(categoryService.topCategoriesForTheMonth()).build();
     }
     
-    @Path("/preferredCategories")
+    @Path("/preferredCategories/{readerID}")
     @GET
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
-    public Response getPreferredCategories(User reader) {
-        return Response.status(Response.Status.OK).entity(categoryService.getPreferredCategories(reader)).build();
+    public Response getPreferredCategories(@PathParam("readerID")Integer readerID) {
+        User reader = new User();
+        reader.setUserID(readerID);
+        List<Category> preferredCategories = categoryService.getPreferredCategories(reader);
+        return Response.status(Response.Status.OK).entity(preferredCategories).build();
     }
 
 }

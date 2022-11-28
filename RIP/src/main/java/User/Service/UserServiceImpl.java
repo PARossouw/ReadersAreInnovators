@@ -2,6 +2,7 @@ package User.Service;
 
 import Category.Dao.CategoryRepo;
 import Category.Model.Category;
+import Story.Dao.StoryRepo;
 import User.Dao.UserRepo;
 import User.Model.Editor;
 import User.Model.Reader;
@@ -19,16 +20,19 @@ public class UserServiceImpl implements UserService {
 
     private final UserRepo userRepo;
     private final CategoryRepo categoryRepo;
+    private final StoryRepo storyRepo;
 
-    public UserServiceImpl(UserRepo userRepo, CategoryRepo categoryRepo) {
+    public UserServiceImpl(UserRepo userRepo, CategoryRepo categoryRepo, StoryRepo storyRepo) {
         this.userRepo = userRepo;
         this.categoryRepo = categoryRepo;
+        this.storyRepo = storyRepo;
     }
 
     @Override
     public User login(User user) {
 
-        User currentUser = new User();
+        User currentUser = null;
+        
         try {
             //this should check if the user password equals the password
             currentUser = userRepo.getUser(user);
@@ -36,7 +40,13 @@ public class UserServiceImpl implements UserService {
             if (currentUser != null) {
                 if (currentUser.getPassword().equals(user.getPassword()) && (currentUser.getUsername().equals(user.getUsername())
                         || currentUser.getEmail().equals(user.getEmail()))) {
+                    
+                    if (currentUser instanceof Reader) {
+                        ((Reader) currentUser).setPreferredCategories(categoryRepo.getPreferredCategories(currentUser));
+                        ((Reader) currentUser).setLikedStories(storyRepo.getLikedStories(currentUser));
+                    }
                     return currentUser;
+                    
                 } else {
                     return null;
                 }
@@ -96,6 +106,7 @@ public class UserServiceImpl implements UserService {
 //            Logger.getLogger(UserServiceImpl.class.getName()).log(Level.SEVERE, null, ex);
 //        }
 //        return "Opertaion unsuccessful, please try again later.";
+        return null;
     }
 
     @Override
@@ -164,7 +175,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public List<Writer> writerSearch(String writerSearch) {
-        
+
         List<Writer> writers = new ArrayList<>();
         try {
             writers = userRepo.writerSearch(writerSearch);
