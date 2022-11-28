@@ -5,6 +5,7 @@ import User.Model.Editor;
 import User.Model.Reader;
 import User.Model.User;
 import User.Model.Writer;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -16,7 +17,7 @@ public interface UserService {
 
     String registerUser(User user);
 
-    String blockWriter(Writer writer);
+    String blockWriter(String[] results, ArrayList<Writer> writers);
 
     String addNewEditor(Editor editor);
 
@@ -27,4 +28,6 @@ public interface UserService {
     Map<Writer, Integer> topRejectedWritersForMonth();
 
     Map<Writer, Integer> topApprovingEditors();
+
+    List<Writer> writerSearch(String writerSearch);
 }

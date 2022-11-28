@@ -5,9 +5,11 @@ import Category.Model.Category;
 import Story.Dao.StoryRepo;
 import Story.Model.Story;
 import User.Model.Reader;
+import User.Model.User;
 import User.Model.Writer;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -132,7 +134,7 @@ public class StoryServiceImpl implements StoryService {
     }
 
     @Override
-    public List<Story> getLikedStory(Reader reader) {
+    public List<Story> getLikedStory(User reader) {
 
         List<Story> likedStories = new ArrayList<>();
         if (reader == null) {
@@ -148,14 +150,33 @@ public class StoryServiceImpl implements StoryService {
     }
 
     @Override
-    public List<Story> getFiveStoriesForStoryOfTheDay() {
+    public List<Story> getPendingStories() {
+
         List<Story> stories = new ArrayList<>();
+
         try {
-            return storyRepo.getFiveStoriesForStoryOfTheDay();
+            return storyRepo.getPendingStories();
         } catch (SQLException ex) {
             Logger.getLogger(StoryServiceImpl.class.getName()).log(Level.SEVERE, null, ex);
         }
+
         return stories;
+
+    }
+
+    @Override
+    public List<Story> getStoriesForStoryOfTheDay() {
+
+        List<Story> stories = new ArrayList<>();
+
+        try {
+            return storyRepo.getStoriesForStoryOfTheDay();
+        } catch (SQLException ex) {
+            Logger.getLogger(StoryServiceImpl.class.getName()).log(Level.SEVERE, null, ex);
+        }
+
+        return stories;
+
     }
 
     @Override

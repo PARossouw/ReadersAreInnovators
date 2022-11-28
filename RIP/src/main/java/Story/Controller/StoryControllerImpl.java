@@ -7,6 +7,7 @@ import Story.Model.Story;
 import Story.Service.StoryService;
 import Story.Service.StoryServiceImpl;
 import User.Model.Reader;
+import User.Model.User;
 import User.Model.Writer;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.ws.rs.Consumes;
@@ -18,6 +19,9 @@ import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
 import java.util.AbstractList;
 import java.util.ArrayList;
+
+import java.util.Calendar;
+
 import java.util.List;
 import org.json.simple.JSONObject;
 
@@ -88,20 +92,27 @@ public class StoryControllerImpl {
 
     
     @Path("/viewLikedStories")
-    @POST
+    @GET
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
-    public Response viewLikedStories(Reader reader){
+    public Response viewLikedStories(User reader){
         return Response.status(Response.Status.OK).entity(storyService.getLikedStory(reader)).build();
     }
     
 
-    @Path("/getFiveStoriesForStoryOfTheDay")
+    @Path("/getPendingStories")
     @GET
     @Produces(MediaType.APPLICATION_JSON)
-    public Response getFiveStoriesForStoryOfTheDay() {
-        return Response.status(Response.Status.OK).entity(storyService.getFiveStoriesForStoryOfTheDay()).build();
-
+    public Response getPendingStories() {
+        return Response.status(Response.Status.OK).entity(storyService.getPendingStories()).build();
+    }
+    
+    @Path("/getStoriesForStoryOfTheDay")
+    @GET
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response getStoriesForStoryOfTheDay() {
+        return Response.status(Response.Status.OK).entity(storyService.getStoriesForStoryOfTheDay()).build();
     }
     
     @Path("/getTop20StoriesForMonth")
