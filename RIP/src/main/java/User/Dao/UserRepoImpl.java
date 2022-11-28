@@ -8,7 +8,9 @@ import java.util.Calendar;
 import User.Model.Editor;
 import User.Model.Reader;
 import User.Model.Writer;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 public class UserRepoImpl extends DBManager implements UserRepo {
@@ -267,4 +269,64 @@ public class UserRepoImpl extends DBManager implements UserRepo {
         return rowsAffected == 1;
     }
 
+    @Override
+    public List<Writer> writerSearch(String writerSearch) throws SQLException {
+
+        List<Writer> writers = new ArrayList<>();
+//        writer.setUsername(writerSearch);
+//        writers.add(writer);
+//        return writers;
+
+        if (getConnection() != null) {
+
+            ps = getConnection().prepareStatement("select userid, username, email, "
+                    + "phonenumber, password, isactive, dateadded, role from user "
+                    + "where username like ? and role = 2");
+
+            writerSearch = "%" + writerSearch + "%";
+            ps.setString(1, writerSearch);
+
+            rs = ps.executeQuery();
+
+            while (rs.next()) {
+                Writer writer = new Writer();
+                int userID = (rs.getInt("userid"));
+                String username = (rs.getString("username"));
+                String email = (rs.getString("email"));
+                String phoneNumber = (rs.getString("phonenumber"));
+                String password = (rs.getString("password"));
+                Boolean isActive = (rs.getBoolean("isactive"));
+
+                //watch out for calendar
+//                Calendar calendar = Calendar.getInstance();
+//                calendar.setTime(rs.getDate("dateadded"));
+                Integer role = (rs.getInt("role"));
+
+                writer.setUserID(userID);
+                writer.setUsername(username);
+                writer.setEmail(email);
+                writer.setPhoneNumber(phoneNumber);
+                writer.setPassword(password);
+                writer.setIsActive(isActive);
+//                u.setDateAdded(calendar);
+
+                writers.add(writer);
+            }
+        }
+        close();
+        return writers;
+    }
+
 }
+
+//hardcoding
+//        List<Writer> writers = new ArrayList<>();
+//        Writer writer1 = new Writer();
+//        writer1.setUsername("Anton");
+//        Writer writer2 = new Writer();
+//        writer2.setUsername("Buffy");
+//        
+//        writers.add(writer1);
+//        writers.add(writer2);
+//        return writers;
+

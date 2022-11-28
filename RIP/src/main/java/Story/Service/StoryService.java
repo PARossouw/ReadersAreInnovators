@@ -23,6 +23,8 @@ public interface StoryService {
     
     List<Story> getLikedStory(User reader);
 
-    List<Story> getFiveStoriesForStoryOfTheDay();
+    List<Story> getPendingStories();
+    
+    List<Story> getStoriesForStoryOfTheDay();
 
 }

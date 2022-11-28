@@ -4,6 +4,7 @@ import User.Model.Editor;
 import User.Model.User;
 import User.Model.Writer;
 import java.sql.SQLException;
+import java.util.List;
 import java.util.Map;
 
 public interface UserRepo {
@@ -23,5 +24,7 @@ public interface UserRepo {
     Map<Editor, Integer> topApprovingEditors() throws SQLException;
 
     Boolean blockWriter(Writer writer) throws SQLException;
+
+    List<Writer> writerSearch(String writerSearch) throws SQLException;
 
 }
