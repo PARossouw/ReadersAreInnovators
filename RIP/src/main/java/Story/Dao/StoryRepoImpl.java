@@ -9,6 +9,7 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 import User.Model.Reader;
+import User.Model.User;
 import User.Model.Writer;
 import java.util.Collections;
 
@@ -114,7 +115,7 @@ public class StoryRepoImpl extends DBManager implements StoryRepo {
     }
 
     @Override
-    public List<Story> getLikedStories(Reader reader) throws SQLException {
+    public List<Story> getLikedStories(User reader) throws SQLException {
 
         List<Story> readersLikesStories = new ArrayList<>();
         Story story = null;
@@ -140,9 +141,8 @@ public class StoryRepoImpl extends DBManager implements StoryRepo {
                 boolean isDraft = rs.getBoolean("isDraft");
                 boolean isActive = rs.getBoolean("isActive");
 
-                Date createdOn = rs.getDate("createdOn");
                 Calendar calendar = Calendar.getInstance();
-                calendar.setTime(createdOn);
+                calendar.setTime(rs.getDate("createdOn"));
 
                 boolean allowComments = rs.getBoolean("allowComments");
                 boolean isApproved = rs.getBoolean("isApproved");
@@ -158,7 +158,6 @@ public class StoryRepoImpl extends DBManager implements StoryRepo {
             }
         }
         close();
-
         return readersLikesStories;
     }
 

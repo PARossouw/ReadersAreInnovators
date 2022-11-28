@@ -5,6 +5,7 @@ import Story.Model.Story;
 import java.sql.SQLException;
 import java.util.List;
 import User.Model.Reader;
+import User.Model.User;
 import User.Model.Writer;
 
 public interface StoryRepo {
@@ -13,7 +14,7 @@ public interface StoryRepo {
 
     List<Story> getRejectedStories() throws SQLException;
 
-    List<Story> getLikedStories(Reader reader) throws SQLException;
+    List<Story> getLikedStories(User reader) throws SQLException;
 
     Boolean submitStory(Story story) throws SQLException;
 

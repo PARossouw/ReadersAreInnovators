@@ -6,6 +6,7 @@ import Category.Service.CategoryService;
 import Category.Service.CategoryServiceImpl;
 import Story.Model.Story;
 import User.Model.Reader;
+import User.Model.User;
 import jakarta.ws.rs.Consumes;
 import jakarta.ws.rs.GET;
 import jakarta.ws.rs.POST;
@@ -50,10 +51,10 @@ public class CategoryControllerImpl{
     }
     
     @Path("/preferredCategories")
-    @POST
+    @GET
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
-    public Response getPreferredCategories(Reader reader) {
+    public Response getPreferredCategories(User reader) {
         return Response.status(Response.Status.OK).entity(categoryService.getPreferredCategories(reader)).build();
     }
 
