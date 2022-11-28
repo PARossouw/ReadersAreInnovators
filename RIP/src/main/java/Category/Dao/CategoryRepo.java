@@ -5,6 +5,7 @@ import Story.Model.Story;
 import java.sql.SQLException;
 import java.util.List;
 import User.Model.Reader;
+import User.Model.User;
 
 public interface CategoryRepo {
 
@@ -16,7 +17,7 @@ public interface CategoryRepo {
 
     Boolean updateCategory(Category category) throws SQLException;
 
-    List<Category> getPreferredCategories(Reader reader) throws SQLException;
+    List<Category> getPreferredCategories(User reader) throws SQLException;
 
     Boolean addPreferredCategories(Reader reader, List<Category> categories) throws SQLException;
     

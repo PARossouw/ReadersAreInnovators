@@ -8,7 +8,9 @@ import java.util.Calendar;
 import User.Model.Editor;
 import User.Model.Reader;
 import User.Model.Writer;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 public class UserRepoImpl extends DBManager implements UserRepo {
@@ -42,61 +44,68 @@ public class UserRepoImpl extends DBManager implements UserRepo {
     public User getUser(User user) throws SQLException {
         User u = new User();
 
-        if (getConnection() != null) {
-            ps = getConnection().prepareStatement("select userid, username, email, "
-                    + "phonenumber, password, isactive, dateadded, role from user "
-                    + "where username = ? or email = ?");
-            ps.setString(1, user.getUsername());
-            ps.setString(2, user.getEmail());
+        try {
+            if (getConnection() != null) {
 
-            rs = ps.executeQuery();
+                ps = getConnection().prepareStatement("select userid, username, email, "
+                        + "phonenumber, password, isactive, dateadded, role from user "
+                        + "where username = ? or email = ?");
+                ps.setString(1, user.getUsername());
+                ps.setString(2, user.getEmail());
 
-            if (rs.next()) {
-                int userID = (rs.getInt("userid"));
-                String username = (rs.getString("username"));
-                String email = (rs.getString("email"));
-//                String phoneNumber = (rs.getString("phonenumber"));
-                String password = (rs.getString("password"));
-                Boolean isActive = (rs.getBoolean("isactive"));
+                rs = ps.executeQuery();
 
-//                Calendar calendar = Calendar.getInstance();
-//                calendar.setTime(rs.getDate("dateadded"));
-                Integer role = (rs.getInt("role"));
+                if (rs.next()) {
+                    int userID = (rs.getInt("userid"));
+                    String username = (rs.getString("username"));
+                    String email = (rs.getString("email"));
+                    String phoneNumber = (rs.getString("phonenumber"));
+                    String password = (rs.getString("password"));
+                    Boolean isActive = (rs.getBoolean("isactive"));
 
-                switch (role) {
+                    Calendar calendar = Calendar.getInstance();
+                    calendar.setTime(rs.getDate("dateadded"));
+                    Integer role = (rs.getInt("role"));
 
-                    case 1:
-                        u = new Reader();
-                        break;
-                    case 2:
-                        u = new Writer();
-                        break;
-                    case 3:
-                        u = new Editor();
-                        break;
-                    case 4:
-                        u = new AdminEditor();
-                        break;
-                    default:
-                        u = new Reader();
+                    switch (role) {
+
+                        case 1:
+                            u = new Reader();
+                            break;
+                        case 2:
+                            u = new Writer();
+                            break;
+                        case 3:
+                            u = new Editor();
+                            break;
+                        case 4:
+                            u = new AdminEditor();
+                            break;
+                        default:
+                            u = new Reader();
+                    }
+
+                    u.setUserID(userID);
+                    u.setUsername(username);
+                    u.setEmail(email);
+                    u.setPhoneNumber(phoneNumber);
+                    u.setPassword(password);
+                    u.setIsActive(isActive);
+                    u.setDateAdded(calendar);
                 }
-
-                u.setUserID(userID);
-                u.setUsername(username);
-                u.setEmail(email);
-//                u.setPhoneNumber(phoneNumber);
-                u.setPassword(password);
-                u.setIsActive(isActive);
-//                u.setDateAdded(calendar);
+                return u;
             }
-
+        } finally {
+            close();
         }
+
         close();
 
 //        u.setUsername("amet");
 //        u.setEmail("amet1@gmail.com");
 //        u.setPassword("password");
         //return null;
+
 
         return u;
     }
@@ -269,4 +278,64 @@ public class UserRepoImpl extends DBManager implements UserRepo {
         return rowsAffected == 1;
     }
 
+    @Override
+    public List<Writer> writerSearch(String writerSearch) throws SQLException {
+
+        List<Writer> writers = new ArrayList<>();
+//        writer.setUsername(writerSearch);
+//        writers.add(writer);
+//        return writers;
+
+        if (getConnection() != null) {
+
+            ps = getConnection().prepareStatement("select userid, username, email, "
+                    + "phonenumber, password, isactive, dateadded, role from user "
+                    + "where username like ? and role = 2");
+
+            writerSearch = "%" + writerSearch + "%";
+            ps.setString(1, writerSearch);
+
+            rs = ps.executeQuery();
+
+            while (rs.next()) {
+                Writer writer = new Writer();
+                int userID = (rs.getInt("userid"));
+                String username = (rs.getString("username"));
+                String email = (rs.getString("email"));
+                String phoneNumber = (rs.getString("phonenumber"));
+                String password = (rs.getString("password"));
+                Boolean isActive = (rs.getBoolean("isactive"));
+
+                //watch out for calendar
+//                Calendar calendar = Calendar.getInstance();
+//                calendar.setTime(rs.getDate("dateadded"));
+                Integer role = (rs.getInt("role"));
+
+                writer.setUserID(userID);
+                writer.setUsername(username);
+                writer.setEmail(email);
+                writer.setPhoneNumber(phoneNumber);
+                writer.setPassword(password);
+                writer.setIsActive(isActive);
+//                u.setDateAdded(calendar);
+
+                writers.add(writer);
+            }
+        }
+        close();
+        return writers;
+    }
+
 }
+
+//hardcoding
+//        List<Writer> writers = new ArrayList<>();
+//        Writer writer1 = new Writer();
+//        writer1.setUsername("Anton");
+//        Writer writer2 = new Writer();
+//        writer2.setUsername("Buffy");
+//        
+//        writers.add(writer1);
+//        writers.add(writer2);
+//        return writers;
+

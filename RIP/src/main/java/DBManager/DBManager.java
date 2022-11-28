@@ -10,7 +10,7 @@ import java.sql.SQLException;
 public class DBManager {
 
     private static DataSource dSource;
-    private static BasicDataSource dataSource;
+    private final static BasicDataSource dataSource;
     protected PreparedStatement ps;
     protected ResultSet rs;
     protected Integer rowsAffected;

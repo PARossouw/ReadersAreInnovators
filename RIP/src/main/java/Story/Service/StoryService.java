@@ -3,6 +3,7 @@ package Story.Service;
 import Category.Model.Category;
 import Story.Model.Story;
 import User.Model.Reader;
+import User.Model.User;
 import User.Model.Writer;
 import java.util.List;
 
@@ -20,8 +21,11 @@ public interface StoryService {
 
     List<Story> searchForStory(String storyParameter);
     
-    List<Story> getLikedStory(Reader reader);
+    List<Story> getLikedStory(User reader);
 
-    List<Story> getFiveStoriesForStoryOfTheDay();
+    List<Story> getPendingStories();
+    
+    List<Story> getStoriesForStoryOfTheDay();
 
+    List<Story> getTop20RatedStoriesOfTheMonth();
 }
