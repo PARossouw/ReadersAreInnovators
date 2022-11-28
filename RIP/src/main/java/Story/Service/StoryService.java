@@ -24,4 +24,5 @@ public interface StoryService {
 
     List<Story> getFiveStoriesForStoryOfTheDay();
 
+    List<Story> getTop20RatedStoriesOfTheMonth();
 }
