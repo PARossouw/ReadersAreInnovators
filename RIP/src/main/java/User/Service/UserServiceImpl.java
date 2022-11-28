@@ -3,6 +3,7 @@ package User.Service;
 import Category.Dao.CategoryRepo;
 import Category.Model.Category;
 import Story.Dao.StoryRepo;
+import Story.Model.Story;
 import User.Dao.UserRepo;
 import User.Model.Editor;
 import User.Model.Reader;
@@ -32,7 +33,7 @@ public class UserServiceImpl implements UserService {
     public User login(User user) {
 
         User currentUser = null;
-        
+
         try {
             //this should check if the user password equals the password
             currentUser = userRepo.getUser(user);
@@ -40,13 +41,21 @@ public class UserServiceImpl implements UserService {
             if (currentUser != null) {
                 if (currentUser.getPassword().equals(user.getPassword()) && (currentUser.getUsername().equals(user.getUsername())
                         || currentUser.getEmail().equals(user.getEmail()))) {
-                    
+
                     if (currentUser instanceof Reader) {
                         ((Reader) currentUser).setPreferredCategories(categoryRepo.getPreferredCategories(currentUser));
                         ((Reader) currentUser).setLikedStories(storyRepo.getLikedStories(currentUser));
+
+                        //need to populate all writer stories if the user is a writer
+                        if (currentUser instanceof Writer) {
+                            List<Story> writerStories = storyRepo.getWriterStories((Writer) currentUser);
+                            ((Writer) currentUser).setAllWriterStories(writerStories);
+                            return currentUser;
+                        }
                     }
+
                     return currentUser;
-                    
+
                 } else {
                     return null;
                 }
@@ -92,21 +101,21 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public String blockWriter(String[] results, ArrayList<Writer> writers) {
+    public String blockWriter(Writer writer) {
 
-//        try {
-//            if (userRepo.getUser(writer) == null) {
-//                return "No such user exists.";
-//            } else if (userRepo.getUser(writer).getRoleID() != 2) {
-//                return "This user is not a writer.";
-//            } else {
-//                return userRepo.blockWriter(writer) ? "Writer status removed." : "Could not removed writer status from this account at this time.";
-//            }
-//        } catch (SQLException ex) {
-//            Logger.getLogger(UserServiceImpl.class.getName()).log(Level.SEVERE, null, ex);
-//        }
-//        return "Opertaion unsuccessful, please try again later.";
-        return null;
+        try {
+            if (userRepo.getUser(writer) == null) {
+                return "No such user exists.";
+            } else if (writer.getRoleID() != 2) {
+                return "This user is not a writer.";
+            } else {
+                return userRepo.blockWriter(writer) ? "Writer status removed." : "Could not removed writer status from this account at this time.";
+            }
+        } catch (SQLException ex) {
+            Logger.getLogger(UserServiceImpl.class.getName()).log(Level.SEVERE, null, ex);
+        }
+
+        return "unsuccessful";
     }
 
     @Override

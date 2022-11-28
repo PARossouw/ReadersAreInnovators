@@ -80,7 +80,19 @@ public class StoryControllerImpl {
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
     public Response retrieveStory(Story story) {
-        return Response.status(Response.Status.OK).entity(storyService.retrieveStory(story)).build();
+//        return Response.status(Response.Status.OK).entity(storyService.retrieveStory(story)).build();
+
+Story storyObj = new Story();
+storyObj.setStoryID(420);
+        storyObj.setTitle("DAO practice Title");
+        storyObj.setAvgRating(2.9);
+        storyObj.setWriter("DAO Pratice Author Tarun Sing");
+        storyObj.setDescription("DAO Practice Description");
+        storyObj.setBody("DAO Practice Body");
+        storyObj.setViews(504);
+        storyObj.setLikes(88);
+
+        return Response.status(Response.Status.OK).entity(storyObj).build();
     }
 
     @Path("/search")

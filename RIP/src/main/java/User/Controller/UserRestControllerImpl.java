@@ -10,6 +10,7 @@ import User.Model.User;
 import User.Model.Writer;
 import User.Service.UserService;
 import User.Service.UserServiceImpl;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.ws.rs.Consumes;
 import jakarta.ws.rs.GET;
 import jakarta.ws.rs.POST;
@@ -24,9 +25,10 @@ import java.util.Map;
 import org.json.simple.JSONObject;
 
 @Path("/User")
-public class UserRestControllerImpl{
+public class UserRestControllerImpl {
 
     private final UserService userService;
+    ObjectMapper mapper;
 
     public UserRestControllerImpl() {
         this.userService = new UserServiceImpl(new UserRepoImpl(), new CategoryRepoImpl(), new StoryRepoImpl());
@@ -37,9 +39,9 @@ public class UserRestControllerImpl{
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
     public Response login(User user) {
-        
+
         return Response.status(Response.Status.OK).entity(userService.login(user)).build();
-        
+
         //User user2 = userService.login(user);
 //        User user2 = new User(1, "amet", "amet@gmail.com", "password", true, null);
 //        return Response.status(Response.Status.OK).entity(user2).build();
@@ -51,22 +53,21 @@ public class UserRestControllerImpl{
     @Produces(MediaType.APPLICATION_JSON)
     public Response addPreferredCategoriesToUser(/*JSONObject jsonObject*/) {
         //return Response.status(Response.Status.OK).entity(userService.addPreferredCategoriesToUser((Reader)jsonObject.get("reader"), (List)jsonObject.get("categories"))).build();
-        
+
         //just for testing the JSONObject
         JSONObject jsonObject = new JSONObject();
-        
-        
+
         Reader reader = new Reader();
         reader.setUsername("username is Anton");
         List<Category> categories = new ArrayList<>();
         categories.add(new Category("sex"));
         categories.add(new Category("drugs"));
         categories.add(new Category("alcohol"));
-        
+
         jsonObject.put("message", userService.addPreferredCategoriesToUser(reader, categories));
-        
+
         return Response.status(Response.Status.OK).entity(jsonObject).build();
-        
+
 //        jsonObject.put("name", reader.getUsername());
 //        
 //        
@@ -84,7 +85,7 @@ public class UserRestControllerImpl{
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
     public Response registerUser(User user) {
-      //  return Response.status(Response.Status.OK).entity("hello again").build();
+        //  return Response.status(Response.Status.OK).entity("hello again").build();
         return Response.status(Response.Status.OK).entity(userService.registerUser(user)).build();
     }
 
@@ -92,11 +93,8 @@ public class UserRestControllerImpl{
     @POST
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
-    public Response blockWriter(JSONObject jsonObject) {
-        String[] results = (String[])jsonObject.get("results");
-        ArrayList<Writer> writers = (ArrayList<Writer>)jsonObject.get("writersSeacrched");
-        
-        return Response.status(Response.Status.OK).entity(userService.blockWriter(results, writers)).build();
+    public Response blockWriter(Writer writer) {
+        return Response.status(Response.Status.OK).entity(userService.blockWriter(writer)).build();
     }
 
     @Path("/editor/add")
@@ -142,10 +140,10 @@ public class UserRestControllerImpl{
     @Path("/searchWriter/{writerSearch}")
     @GET
     @Produces(MediaType.APPLICATION_JSON)
-    public Response writerSearch(@PathParam("writerSearch")String writerSearch) {
+    public Response writerSearch(@PathParam("writerSearch") String writerSearch) {
         List<Writer> writers = new ArrayList<>();
         writers = userService.writerSearch(writerSearch);
         return Response.status(Response.Status.OK).entity(writers).build();
-        
+
     }
 }
