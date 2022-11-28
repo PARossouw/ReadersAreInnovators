@@ -112,17 +112,13 @@ public class CategoryRepoImpl extends DBManager implements CategoryRepo {
         List<Category> categoryList = new ArrayList<>();
 
         if (getConnection() != null) {
-            ps = getConnection().prepareStatement("select categoryID, category, dateAdded from Category "
+            ps = getConnection().prepareStatement("select categoryID, category from Category "
                     + "where CategoryID IN (select category from user_category where user = ?)");
             ps.setInt(1, reader.getUserID());
             rs = ps.executeQuery();
 
             while (rs.next()) {
-
-                Calendar calendar = Calendar.getInstance();
-                calendar.setTime(rs.getDate("dateAdded"));
-
-                categoryList.add(new Category(rs.getInt("categoryID"), rs.getString("category"), calendar));
+                categoryList.add(new Category(rs.getInt("categoryID"), rs.getString("category"), null));
             }
         }
         close();
@@ -136,7 +132,8 @@ public class CategoryRepoImpl extends DBManager implements CategoryRepo {
             ps = getConnection().prepareStatement("insert into user_category (user, category) values(?, ?)");
 
             for (int i = 0; i < categories.size(); i++) {
-                ps.setInt(reader.getUserID(), categories.get(i).getCategoryID());
+                ps.setInt(1, reader.getUserID());
+                ps.setInt(2, categories.get(i).getCategoryID());
 
             }
             rowsAffected = ps.executeBatch().length;

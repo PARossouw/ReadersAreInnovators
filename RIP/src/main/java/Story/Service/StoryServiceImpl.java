@@ -149,7 +149,7 @@ public class StoryServiceImpl implements StoryService {
     public List<Story> getLikedStory(User reader) {
 
         List<Story> likedStories = new ArrayList<>();
-        if (reader == null) {
+        if (reader.getUserID() == null) {
             return null;
         }
 

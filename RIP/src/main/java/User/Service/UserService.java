@@ -17,7 +17,7 @@ public interface UserService {
 
     String registerUser(User user);
 
-    String blockWriter(String[] results, ArrayList<Writer> writers);
+    String blockWriter(Writer writer);
 
     String addNewEditor(Editor editor);
 
