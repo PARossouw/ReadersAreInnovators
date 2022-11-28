@@ -92,21 +92,15 @@ public class StoryControllerImpl {
     @GET
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
-    public Response getFiveStoriesForStoryOfTheDay() {
-        return Response.status(Response.Status.OK).entity(storyService.getFiveStoriesForStoryOfTheDay()).build();
-
-        
-//                Calendar cal = Calendar.getInstance();
-//                Story story = new Story(1, "mock titleexxxx", "mock writer", "mock description", "mock imagepath", "mock body", false, true, cal, true, true, 10, 57, 4.0);
-//                story.setCreatedOn(null);
-//                List<Story> sixStoryList = new ArrayList<>();
-//                sixStoryList.add(story);
-//                sixStoryList.add(story);
-//                sixStoryList.add(story);
-//                sixStoryList.add(story);
-//                sixStoryList.add(story);
-//                
-//        return Response.status(Response.Status.OK).entity(sixStoryList).build();
-
+    public Response getPendingStories() {
+        return Response.status(Response.Status.OK).entity(storyService.getPendingStories()).build();
+    }
+    
+    @Path("/getStoriesForStoryOfTheDay")
+    @GET
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response getStoriesForStoryOfTheDay() {
+        return Response.status(Response.Status.OK).entity(storyService.getStoriesForStoryOfTheDay()).build();
     }
 }

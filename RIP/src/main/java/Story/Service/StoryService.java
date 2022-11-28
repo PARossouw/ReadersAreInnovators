@@ -22,6 +22,8 @@ public interface StoryService {
     
     List<Story> getLikedStory(Reader reader);
 
-    List<Story> getFiveStoriesForStoryOfTheDay();
+    List<Story> getPendingStories();
+    
+    List<Story> getStoriesForStoryOfTheDay();
 
 }
