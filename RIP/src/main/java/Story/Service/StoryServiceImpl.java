@@ -149,12 +149,27 @@ public class StoryServiceImpl implements StoryService {
     }
 
     @Override
-    public List<Story> getFiveStoriesForStoryOfTheDay() {
+    public List<Story> getPendingStories() {
 
         List<Story> stories = new ArrayList<>();
 
         try {
-            return storyRepo.getFiveStoriesForStoryOfTheDay();
+            return storyRepo.getPendingStories();
+        } catch (SQLException ex) {
+            Logger.getLogger(StoryServiceImpl.class.getName()).log(Level.SEVERE, null, ex);
+        }
+
+        return stories;
+
+    }
+
+    @Override
+    public List<Story> getStoriesForStoryOfTheDay() {
+
+        List<Story> stories = new ArrayList<>();
+
+        try {
+            return storyRepo.getStoriesForStoryOfTheDay();
         } catch (SQLException ex) {
             Logger.getLogger(StoryServiceImpl.class.getName()).log(Level.SEVERE, null, ex);
         }

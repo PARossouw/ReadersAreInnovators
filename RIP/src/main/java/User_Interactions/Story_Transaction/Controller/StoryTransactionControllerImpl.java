@@ -3,6 +3,7 @@ package User_Interactions.Story_Transaction.Controller;
 import Story.Dao.StoryRepo;
 import Story.Dao.StoryRepoImpl;
 import Story.Model.Story;
+import User.Dao.UserRepoImpl;
 import User.Model.Editor;
 import User.Model.Writer;
 import User_Interactions.Story_Transaction.Dao.StoryTransactionRepo;
@@ -27,7 +28,7 @@ public class StoryTransactionControllerImpl {
     ObjectMapper mapper = new ObjectMapper();
 
     public StoryTransactionControllerImpl() {
-        this.storyTransactionService = new Story_TransactionServiceImpl(new StoryRepoImpl(), new StoryTransactionRepoImpl());
+        this.storyTransactionService = new Story_TransactionServiceImpl(new StoryRepoImpl(), new StoryTransactionRepoImpl(), new UserRepoImpl());
     }
 
     @Path("/approve")
