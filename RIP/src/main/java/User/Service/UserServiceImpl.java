@@ -96,6 +96,7 @@ public class UserServiceImpl implements UserService {
 //            Logger.getLogger(UserServiceImpl.class.getName()).log(Level.SEVERE, null, ex);
 //        }
 //        return "Opertaion unsuccessful, please try again later.";
+return null;
     }
 
     @Override

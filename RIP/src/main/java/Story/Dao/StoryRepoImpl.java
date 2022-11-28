@@ -403,7 +403,7 @@ public class StoryRepoImpl extends DBManager implements StoryRepo {
 
         if (getConnection() != null) {
             ps = getConnection().prepareStatement("select storyID, title, writer,description, "
-                    + "imagePath, body, isDraft, isActive , createdOn, allowComments, "
+                    + "imagePath, body, isDraft, isActive , createdOn, allowComment, "
                     + "isApproved, views, likes, avgRating from story where storyID = ? ");
             ps.setInt(1, story.getStoryID());
 
@@ -423,14 +423,14 @@ public class StoryRepoImpl extends DBManager implements StoryRepo {
                 Calendar calendar = Calendar.getInstance();
                 calendar.setTime(createdOn);
 
-                boolean allowComments = rs.getBoolean("allowComments");
+                boolean allowComments = rs.getBoolean("allowComment");
                 boolean isApproved = rs.getBoolean("isApproved");
                 int views = rs.getInt("views");
                 int likes = rs.getInt("likes");
                 double avgRating = rs.getDouble("avgRating");
 
                 storyObj = new Story(storyID, title, writer, description, imagePath, body,
-                        isDraft, isActive, calendar, allowComments, isApproved, views, likes, avgRating);
+                        isDraft, isActive, null, allowComments, isApproved, views, likes, avgRating);
 
             }
         }
@@ -444,10 +444,11 @@ public class StoryRepoImpl extends DBManager implements StoryRepo {
     @Override
     public Boolean updateStory(Story story) throws SQLException {
 
-        Boolean storyUpdated = false;
+        
+        int rowsAffected = 0;
         if (getConnection() != null) {
             ps = getConnection().prepareStatement("update story set title = ?, writer = ? ,description = ? , "
-                    + "imagePath = ? , body = ? , isDraft = ?, isActive = ? , createdOn = ?, allowComments = ?, "
+                    + "imagePath = ? , body = ? , isDraft = ?, isActive = ? , createdOn = ?, allowComment = ?, "
                     + "isApproved = ?, views = ?, likes = ?, avgRating = ?  where storyID = ? ");
 
             ps.setString(1, story.getTitle());
@@ -456,22 +457,23 @@ public class StoryRepoImpl extends DBManager implements StoryRepo {
             ps.setString(4, story.getImagePath());
             ps.setString(5, story.getBody());
             ps.setBoolean(6, story.getIsDraft());
-            ps.setBoolean(7, story.getIsActive());
-            ps.setBoolean(8, story.getIsActive());
-            ps.setBoolean(9, story.getAllowComments());
+//            ps.setBoolean(7, story.getIsActive());
+//            ps.setDate(Date)(8, story.getCreatedOn();
+//            ps.setBoolean(9, story.getAllowComments());
             ps.setBoolean(10, story.getIsApproved());
             ps.setInt(11, story.getViews());
-            ps.setDouble(12, story.getAvgRating());
-            ps.setInt(13, story.getLikes());
-            ps.setInt(14, story.getStoryID());
+            ps.setInt(12, story.getLikes());
+            ps.setDouble(13, story.getAvgRating());
+            ps.setInt(14, 1);
 
-            rs = ps.executeQuery();
-            storyUpdated = true;
+            rowsAffected = ps.executeUpdate(); 
+            
+            
 
         }
         close();
 
-        return storyUpdated;
+        return rowsAffected ==1;
     }
 
     @Override

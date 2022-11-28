@@ -107,23 +107,25 @@ public class StoryServiceImpl implements StoryService {
 
     @Override
     public Story retrieveStory(Story story) {
-//        try {
-//            return storyRepo.retrieveStory(story);
+        try {
+            return storyRepo.retrieveStory(story);
+
+        } catch (SQLException ex) {
+            Logger.getLogger(StoryServiceImpl.class.getName()).log(Level.SEVERE, null, ex);
+            return null;
+        }
+
+//Story storyObj = new Story();
+//storyObj.setStoryID(420);
+//        storyObj.setTitle("DAO practice Title");
+//        storyObj.setAvgRating(2.9);
+//        storyObj.setWriter("Anton  Tarun Sing");
+//        storyObj.setDescription("DAO Practice Description");
+//        storyObj.setBody("DAO Practice Body");
+//        storyObj.setViews(888);
+//        storyObj.setLikes(666);
 //
-//        } catch (SQLException ex) {
-//            Logger.getLogger(StoryServiceImpl.class.getName()).log(Level.SEVERE, null, ex);
-//            return null;
-//        }
-
-Story storyObj = new Story();
-storyObj.setStoryID(420);
-        storyObj.setTitle("DAO practice Title");
-        storyObj.setAvgRating(2.9);
-        storyObj.setWriter("DAO Pratice Author Tarun Sing");
-        storyObj.setDescription("DAO Practice Description");
-        storyObj.setBody("DAO Practice Body");
-
-        return storyObj;
+//        return storyObj;
     }
 
     @Override

@@ -14,6 +14,7 @@ import jakarta.ws.rs.Consumes;
 import jakarta.ws.rs.GET;
 import jakarta.ws.rs.POST;
 import jakarta.ws.rs.Path;
+import jakarta.ws.rs.PathParam;
 import jakarta.ws.rs.Produces;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
@@ -63,7 +64,9 @@ public class StoryControllerImpl {
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
     public Response saveStory(Story story) {
+        String goodStory = "Mellisa saved the story";
         return Response.status(Response.Status.OK).entity(storyService.saveStory(story)).build();
+//        return Response.status(Response.Status.OK).entity(goodStory).build();
     }
 
     @Path("/submit")
@@ -96,6 +99,45 @@ public class StoryControllerImpl {
         return Response.status(Response.Status.OK).entity(storyObj).build();
         
     }
+    
+    
+        @Path("/getStory/{storyID}")
+    @GET
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response storySearch(@PathParam("storyID")String storySearch) {
+       
+//        writers = userService.writerSearch(writerSearch);
+    
+      Story storyObj = new Story();
+      storyObj.setStoryID(Integer.parseInt(storySearch));
+      
+      storyObj = storyService.retrieveStory(storyObj);
+//        storyObj.setStoryID(420);
+//        storyObj.setTitle("DAO practice Title");
+//        storyObj.setAvgRating(8.0);
+//        storyObj.setWriter("Controller Pratice Author Tarun Sing");
+//        storyObj.setViews(30);
+//        storyObj.setLikes(300);
+//        storyObj.setDescription("ControllerPractice Description");
+//        storyObj.setBody("DAO Practice Body");
+    
+    
+    
+        return Response.status(Response.Status.OK).entity(storyObj).build();
+        
+    }
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
 
     @Path("/search")
     @POST
