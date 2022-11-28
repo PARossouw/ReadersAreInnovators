@@ -9,6 +9,7 @@ import Story.Service.StoryServiceImpl;
 import User.Model.Reader;
 import User.Model.User;
 import User.Model.Writer;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.ws.rs.Consumes;
 import jakarta.ws.rs.GET;
 import jakarta.ws.rs.POST;
@@ -16,16 +17,19 @@ import jakarta.ws.rs.Path;
 import jakarta.ws.rs.Produces;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
+import java.util.AbstractList;
 import java.util.ArrayList;
 
 import java.util.Calendar;
 
 import java.util.List;
+import org.json.simple.JSONObject;
 
 @Path("/Story")
 public class StoryControllerImpl {
 
     private final StoryService storyService;
+    private ObjectMapper mapper;
 
     public StoryControllerImpl() {
         this.storyService = new StoryServiceImpl(new StoryRepoImpl(), new CategoryRepoImpl());
@@ -35,7 +39,14 @@ public class StoryControllerImpl {
     @POST
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
-    public Response searchStoriesByCategories(List<Category> categories) {
+    public Response searchStoriesByCategories(JSONObject jsonObject) {
+        List<Category> categories = new ArrayList<>();
+        
+        int size = mapper.convertValue( jsonObject.get("size"), Integer.class);
+
+        for(int i = 0; i < size; i++){
+            categories.add(mapper.convertValue(jsonObject.get(i), Category.class));
+        }
         return Response.status(Response.Status.OK).entity(storyService.searchStoriesByCategories(categories)).build();
     }
 
@@ -91,7 +102,6 @@ public class StoryControllerImpl {
 
     @Path("/getPendingStories")
     @GET
-    @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
     public Response getPendingStories() {
         return Response.status(Response.Status.OK).entity(storyService.getPendingStories()).build();
@@ -103,5 +113,13 @@ public class StoryControllerImpl {
     @Produces(MediaType.APPLICATION_JSON)
     public Response getStoriesForStoryOfTheDay() {
         return Response.status(Response.Status.OK).entity(storyService.getStoriesForStoryOfTheDay()).build();
+    }
+    
+    @Path("/getTop20StoriesForMonth")
+    @GET
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response getTop20StoriesForMonth() {
+        return Response.status(Response.Status.OK).entity(storyService.getTop20RatedStoriesOfTheMonth()).build();
+
     }
 }
