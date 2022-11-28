@@ -5,6 +5,7 @@ import Category.Model.Category;
 import Story.Dao.StoryRepo;
 import Story.Model.Story;
 import User.Model.Reader;
+import User.Model.User;
 import User.Model.Writer;
 import java.sql.SQLException;
 import java.util.ArrayList;
@@ -133,7 +134,7 @@ public class StoryServiceImpl implements StoryService {
     }
 
     @Override
-    public List<Story> getLikedStory(Reader reader) {
+    public List<Story> getLikedStory(User reader) {
 
         List<Story> likedStories = new ArrayList<>();
         if (reader == null) {

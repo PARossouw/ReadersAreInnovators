@@ -7,6 +7,7 @@ import Story.Model.Story;
 import Story.Service.StoryService;
 import Story.Service.StoryServiceImpl;
 import User.Model.Reader;
+import User.Model.User;
 import User.Model.Writer;
 import jakarta.ws.rs.Consumes;
 import jakarta.ws.rs.GET;
@@ -80,10 +81,10 @@ public class StoryControllerImpl {
 
     
     @Path("/viewLikedStories")
-    @POST
+    @GET
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
-    public Response viewLikedStories(Reader reader){
+    public Response viewLikedStories(User reader){
         return Response.status(Response.Status.OK).entity(storyService.getLikedStory(reader)).build();
     }
     

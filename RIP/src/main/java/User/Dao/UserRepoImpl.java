@@ -57,12 +57,12 @@ public class UserRepoImpl extends DBManager implements UserRepo {
                     int userID = (rs.getInt("userid"));
                     String username = (rs.getString("username"));
                     String email = (rs.getString("email"));
-//                String phoneNumber = (rs.getString("phonenumber"));
+                    String phoneNumber = (rs.getString("phonenumber"));
                     String password = (rs.getString("password"));
                     Boolean isActive = (rs.getBoolean("isactive"));
 
-//                Calendar calendar = Calendar.getInstance();
-//                calendar.setTime(rs.getDate("dateadded"));
+                    Calendar calendar = Calendar.getInstance();
+                    calendar.setTime(rs.getDate("dateadded"));
                     Integer role = (rs.getInt("role"));
 
                     switch (role) {
@@ -86,23 +86,16 @@ public class UserRepoImpl extends DBManager implements UserRepo {
                     u.setUserID(userID);
                     u.setUsername(username);
                     u.setEmail(email);
-//                u.setPhoneNumber(phoneNumber);
+                    u.setPhoneNumber(phoneNumber);
                     u.setPassword(password);
                     u.setIsActive(isActive);
-//                u.setDateAdded(calendar);
+                    u.setDateAdded(calendar);
                 }
                 return u;
             }
         } finally {
             close();
         }
-//        close();
-
-//        u.setUsername("amet");
-//        u.setEmail("amet1@gmail.com");
-//        u.setPassword("password");
-//        u.setRoleID(3);
-        //return null;
         return u;
     }
 

@@ -3,6 +3,7 @@ package Category.Service;
 import Category.Model.Category;
 import Story.Model.Story;
 import User.Model.Reader;
+import User.Model.User;
 import java.util.List;
 
 public interface CategoryService {
@@ -13,6 +14,6 @@ public interface CategoryService {
 
     List<Category> topCategoriesForTheMonth();
     
-    List<Category> getPreferredCategories(Reader reader);
+    List<Category> getPreferredCategories(User reader);
 
 }
