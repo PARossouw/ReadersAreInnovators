@@ -99,6 +99,15 @@ public class UserRepoImpl extends DBManager implements UserRepo {
         } finally {
             close();
         }
+
+        close();
+
+//        u.setUsername("amet");
+//        u.setEmail("amet1@gmail.com");
+//        u.setPassword("password");
+        //return null;
+
+
         return u;
     }
 
