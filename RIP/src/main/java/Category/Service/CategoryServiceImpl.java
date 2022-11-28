@@ -67,7 +67,7 @@ public class CategoryServiceImpl extends DBManager implements CategoryService {
     public List<Category> getPreferredCategories(User reader) {
         List<Category> preferredCategories = new ArrayList<>();
         try {
-            return preferredCategories = categoryRepo.getPreferredCategories(reader);
+            preferredCategories = categoryRepo.getPreferredCategories(reader);
         } catch (SQLException ex) {
             Logger.getLogger(CategoryServiceImpl.class.getName()).log(Level.SEVERE, null, ex);
         }
