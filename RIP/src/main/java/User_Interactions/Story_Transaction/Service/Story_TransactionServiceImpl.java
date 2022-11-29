@@ -30,7 +30,7 @@ public class Story_TransactionServiceImpl implements Story_TransactionService {
     @Override
     public smsreq approvePendingStory(Editor editor, Story story) {
 
-        smsreq sms = null;
+        smsreq sms = new smsreq();
         try {
             if (storyTransactionRepo.createEvent(story, editor, "Approved Pending Story")) {
                 Date date = new Date();
@@ -38,29 +38,46 @@ public class Story_TransactionServiceImpl implements Story_TransactionService {
 
                 //getting the writer so we can get their number
                 User user = new User();
-                user.setUsername(story.getWriter());
+                user.setUsername("Anton");
+                
                 user.setPhoneNumber("0739068691");
                 //user = userRepo.getUser(user); GOTTA TEST THIS ON A DATABASE
 
                 //building the sms
-                sms = new smsreq();
                 sms.setDatetime(sdf.format(date));
                 sms.setMsisdn(user.getPhoneNumber());
-                sms.setMessage("Story with the title: \"" + story.getTitle() + "\" has been approved and is now available for public view");
+                //sms.setMessage("Story with the title: \"" + story.getTitle() + "\" has been approved and is now available for public view");
+                sms.setMessage("Story with the title: xxxxxxxxxxx has been approved and is now available for public view");
                 return sms;
-            } else {
-                return sms;
-            }
+            } 
+//            else {
+//                return sms;
+//            }
         } catch (SQLException ex) {
             Logger.getLogger(Story_TransactionServiceImpl.class.getName()).log(Level.SEVERE, null, ex);
         }
+
+//        //harcoding below
+//        sms = new smsreq();
+//        Date date = new Date();
+//        SimpleDateFormat sdf = new SimpleDateFormat("yyyy/MM/dd,hh:mm:ss");
+//
+//        //getting the writer so we can get their number
+//        User user = new User();
+//        user.setUsername(story.getWriter());
+//        user.setPhoneNumber("0739068691");
+//        sms.setDatetime(sdf.format(date));
+//        sms.setMsisdn(user.getPhoneNumber());
+//        sms.setMessage("Story with the title: \"" + story.getTitle() + "\" has been approved and is now available for public view");
+//        //hardcoding above
+        //return sms;
         return sms;
     }
 
     @Override
     public smsreq rejectPendingStory(Editor editor, Story story) {
 
-                smsreq sms = null;
+        smsreq sms = null;
         try {
             if (storyTransactionRepo.createEvent(story, editor, "Rejected Pending Story")) {
                 Date date = new Date();
@@ -69,7 +86,7 @@ public class Story_TransactionServiceImpl implements Story_TransactionService {
                 //getting the writer so we can get their number
                 User user = new User();
                 user.setUsername(story.getWriter());
-                user = userRepo.getUser(user);
+                //user = userRepo.getUser(user);
 
                 //building the sms
                 sms = new smsreq();

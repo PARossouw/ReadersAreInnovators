@@ -53,9 +53,7 @@ public class UserServiceImpl implements UserService {
                             return currentUser;
                         }
                     }
-
                     return currentUser;
-
                 } else {
                     return null;
                 }
@@ -64,7 +62,6 @@ public class UserServiceImpl implements UserService {
             currentUser = null;
             Logger.getLogger(UserServiceImpl.class.getName()).log(Level.SEVERE, null, ex);
         }
-
         return currentUser;
     }
 
@@ -99,24 +96,6 @@ public class UserServiceImpl implements UserService {
         }
         return "Operation unsuccessful, please try again later.";
     }
-
-    @Override
-
-    public String blockWriter(String[] results, ArrayList<Writer> writers) {
-
-//        try {
-//            if (userRepo.getUser(writer) == null) {
-//                return "No such user exists.";
-//            } else if (userRepo.getUser(writer).getRoleID() != 2) {
-//                return "This user is not a writer.";
-//            } else {
-//                return userRepo.blockWriter(writer) ? "Writer status removed." : "Could not removed writer status from this account at this time.";
-//            }
-//        } catch (SQLException ex) {
-//            Logger.getLogger(UserServiceImpl.class.getName()).log(Level.SEVERE, null, ex);
-//        }
-//        return "Opertaion unsuccessful, please try again later.";
-return null;
 
     public String blockWriter(Writer writer) {
 
