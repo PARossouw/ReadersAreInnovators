@@ -100,7 +100,6 @@ public class UserServiceImpl implements UserService {
         return "Operation unsuccessful, please try again later.";
     }
 
-    @Override
 
     public String blockWriter(String[] results, ArrayList<Writer> writers) {
 
@@ -117,6 +116,7 @@ public class UserServiceImpl implements UserService {
 //        }
 //        return "Opertaion unsuccessful, please try again later.";
 return null;
+    }
 
     public String blockWriter(Writer writer) {
 

@@ -81,7 +81,7 @@ public class StoryServiceImpl implements StoryService {
                 Logger.getLogger(StoryServiceImpl.class.getName()).log(Level.SEVERE, null, ex);
             }
         }
-        return "Unfortunetely, the story has not been saved successfully.";
+        return "Unfortunetely, the story has not been saved successfully. " + story.toString();
     }
 
     @Override
