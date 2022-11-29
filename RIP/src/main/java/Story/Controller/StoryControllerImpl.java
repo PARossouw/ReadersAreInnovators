@@ -42,10 +42,10 @@ public class StoryControllerImpl {
     @Produces(MediaType.APPLICATION_JSON)
     public Response searchStoriesByCategories(JSONObject jsonObject) {
         List<Category> categories = new ArrayList<>();
-        
-        int size = mapper.convertValue( jsonObject.get("size"), Integer.class);
 
-        for(int i = 0; i < size; i++){
+        int size = mapper.convertValue(jsonObject.get("size"), Integer.class);
+
+        for (int i = 0; i < size; i++) {
             categories.add(mapper.convertValue(jsonObject.get(i), Category.class));
         }
         return Response.status(Response.Status.OK).entity(storyService.searchStoriesByCategories(categories)).build();
@@ -84,7 +84,6 @@ public class StoryControllerImpl {
     public Response retrieveStory(Story story) {
 //        return Response.status(Response.Status.OK).entity(storyService.retrieveStory(story)).build();
 
-        
         //Testing purposes below only
         Story storyObj = new Story();
         storyObj.setStoryID(420);
@@ -98,21 +97,29 @@ public class StoryControllerImpl {
 
 //        return storyObj;
         return Response.status(Response.Status.OK).entity(storyObj).build();
-        
+
     }
-    
-    
-        @Path("/getStory/{storyID}")
+
+    @Path("/getStory/{storyID}")
     @GET
     @Produces(MediaType.APPLICATION_JSON)
-    public Response storySearch(@PathParam("storyID")String storySearch) {
-       
+    public Response storySearch(@PathParam("storyID") String storySearch) {
+
 //        writers = userService.writerSearch(writerSearch);
+
     
       Story storyObj = new Story();
       storyObj.setStoryID(Integer.parseInt(storySearch));
       
       storyObj = storyService.retrieveStory(storyObj);
+
+        return Response.status(Response.Status.OK).entity(storyObj).build();
+        
+
+//        Story storyObj = new Story();
+//        storyObj.setStoryID(Integer.parseInt(storySearch));
+//
+//        storyObj = storyService.retrieveStory(storyObj);
 //        storyObj.setStoryID(420);
 //        storyObj.setTitle("DAO practice Title");
 //        storyObj.setAvgRating(8.0);
@@ -121,15 +128,11 @@ public class StoryControllerImpl {
 //        storyObj.setLikes(300);
 //        storyObj.setDescription("ControllerPractice Description");
 //        storyObj.setBody("DAO Practice Body");
-    
-    
-    
-        return Response.status(Response.Status.OK).entity(storyObj).build();
-        
 
+//        return Response.status(Response.Status.OK).entity(storyObj).build();
 
-Story storyObj = new Story();
-storyObj.setStoryID(420);
+        Story storyObj = new Story();
+        storyObj.setStoryID(420);
         storyObj.setTitle("DAO practice Title");
         storyObj.setAvgRating(2.9);
         storyObj.setWriter("DAO Pratice Author Tarun Sing");
@@ -141,18 +144,6 @@ storyObj.setStoryID(420);
         return Response.status(Response.Status.OK).entity(storyObj).build();
 
     }
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
 
     @Path("/search")
     @POST
@@ -162,18 +153,16 @@ storyObj.setStoryID(420);
         return Response.status(Response.Status.OK).entity(storyService.searchForStory(StoryParameter)).build();
     }
 
-    
     @Path("/viewLikedStories/{readerID}")
     @GET
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
-    public Response viewLikedStories(@PathParam("readerID")Integer readerID){
+    public Response viewLikedStories(@PathParam("readerID") Integer readerID) {
         User reader = new User();
         reader.setUserID(readerID);
         List<Story> likedStories = storyService.getLikedStory(reader);
         return Response.status(Response.Status.OK).entity(likedStories).build();
     }
-    
 
     @Path("/getPendingStories")
     @GET
@@ -181,7 +170,7 @@ storyObj.setStoryID(420);
     public Response getPendingStories() {
         return Response.status(Response.Status.OK).entity(storyService.getPendingStories()).build();
     }
-    
+
     @Path("/getStoriesForStoryOfTheDay")
     @GET
     @Consumes(MediaType.APPLICATION_JSON)
@@ -189,7 +178,7 @@ storyObj.setStoryID(420);
     public Response getStoriesForStoryOfTheDay() {
         return Response.status(Response.Status.OK).entity(storyService.getStoriesForStoryOfTheDay()).build();
     }
-    
+
     @Path("/getTop20StoriesForMonth")
     @GET
     @Produces(MediaType.APPLICATION_JSON)
