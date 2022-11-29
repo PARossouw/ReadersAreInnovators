@@ -16,7 +16,7 @@ public class LikeTransactionRepoImpl extends DBManager implements LikeTransactio
 
         if (getConnection() != null) {
 
-            ps = getConnection().prepareStatement("insert into like_Transaction (reader, storyid) values (?, ?)");
+            ps = getConnection().prepareStatement("insert into like_Transaction (reader, story) values (?, ?)");
             ps.setInt(1, reader.getUserID());
             ps.setInt(2, story.getStoryID());
 

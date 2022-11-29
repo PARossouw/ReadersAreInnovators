@@ -185,7 +185,8 @@ public class UserServiceImpl implements UserService {
         try {
             writers = userRepo.writerSearch(writerSearch);
             return writers;
-        } catch (SQLException ex) {
+        }
+        catch (SQLException ex) {
             Logger.getLogger(UserServiceImpl.class.getName()).log(Level.SEVERE, null, ex);
         }
         return writers;
