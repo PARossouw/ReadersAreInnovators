@@ -22,7 +22,7 @@ public class DBManager {
     static {
         dataSource = new BasicDataSource();
         dataSource.setDriverClassName("com.mysql.jdbc.Driver");
-        dataSource.setUrl("jdbc:mysql://localhost:3306/ripfinal_v1.1?autoReconnect=true&useSSL=false");
+        dataSource.setUrl("jdbc:mysql://localhost:3306/ripfinal?autoReconnect=true&useSSL=false");
         dataSource.setUsername("root");
         dataSource.setPassword("root");
         dataSource.setMinIdle(10);
@@ -42,8 +42,8 @@ public class DBManager {
         if (rs != null) {
             rs.close();
         }
-//        if (getConnection() != null) {
-//            getConnection().close();
-//        }
+        if (getConnection() != null) {
+            getConnection().close();
+        }
     }
 }
