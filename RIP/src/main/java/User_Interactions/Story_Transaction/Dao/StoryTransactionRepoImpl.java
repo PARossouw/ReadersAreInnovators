@@ -10,8 +10,8 @@ public class StoryTransactionRepoImpl extends DBManager implements StoryTransact
 
     @Override
     public boolean createEvent(Story story, User user, String action) throws SQLException {
-        user.getUserID();
-        story.getStoryID();
+        //user.getUserID();
+        //story.getStoryID();
         return true;
 
 //        try {
