@@ -53,9 +53,7 @@ public class UserServiceImpl implements UserService {
                             return currentUser;
                         }
                     }
-
                     return currentUser;
-
                 } else {
                     return null;
                 }
@@ -64,7 +62,6 @@ public class UserServiceImpl implements UserService {
             currentUser = null;
             Logger.getLogger(UserServiceImpl.class.getName()).log(Level.SEVERE, null, ex);
         }
-
         return currentUser;
     }
 
