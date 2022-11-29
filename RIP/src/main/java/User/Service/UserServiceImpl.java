@@ -53,9 +53,7 @@ public class UserServiceImpl implements UserService {
                             return currentUser;
                         }
                     }
-
                     return currentUser;
-
                 } else {
                     return null;
                 }
@@ -64,7 +62,6 @@ public class UserServiceImpl implements UserService {
             currentUser = null;
             Logger.getLogger(UserServiceImpl.class.getName()).log(Level.SEVERE, null, ex);
         }
-
         return currentUser;
     }
 
@@ -101,6 +98,7 @@ public class UserServiceImpl implements UserService {
     }
 
 
+
     public String blockWriter(String[] results, ArrayList<Writer> writers) {
 
 //        try {
@@ -117,6 +115,7 @@ public class UserServiceImpl implements UserService {
 //        return "Opertaion unsuccessful, please try again later.";
 return null;
     }
+
 
     public String blockWriter(Writer writer) {
 

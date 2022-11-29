@@ -39,12 +39,13 @@ public class UserRestControllerImpl {
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
     public Response login(User user) {
+        User userFeedback = new User();
 
-        return Response.status(Response.Status.OK).entity(userService.login(user)).build();
+        userFeedback.setUsername("amet");
+        userFeedback.setEmail("amet1@gmail.com");
+        userFeedback.setPassword("password");
 
-        //User user2 = userService.login(user);
-//        User user2 = new User(1, "amet", "amet@gmail.com", "password", true, null);
-//        return Response.status(Response.Status.OK).entity(user2).build();
+        return Response.status(Response.Status.OK).entity(userFeedback).build();
     }
 
     @Path("/categories/add")
