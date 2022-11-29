@@ -403,7 +403,7 @@ public class StoryRepoImpl extends DBManager implements StoryRepo {
                     + "imagePath, body, isDraft, isActive , createdOn, allowComment, "
                     + "isApproved, views, likes, avgRating from story where storyID = ? ");
             ps.setInt(1, story.getStoryID());
-
+           
             rs = ps.executeQuery();
 
             if (rs.next()) {

@@ -106,6 +106,16 @@ public class StoryControllerImpl {
     public Response storySearch(@PathParam("storyID") String storySearch) {
 
 //        writers = userService.writerSearch(writerSearch);
+
+    
+      Story storyObj = new Story();
+      storyObj.setStoryID(Integer.parseInt(storySearch));
+      
+      storyObj = storyService.retrieveStory(storyObj);
+
+        return Response.status(Response.Status.OK).entity(storyObj).build();
+        
+
 //        Story storyObj = new Story();
 //        storyObj.setStoryID(Integer.parseInt(storySearch));
 //
