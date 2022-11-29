@@ -114,6 +114,18 @@ public class StoryServiceImpl implements StoryService {
             Logger.getLogger(StoryServiceImpl.class.getName()).log(Level.SEVERE, null, ex);
             return null;
         }
+
+//Story storyObj = new Story();
+//storyObj.setStoryID(420);
+//        storyObj.setTitle("DAO practice Title");
+//        storyObj.setAvgRating(2.9);
+//        storyObj.setWriter("Anton  Tarun Sing");
+//        storyObj.setDescription("DAO Practice Description");
+//        storyObj.setBody("DAO Practice Body");
+//        storyObj.setViews(888);
+//        storyObj.setLikes(666);
+//
+//        return storyObj;
     }
 
     @Override
