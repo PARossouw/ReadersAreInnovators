@@ -112,17 +112,7 @@ public class StoryControllerImpl {
       storyObj.setStoryID(Integer.parseInt(storySearch));
       
       storyObj = storyService.retrieveStory(storyObj);
-//        storyObj.setStoryID(420);
-//        storyObj.setTitle("DAO practice Title");
-//        storyObj.setAvgRating(8.0);
-//        storyObj.setWriter("Controller Pratice Author Tarun Sing");
-//        storyObj.setViews(30);
-//        storyObj.setLikes(300);
-//        storyObj.setDescription("ControllerPractice Description");
-//        storyObj.setBody("DAO Practice Body");
-    
-    
-    
+
         return Response.status(Response.Status.OK).entity(storyObj).build();
         
     }
