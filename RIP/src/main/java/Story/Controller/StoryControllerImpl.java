@@ -64,7 +64,9 @@ public class StoryControllerImpl {
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
     public Response saveStory(Story story) {
+        String goodStory = "Mellisa saved the story";
         return Response.status(Response.Status.OK).entity(storyService.saveStory(story)).build();
+//        return Response.status(Response.Status.OK).entity(goodStory).build();
     }
 
     @Path("/submit")
@@ -82,6 +84,50 @@ public class StoryControllerImpl {
     public Response retrieveStory(Story story) {
 //        return Response.status(Response.Status.OK).entity(storyService.retrieveStory(story)).build();
 
+        
+        //Testing purposes below only
+        Story storyObj = new Story();
+        storyObj.setStoryID(420);
+        storyObj.setTitle("DAO practice Title");
+        storyObj.setAvgRating(6.0);
+        storyObj.setWriter("DAO Pratice Author Tarun Sing");
+        storyObj.setViews(69);
+        storyObj.setLikes(20);
+        storyObj.setDescription("DAO Practice Description");
+        storyObj.setBody("DAO Practice Body");
+
+//        return storyObj;
+        return Response.status(Response.Status.OK).entity(storyObj).build();
+        
+    }
+    
+    
+        @Path("/getStory/{storyID}")
+    @GET
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response storySearch(@PathParam("storyID")String storySearch) {
+       
+//        writers = userService.writerSearch(writerSearch);
+    
+      Story storyObj = new Story();
+      storyObj.setStoryID(Integer.parseInt(storySearch));
+      
+      storyObj = storyService.retrieveStory(storyObj);
+//        storyObj.setStoryID(420);
+//        storyObj.setTitle("DAO practice Title");
+//        storyObj.setAvgRating(8.0);
+//        storyObj.setWriter("Controller Pratice Author Tarun Sing");
+//        storyObj.setViews(30);
+//        storyObj.setLikes(300);
+//        storyObj.setDescription("ControllerPractice Description");
+//        storyObj.setBody("DAO Practice Body");
+    
+    
+    
+        return Response.status(Response.Status.OK).entity(storyObj).build();
+        
+
+
 Story storyObj = new Story();
 storyObj.setStoryID(420);
         storyObj.setTitle("DAO practice Title");
@@ -93,7 +139,20 @@ storyObj.setStoryID(420);
         storyObj.setLikes(88);
 
         return Response.status(Response.Status.OK).entity(storyObj).build();
+
     }
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
 
     @Path("/search")
     @POST

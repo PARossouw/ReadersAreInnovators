@@ -79,9 +79,31 @@ public class CategoryRepoImpl extends DBManager implements CategoryRepo {
                 categoryList.add(new Category(rs.getInt("categoryid"), rs.getString("category"), calendar));
 
             }
+         
+          
         }
+            //-----Testing code------
+         List<Category> categoryListTest = new ArrayList<>();
+            Category cat1 = new Category();
+            Category cat2 = new Category();
+            Category cat3 = new Category();
+            
+            cat1.setName("Thriller");
+            cat2.setName("Science");
+            cat3.setName("Religious");
+            
+            
+            
+            
+            
+            
+            categoryListTest.add(cat1);
+            categoryListTest.add(cat2);
+            categoryListTest.add(cat3);
+            // --------------------
+            
         close();
-        return categoryList;
+        return categoryListTest;
     }
 
     @Override
