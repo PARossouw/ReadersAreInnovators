@@ -40,9 +40,10 @@ public class StoryTransactionControllerImpl {
 //        return Response.status(Response.Status.OK).entity(storyService.approvePendingStory(editor, story)).build();
 
         
-        
-        Editor editor = mapper.convertValue( jsonObject.get("editor"), Editor.class);
-        Story story = mapper.convertValue( jsonObject.get("story"), Story.class);
+        Editor editor = new Editor();
+        Story story = new Story();
+        editor = mapper.convertValue( jsonObject.get("editor"), Editor.class);
+        story = mapper.convertValue( jsonObject.get("story"), Story.class);
         
         
   
