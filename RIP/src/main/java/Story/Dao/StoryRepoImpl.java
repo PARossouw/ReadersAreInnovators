@@ -124,8 +124,8 @@ public class StoryRepoImpl extends DBManager implements StoryRepo {
 
             ps = getConnection().prepareStatement("select storyID, title, "
                     + "writer, description, imagePath, body, isDraft, isActive, "
-                    + "createdOn, allowComments, isApproved, views, likes, "
-                    + "avgRating from story s inner join like_transaction lt on s.storyID = lt.story where lt.reader = ?");
+                    + "allowComment, isApproved, views, likes, avgRating "
+                    + "from story s inner join like_transaction lt on s.storyID = lt.story where lt.reader = ?");
 
             ps.setInt(1, reader.getUserID());
             rs = ps.executeQuery();
@@ -141,10 +141,7 @@ public class StoryRepoImpl extends DBManager implements StoryRepo {
                 boolean isDraft = rs.getBoolean("isDraft");
                 boolean isActive = rs.getBoolean("isActive");
 
-                Calendar calendar = Calendar.getInstance();
-                calendar.setTime(rs.getDate("createdOn"));
-
-                boolean allowComments = rs.getBoolean("allowComments");
+                boolean allowComments = rs.getBoolean("allowComment");
                 boolean isApproved = rs.getBoolean("isApproved");
                 int views = rs.getInt("views");
                 int likes = rs.getInt("likes");
@@ -152,7 +149,7 @@ public class StoryRepoImpl extends DBManager implements StoryRepo {
 
                 story = new Story(storyID, title, writer, description,
                         imagePath, body, isDraft, isActive,
-                        calendar, allowComments, isApproved,
+                        null, allowComments, isApproved,
                         views, likes, avgRating);
                 readersLikesStories.add(story);
             }

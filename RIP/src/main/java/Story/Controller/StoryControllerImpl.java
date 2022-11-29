@@ -83,6 +83,7 @@ public class StoryControllerImpl {
     @Produces(MediaType.APPLICATION_JSON)
     public Response retrieveStory(Story story) {
 //        return Response.status(Response.Status.OK).entity(storyService.retrieveStory(story)).build();
+
         
         //Testing purposes below only
         Story storyObj = new Story();
@@ -115,6 +116,20 @@ public class StoryControllerImpl {
 
         return Response.status(Response.Status.OK).entity(storyObj).build();
         
+
+
+Story storyObj = new Story();
+storyObj.setStoryID(420);
+        storyObj.setTitle("DAO practice Title");
+        storyObj.setAvgRating(2.9);
+        storyObj.setWriter("DAO Pratice Author Tarun Sing");
+        storyObj.setDescription("DAO Practice Description");
+        storyObj.setBody("DAO Practice Body");
+        storyObj.setViews(504);
+        storyObj.setLikes(88);
+
+        return Response.status(Response.Status.OK).entity(storyObj).build();
+
     }
     
     
@@ -138,12 +153,15 @@ public class StoryControllerImpl {
     }
 
     
-    @Path("/viewLikedStories")
+    @Path("/viewLikedStories/{readerID}")
     @GET
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
-    public Response viewLikedStories(User reader){
-        return Response.status(Response.Status.OK).entity(storyService.getLikedStory(reader)).build();
+    public Response viewLikedStories(@PathParam("readerID")Integer readerID){
+        User reader = new User();
+        reader.setUserID(readerID);
+        List<Story> likedStories = storyService.getLikedStory(reader);
+        return Response.status(Response.Status.OK).entity(likedStories).build();
     }
     
 
