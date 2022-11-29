@@ -143,18 +143,18 @@ public class StoryControllerImpl {
 //        return Response.status(Response.Status.OK).entity(storyObj).build();
 
 //        return Response.status(Response.Status.OK).entity(storyObj).build();
+//
+//        Story storyObj = new Story();
+//        storyObj.setStoryID(420);
+//        storyObj.setTitle("DAO practice Title");
+//        storyObj.setAvgRating(2.9);
+//        storyObj.setWriter("DAO Pratice Author Tarun Sing");
+//        storyObj.setDescription("DAO Practice Description");
+//        storyObj.setBody("DAO Practice Body");
+//        storyObj.setViews(504);
+//        storyObj.setLikes(88);
 
-        Story storyObj = new Story();
-        storyObj.setStoryID(420);
-        storyObj.setTitle("DAO practice Title");
-        storyObj.setAvgRating(2.9);
-        storyObj.setWriter("DAO Pratice Author Tarun Sing");
-        storyObj.setDescription("DAO Practice Description");
-        storyObj.setBody("DAO Practice Body");
-        storyObj.setViews(504);
-        storyObj.setLikes(88);
-
-        return Response.status(Response.Status.OK).entity(storyObj).build();
+       // return Response.status(Response.Status.OK).entity(storyObj).build();
 
 
     }
