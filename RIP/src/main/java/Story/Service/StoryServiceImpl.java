@@ -81,6 +81,7 @@ public class StoryServiceImpl implements StoryService {
                     categoryRepo.addCategoriesToStory(story, story.getCategoryList());
                 }
 
+
                 if (storySuccessfullySaved) {
                     return "Story has been successfully saved.";
                 }

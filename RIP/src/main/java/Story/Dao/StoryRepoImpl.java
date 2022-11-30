@@ -475,7 +475,28 @@ public class StoryRepoImpl implements StoryRepo {
     @Override
     public Boolean updateStory(Story story) throws SQLException {
 
+
         con = DBManager.getConnection();
+
+        
+        int rowsAffected = 0;
+        if (getConnection() != null) {
+
+        ps = getConnection().prepareStatement("update story set title = ?, description = ?, imagePath = ?,"
+                + "body = ?, isDraft = ? where storyID = ?");
+         ps.setString(1, story.getTitle());
+         ps.setString(2, story.getDescription());
+         ps.setString(3, story.getImagePath());
+         ps.setString(4, story.getBody());
+         
+         ps.setBoolean(5, story.getIsDraft());
+         
+         
+         ps.setInt(6, story.getStoryID());
+      
+        
+        
+
 
         int rowsAffected = 0;
         try {

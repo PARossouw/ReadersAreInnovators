@@ -27,8 +27,8 @@ public class RatingTransactionControllerImpl {
     @POST
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
-    public Response rateStory(JSONObject jsonObject) {
-        return Response.status(Response.Status.OK).entity(rating_transaction_service.rateStory((Story)jsonObject.get("story"), (Reader)jsonObject.get("reader"), (Integer)jsonObject.get("rating"))).build();
+    public void rateStory(JSONObject jsonObject) {
+        //return Response.status(Response.Status.OK).entity(rating_transaction_service.rateStory((Story)jsonObject.get("story"), (Reader)jsonObject.get("reader"), (Integer)jsonObject.get("rating"))).build();
     }
 
 }
