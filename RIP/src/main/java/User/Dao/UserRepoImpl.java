@@ -329,6 +329,78 @@ public class UserRepoImpl extends DBManager implements UserRepo {
         return writers;
     }
 
+    @Override
+    public User getUserWithUsername(User user) throws SQLException {
+        
+        User u = new User();
+
+        try {
+            if (getConnection() != null) {
+
+                ps = getConnection().prepareStatement("select userid, username, email, "
+                        + "phonenumber, password, isactive, dateadded, role from user "
+                        + "where username = ?");
+                ps.setString(1, user.getUsername());
+
+                rs = ps.executeQuery();
+
+                if (rs.next()) {
+                    int userID = (rs.getInt("userid"));
+                    String username = (rs.getString("username"));
+                    String email = (rs.getString("email"));
+                    String phoneNumber = (rs.getString("phonenumber"));
+                    String password = (rs.getString("password"));
+                    Boolean isActive = (rs.getBoolean("isactive"));
+
+                    Calendar calendar = Calendar.getInstance();
+                    calendar.setTime(rs.getDate("dateadded"));
+                    Integer role = (rs.getInt("role"));
+
+                    switch (role) {
+
+                        case 1:
+                            u = new Reader();
+                            break;
+                        case 2:
+                            u = new Writer();
+                            break;
+                        case 3:
+                            u = new Editor();
+                            break;
+                        case 4:
+                            u = new AdminEditor();
+                            break;
+                        default:
+                            u = new Reader();
+                    }
+
+                    u.setUserID(userID);
+                    u.setRoleID(role);
+                    u.setUsername(username);
+                    u.setEmail(email);
+                    u.setPhoneNumber(phoneNumber);
+                    u.setPassword(password);
+                    u.setIsActive(isActive);
+                    u.setDateAdded(calendar);
+                }
+                return u;
+            }
+        } finally {
+            close();
+        }
+
+        close();
+
+//        u.setUsername("amet");
+//        u.setEmail("amet1@gmail.com");
+//        u.setPassword("password");
+        //return null;
+
+
+        return u;
+        
+    }
+
 }
 
 //hardcoding

@@ -26,5 +26,7 @@ public interface UserRepo {
     Boolean blockWriter(Writer writer) throws SQLException;
 
     List<Writer> writerSearch(String writerSearch) throws SQLException;
+    
+    User getUserWithUsername(User user) throws SQLException;
 
 }
