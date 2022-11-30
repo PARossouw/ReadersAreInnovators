@@ -39,14 +39,10 @@ public class StoryControllerImpl {
     @POST
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
-    public Response searchStoriesByCategories(JSONObject jsonObject) {
+    public Response searchStoriesByCategories(Reader reader) {
         List<Category> categories = new ArrayList<>();
+        categories = reader.getPreferredCategories();
         
-        int size = mapper.convertValue( jsonObject.get("size"), Integer.class);
-
-        for(int i = 0; i < size; i++){
-            categories.add(mapper.convertValue(jsonObject.get(i), Category.class));
-        }
         return Response.status(Response.Status.OK).entity(storyService.searchStoriesByCategories(categories)).build();
     }
 
