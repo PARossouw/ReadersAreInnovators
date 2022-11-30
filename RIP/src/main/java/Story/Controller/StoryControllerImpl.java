@@ -50,7 +50,7 @@ public class StoryControllerImpl {
         //hardcoding
         List<Story> sts = new ArrayList<>();
         Story story1 = new Story();
-        story1.setTitle("Pieter McJeter1");
+        story1.setTitle(reader.getUsername());
         sts.add(story1);
         
         Story story2 = new Story();
