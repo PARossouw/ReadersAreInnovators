@@ -40,11 +40,12 @@ public class UserRestControllerImpl {
     @Produces(MediaType.APPLICATION_JSON)
     public Response login(User user) {
         User userFeedback = new User();
-
-        userFeedback.setUsername("amet");
-        userFeedback.setEmail("amet1@gmail.com");
-        userFeedback.setPassword("password");
-
+        userFeedback = userService.login(user);
+//
+//        userFeedback.setUsername("amet");
+//        userFeedback.setEmail("amet1@gmail.com");
+//        userFeedback.setPassword("password");
+//
         return Response.status(Response.Status.OK).entity(userFeedback).build();
     }
 

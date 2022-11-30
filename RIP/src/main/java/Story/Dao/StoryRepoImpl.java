@@ -2,6 +2,7 @@ package Story.Dao;
 
 import Category.Model.Category;
 import DBManager.DBManager;
+import static DBManager.DBManager.getConnection;
 import Story.Model.Story;
 import java.sql.SQLException;
 import java.util.ArrayList;
@@ -11,19 +12,31 @@ import java.util.List;
 import User.Model.Reader;
 import User.Model.User;
 import User.Model.Writer;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.util.Collections;
 
-public class StoryRepoImpl extends DBManager implements StoryRepo {
+public class StoryRepoImpl /*extends DBManager*/ implements StoryRepo {
+
+    private Connection con;
+    private PreparedStatement ps;
+    private ResultSet rs;
+    private Integer rowsAffected;
 
     @Override
     public List<Story> getApprovedStories() throws SQLException {
 
+        con = DBManager.getConnection();
+
         List<Story> allApprovedStories = new ArrayList<>();
         Story story = null;
 
-        if (getConnection() != null) {
+        con = DBManager.getConnection();
 
-            ps = getConnection().prepareStatement("select storyID, title, "
+        if (con != null) {
+
+            ps = con.prepareStatement("select storyID, title, "
                     + "writer, description, imagePath, body, isDraft, isActive, "
                     + "createdOn, allowComments, isApproved, views, likes, "
                     + "avgRating from story where isApproved = ?");
@@ -68,12 +81,14 @@ public class StoryRepoImpl extends DBManager implements StoryRepo {
     @Override
     public List<Story> getRejectedStories() throws SQLException {
 
+        con = DBManager.getConnection();
+
         List<Story> allRejectedStories = new ArrayList<>();
         Story story = null;
 
-        if (getConnection() != null) {
+        if (con != null) {
 
-            ps = getConnection().prepareStatement("select storyID, title, "
+            ps = con.prepareStatement("select storyID, title, "
                     + "writer, description, imagePath, body, isDraft, isActive, "
                     + "createdOn, allowComment, isApproved, views, likes, "
                     + "avgRating from story s inner join story_transaction st on s.storyid = st.story where storyid = story and isApproved = ? ");
@@ -109,6 +124,7 @@ public class StoryRepoImpl extends DBManager implements StoryRepo {
                 allRejectedStories.add(story);
             }
         }
+        
         close();
 
         return allRejectedStories;
@@ -117,12 +133,14 @@ public class StoryRepoImpl extends DBManager implements StoryRepo {
     @Override
     public List<Story> getLikedStories(User reader) throws SQLException {
 
+        con = DBManager.getConnection();
+
         List<Story> readersLikesStories = new ArrayList<>();
         Story story = null;
 
-        if (getConnection() != null) {
+        if (con != null) {
 
-            ps = getConnection().prepareStatement("select storyID, title, "
+            ps = con.prepareStatement("select storyID, title, "
                     + "writer, description, imagePath, body, isDraft, isActive, "
                     + "allowComment, isApproved, views, likes, avgRating "
                     + "from story s inner join like_transaction lt on s.storyID = lt.story where lt.reader = ?");
@@ -154,6 +172,7 @@ public class StoryRepoImpl extends DBManager implements StoryRepo {
                 readersLikesStories.add(story);
             }
         }
+        
         close();
         return readersLikesStories;
     }
@@ -161,11 +180,14 @@ public class StoryRepoImpl extends DBManager implements StoryRepo {
     @Override
     public Boolean submitStory(Story story) throws SQLException {
 
-        if (getConnection() != null) {
-            ps = getConnection().prepareStatement("update story set isDraft = 0 where storyID = ?");
+        con = DBManager.getConnection();
+
+        if (con != null) {
+            ps = con.prepareStatement("update story set isDraft = 0 where storyID = ?");
             ps.setInt(1, story.getStoryID());
             rowsAffected = ps.executeUpdate();
         }
+        
         close();
 
         return rowsAffected == 1;
@@ -174,11 +196,13 @@ public class StoryRepoImpl extends DBManager implements StoryRepo {
     @Override
     public List<Story> getWriterStories(Writer writer) throws SQLException {
 
+        con = DBManager.getConnection();
+
         List<Story> draftStories = new ArrayList<>();
         Story storyObj;
 
-        if (getConnection() != null) {
-            ps = getConnection().prepareStatement("select storyID, title, writer,description, imagePath, body, isDraft, isActive , createdOn, allowComments, isApproved, views, likes, avgRating from story where writer = ?");
+        if (con != null) {
+            ps = con.prepareStatement("select storyID, title, writer,description, imagePath, body, isDraft, isActive , createdOn, allowComments, isApproved, views, likes, avgRating from story where writer = ?");
 
             ps.setInt(1, writer.getUserID());
 
@@ -208,6 +232,7 @@ public class StoryRepoImpl extends DBManager implements StoryRepo {
                 draftStories.add(storyObj);
             }
         }
+        
         close();
 
         return draftStories;
@@ -215,23 +240,22 @@ public class StoryRepoImpl extends DBManager implements StoryRepo {
 
     @Override
     public List<Story> getPendingStories() throws SQLException {
-        
-        
+
+        con = DBManager.getConnection();
+
         Story storyObj = new Story();
         List<Story> stories = new ArrayList<>();
 
-        if (getConnection() != null) {
-//            ps = getConnection().prepareStatement("select storyID, title, writer,description, imagePath, body, isDraft, isActive, createdOn, allowComment, isApproved, views, likes, avgRating from story where isApproved = 0 and isDraft = 0");
+        if (con != null) {
+//            ps = con.prepareStatement("select storyID, title, writer,description, imagePath, body, isDraft, isActive, createdOn, allowComment, isApproved, views, likes, avgRating from story where isApproved = 0 and isDraft = 0");
 
-
-            ps = getConnection().prepareStatement("select storyID, title, writer, description, imagePath, "
+            ps = con.prepareStatement("select storyID, title, writer, description, imagePath, "
                     + "body, isDraft, isActive, createdOn, allowComment, isApproved, views, likes, avgRating "
                     + "from story where isapproved = 0 and isdraft = 0");
 
             rs = ps.executeQuery();
 
             while (rs.next()) {
-
 
                 int storyID = rs.getInt("storyid");
 
@@ -253,22 +277,21 @@ public class StoryRepoImpl extends DBManager implements StoryRepo {
                 int likes = rs.getInt("likes");
                 double avgRating = rs.getDouble("avgRating");
 
-
                 storyObj = new Story(storyID, title, writer1, description, imagePath, body, isDraft, isActive, null, allowComments, isApproved, views, likes, avgRating);
                 stories.add(storyObj);
             }
         }
+        
         close();
 
         return stories;
-        
-    
+
 //
 //        List<Story> pendingStories = new ArrayList<>();
 //        Story storyObj;
 //
-//        if (getConnection() != null) {
-//            ps = getConnection().prepareStatement("select storyID, title, writer,description, imagePath, body, isDraft, isActive , "
+//        if (con != null) {
+//            ps = con.prepareStatement("select storyID, title, writer,description, imagePath, body, isDraft, isActive , "
 //                    + "createdOn, allowComment, isApproved, views, likes, avgRating from story where isApproved = ? and isDraft = ? ");
 //            ps.setInt(1, 0);
 //            ps.setInt(1, 1);
@@ -300,13 +323,16 @@ public class StoryRepoImpl extends DBManager implements StoryRepo {
 //                pendingStories.add(storyObj);
 //            }
 //        }
-//        close();
+//        
+//close();
 //
 //        return pendingStories;
     }
 
     @Override
     public List<Story> getStoryByCategory(List<Category> categories) throws SQLException {
+
+        con = DBManager.getConnection();
         List<Story> storiesByCategory = new ArrayList<>();
         Story storyObj;
 
@@ -316,9 +342,9 @@ public class StoryRepoImpl extends DBManager implements StoryRepo {
                 more += "or sc.category = ?";
             }
         }
-        if (getConnection() != null) {
+        if (con != null) {
 
-            ps = getConnection().prepareStatement("select storyID, title, "
+            ps = con.prepareStatement("select storyID, title, "
                     + "writer, description, imagePath, body, isDraft, isActive, "
                     + "createdOn, allowComments, isApproved, views, likes, "
                     + "avgRating from story s inner join story_category sc on s.storyID = sc.story where sc.category = ?" + more);
@@ -359,6 +385,7 @@ public class StoryRepoImpl extends DBManager implements StoryRepo {
             }
         }
 
+        
         close();
         return storiesByCategory;
     }
@@ -366,11 +393,13 @@ public class StoryRepoImpl extends DBManager implements StoryRepo {
     @Override
     public Boolean createStory(Story story) throws SQLException {
 
+        con = DBManager.getConnection();
+
         Boolean createdStory = false;
 
-        if (getConnection() != null) {
+        if (con != null) {
 
-            ps = getConnection().prepareStatement("insert into story (title, writer, description, imagePath, body, isDraft, isActive, allowComment, isApproved, views, avgRating,likes) values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
+            ps = con.prepareStatement("insert into story (title, writer, description, imagePath, body, isDraft, isActive, allowComment, isApproved, views, avgRating,likes) values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
             ps.setString(1, story.getTitle());
             ps.setString(2, story.getWriter());
             ps.setString(3, story.getDescription());
@@ -388,6 +417,7 @@ public class StoryRepoImpl extends DBManager implements StoryRepo {
 
             createdStory = true;
         }
+        
         close();
         return createdStory;
 
@@ -396,14 +426,16 @@ public class StoryRepoImpl extends DBManager implements StoryRepo {
     @Override
     public Story retrieveStory(Story story) throws SQLException {
 
+        con = DBManager.getConnection();
+
         Story storyObj = new Story();
 
-        if (getConnection() != null) {
-            ps = getConnection().prepareStatement("select storyID, title, writer,description, "
+        if (con != null) {
+            ps = con.prepareStatement("select storyID, title, writer,description, "
                     + "imagePath, body, isDraft, isActive , createdOn, allowComment, "
                     + "isApproved, views, likes, avgRating from story where storyID = ? ");
             ps.setInt(1, story.getStoryID());
-           
+
             rs = ps.executeQuery();
 
             if (rs.next()) {
@@ -431,7 +463,7 @@ public class StoryRepoImpl extends DBManager implements StoryRepo {
 
             }
         }
-        
+
         
         close();
         return storyObj;
@@ -441,39 +473,42 @@ public class StoryRepoImpl extends DBManager implements StoryRepo {
     @Override
     public Boolean updateStory(Story story) throws SQLException {
 
-        
+        con = DBManager.getConnection();
+
         int rowsAffected = 0;
-        if (getConnection() != null) {
+        if (con != null) {
 
-        ps = getConnection().prepareStatement("update story set title = ?, description = ?, imagePath = ?,"
-                + "body = ? where storyID = ?");
-         ps.setString(1, story.getTitle());
-         ps.setString(2, story.getDescription());
-         ps.setString(3, story.getImagePath());
-         ps.setString(4, story.getBody());
-         ps.setInt(5, story.getStoryID());
-        
-        
+            ps = con.prepareStatement("update story set title = ?, description = ?, imagePath = ?,"
+                    + "body = ? where storyID = ?");
+            ps.setString(1, story.getTitle());
+            ps.setString(2, story.getDescription());
+            ps.setString(3, story.getImagePath());
+            ps.setString(4, story.getBody());
+            ps.setInt(5, story.getStoryID());
 
-            rowsAffected = ps.executeUpdate(); 
+            rowsAffected = ps.executeUpdate();
         }
+
         
         close();
 
-        return rowsAffected ==1;
+        return rowsAffected == 1;
     }
 
     @Override
     public Boolean deleteStory(Story story) throws SQLException {
 
-        if (getConnection() != null) {
-            ps = getConnection().prepareStatement("update story set isActive = ? where storyID = ? ");
+        con = DBManager.getConnection();
+
+        if (con != null) {
+            ps = con.prepareStatement("update story set isActive = ? where storyID = ? ");
 
             ps.setInt(1, 0);
             ps.setInt(2, story.getStoryID());
             rowsAffected = ps.executeUpdate();
 
         }
+        
         close();
         return rowsAffected == 1;
 
@@ -482,11 +517,13 @@ public class StoryRepoImpl extends DBManager implements StoryRepo {
     @Override//change the sql statement to getting the stories for that particular month - take out category
     public List<Story> getHighestRatedStoriesForMonth() throws SQLException {
 
+        con = DBManager.getConnection();
+
         List<Story> storyList = new ArrayList<>();
 
-        if (getConnection() != null) {
+        if (con != null) {
 
-            ps = getConnection().prepareStatement("select storyID, title,writer, description, imagePath, "
+            ps = con.prepareStatement("select storyID, title,writer, description, imagePath, "
                     + "body, isDraft , isActive, createdOn, allowComments, isApproved, views, likes, "
                     + " avg(rt.rating) as averageRating from Story s"
                     + " inner join rating_transaction rt on s.storyID = rt.story "
@@ -541,12 +578,14 @@ public class StoryRepoImpl extends DBManager implements StoryRepo {
 
     @Override
     public List<Story> searchForStory(String text) throws SQLException {
+
+        con = DBManager.getConnection();
         List<Story> stories = new ArrayList<>();
         Story storyObj;
 
-        if (getConnection() != null) {
+        if (con != null) {
 
-            ps = getConnection().prepareStatement("select storyID, title, "
+            ps = con.prepareStatement("select storyID, title, "
                     + "writer, description, imagePath, body, isDraft, isActive, "
                     + "createdOn, allowComments, isApproved, views, likes, "
                     + "avgRating from story where title like '%?%' or writer like '%?%'");
@@ -582,28 +621,31 @@ public class StoryRepoImpl extends DBManager implements StoryRepo {
             }
         }
 
+        
         close();
         return stories;
     }
 
     @Override
     public List<Story> getStoriesForStoryOfTheDay() throws SQLException {
-        
+
+        con = DBManager.getConnection();
+
         Story storyObj = new Story();
         List<Story> stories = new ArrayList<>();
 
-        if (getConnection() != null) {
-//            ps = getConnection().prepareStatement("select storyID, title, writer,description, imagePath, body, isDraft, isActive, createdOn, allowComment, isApproved, views, likes, avgRating from story where isApproved = 0 and isDraft = 0");
+        con = DBManager.getConnection();
 
+        if (con != null) {
+//            ps = con.prepareStatement("select storyID, title, writer,description, imagePath, body, isDraft, isActive, createdOn, allowComment, isApproved, views, likes, avgRating from story where isApproved = 0 and isDraft = 0");
 
-            ps = getConnection().prepareStatement("select storyID, title, writer, description, imagePath, "
+            ps = con.prepareStatement("select storyID, title, writer, description, imagePath, "
                     + "body, isDraft, isActive, createdOn, allowComment, isApproved, views, likes, avgRating "
                     + "from story where isApproved = 1 and isDraft = 0 ORDER BY RAND() limit 6");
 
             rs = ps.executeQuery();
 
             while (rs.next()) {
-
 
                 int storyID = rs.getInt("storyid");
 
@@ -625,33 +667,49 @@ public class StoryRepoImpl extends DBManager implements StoryRepo {
                 int likes = rs.getInt("likes");
                 double avgRating = rs.getDouble("avgRating");
 
-
                 storyObj = new Story(storyID, title, writer1, description, imagePath, body, isDraft, isActive, null, allowComments, isApproved, views, likes, avgRating);
                 stories.add(storyObj);
             }
         }
+        
         close();
 
         return stories;
-        
+
     }
 
     @Override
-    public Boolean turnOffComments(Story story) throws SQLException{
-        
+    public Boolean turnOffComments(Story story) throws SQLException {
+
+        con = DBManager.getConnection();
+
         int rowsAffected = 0;
-        if (getConnection() != null) {
-            ps = getConnection().prepareStatement("UPDATE story SET allowcomment = IF(allowcomment != 0, 0, 1) WHERE storyid = ?;");
+        if (con != null) {
+            ps = con.prepareStatement("UPDATE story SET allowcomment = IF(allowcomment != 0, 0, 1) WHERE storyid = ?;");
 
             ps.setInt(1, story.getStoryID());
 
-            rowsAffected = ps.executeUpdate(); 
+            rowsAffected = ps.executeUpdate();
+            
             close();
 
             return rowsAffected == 1;
         }
-                
+
         return false;
+    }
+    
+    public void close() throws SQLException {
+
+        if (ps != null) {
+            ps.close();
+        }
+        if (rs != null) {
+            rs.close();
+        }
+        if (con != null) {
+            con.close();
+        }
     }
 
 }

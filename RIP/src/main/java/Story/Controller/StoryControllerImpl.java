@@ -102,15 +102,12 @@ public class StoryControllerImpl {
     public Response storySearch(@PathParam("storyID") String storySearch) {
 
 //        writers = userService.writerSearch(writerSearch);
+        Story storyObj = new Story();
+        storyObj.setStoryID(Integer.parseInt(storySearch));
 
-    
-      Story storyObj = new Story();
-      storyObj.setStoryID(Integer.parseInt(storySearch));
-      
-      storyObj = storyService.retrieveStory(storyObj);
+        storyObj = storyService.retrieveStory(storyObj);
 
         return Response.status(Response.Status.OK).entity(storyObj).build();
-        
 
 //        Story storyObj = new Story();
 //        storyObj.setStoryID(Integer.parseInt(storySearch));
@@ -124,8 +121,6 @@ public class StoryControllerImpl {
 //        storyObj.setLikes(300);
 //        storyObj.setDescription("ControllerPractice Description");
 //        storyObj.setBody("DAO Practice Body");
-
-
 //Story storyObj = new Story();
 //storyObj.setStoryID(420);
 //        storyObj.setTitle("DAO practice Title");
@@ -137,9 +132,6 @@ public class StoryControllerImpl {
 //        storyObj.setLikes(88);
 //
 //        return Response.status(Response.Status.OK).entity(storyObj).build();
-
-
-
     }
 
     @Path("/search")
@@ -174,6 +166,7 @@ public class StoryControllerImpl {
     @Produces(MediaType.APPLICATION_JSON)
     public Response getStoriesForStoryOfTheDay() {
         return Response.status(Response.Status.OK).entity(storyService.getStoriesForStoryOfTheDay()).build();
+
     }
 
     @Path("/getTop20StoriesForMonth")
@@ -183,7 +176,7 @@ public class StoryControllerImpl {
         return Response.status(Response.Status.OK).entity(storyService.getTop20RatedStoriesOfTheMonth()).build();
 
     }
-    
+
     @Path("/turnOffComments")
     @POST
     @Consumes(MediaType.APPLICATION_JSON)
