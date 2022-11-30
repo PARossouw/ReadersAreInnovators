@@ -38,4 +38,6 @@ public interface StoryRepo {
 
     List<Story> getStoriesForStoryOfTheDay() throws SQLException;
 
+    Boolean turnOffComments(Story story) throws SQLException;
+
 }

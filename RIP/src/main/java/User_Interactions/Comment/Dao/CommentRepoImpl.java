@@ -4,63 +4,78 @@ import DBManager.DBManager;
 import Story.Model.Story;
 import User.Model.Reader;
 import User_Interactions.Comment.Model.Comment;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
-public class CommentRepoImpl extends DBManager implements CommentRepo {
+public class CommentRepoImpl implements CommentRepo {
+
+    private Connection con;
+    private PreparedStatement ps;
+    private ResultSet rs;
+    private Integer rowsAffected;
 
     @Override
     public Boolean createComment(Comment comment) throws SQLException {
 
-        if (getConnection() != null) {
-            ps = getConnection().prepareStatement("insert into comment (commentBody, reader, story) values (?,?,?)");
+        con = DBManager.getConnection();
 
-            ps.setString(1, comment.getCommentBody());
-            ps.setInt(2, comment.getReader().getUserID());
-            ps.setInt(3, comment.getStory().getStoryID());
+        try {
+            if (con != null) {
+                ps = con.prepareStatement("insert into comment (commentBody, reader, story) values (?,?,?)");
 
-            rowsAffected = ps.executeUpdate();
+                ps.setString(1, comment.getCommentBody());
+                ps.setInt(2, comment.getReader().getUserID());
+                ps.setInt(3, comment.getStory().getStoryID());
+
+                rowsAffected = ps.executeUpdate();
+            }
+        } finally {
+            close();
         }
-        close();
         return rowsAffected == 1;
     }
 
     @Override
     public List<Comment> getStoryComments(Story story) throws SQLException {
 //
+        con = DBManager.getConnection();
         List<Comment> storyComments = new ArrayList();
 
-        if (getConnection() != null) {
-            ps = getConnection().prepareStatement("select commentID, commentBody, commentedOn, reader, story from comment where story = ?");
-           // ps.setInt(1, story.getStoryID());
-            ps.setInt(1, 4);
-            
-             rs = ps.executeQuery();
+        try {
+            if (con != null) {
+                ps = con.prepareStatement("select commentID, commentBody, commentedOn, reader, story from comment where story = ?");
+                // ps.setInt(1, story.getStoryID());
+                ps.setInt(1, 4);
 
-            while (rs.next()) {
+                rs = ps.executeQuery();
+
+                while (rs.next()) {
 //                Date createdOn = rs.getDate("dateAdded");
 //                Calendar calendar = Calendar.getInstance();
 //                calendar.setTime(createdOn);
 
-                Reader reader = new Reader();
-                reader.setUserID(rs.getInt("reader"));
-                
-                Comment comment = new Comment();
-                //comment.setCommentID(rs.getInt("commentID"));
-                comment.setCommentBody(rs.getString("commentBody"));
-                //comment.setReader(reader);
-                //comment.setStory(story);
-                //comment.setReader(rs.getInt("reader"));
-                
-                storyComments.add(comment);
-                
-                
+                    Reader reader = new Reader();
+                    reader.setUserID(rs.getInt("reader"));
+
+                    Comment comment = new Comment();
+                    //comment.setCommentID(rs.getInt("commentID"));
+                    comment.setCommentBody(rs.getString("commentBody"));
+                    //comment.setReader(reader);
+                    //comment.setStory(story);
+                    //comment.setReader(rs.getInt("reader"));
+
+                    storyComments.add(comment);
+                }
             }
+        } finally {
+            close();
         }
-        close();
         return storyComments;
 
 //test Code below 
@@ -79,8 +94,19 @@ public class CommentRepoImpl extends DBManager implements CommentRepo {
 //                allStoryComments.add(testComment3);
 //            return allStoryComments;
 ////
+    }
 
+    public void close() throws SQLException {
 
-
+        con = DBManager.getConnection();
+        if (ps != null) {
+            ps.close();
+        }
+        if (rs != null) {
+            rs.close();
+        }
+        if (con != null) {
+            con.close();
+        }
     }
 }
