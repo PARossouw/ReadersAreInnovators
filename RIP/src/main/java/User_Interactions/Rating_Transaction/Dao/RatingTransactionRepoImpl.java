@@ -25,10 +25,12 @@ public class RatingTransactionRepoImpl implements RatingTransactionRepo {
         try {
             if (con != null) {
 
-                ps = con.prepareStatement("insert into rating_Transaction (rating, reader, storyID) values (?, ?, ?)");
-                ps.setInt(1, rating);
-                ps.setInt(2, reader.getUserID());
-                ps.setInt(3, story.getStoryID());
+
+            ps = getConnection().prepareStatement("insert into rating_Transaction (rating, reader, story) values (?, ?, ?)");
+            ps.setInt(1, rating);
+            ps.setInt(2, reader.getUserID());
+            ps.setInt(3, story.getStoryID());
+
 
                 rowsAffected = ps.executeUpdate();
 
@@ -45,24 +47,24 @@ public class RatingTransactionRepoImpl implements RatingTransactionRepo {
         con = DBManager.getConnection();
         RatingTransaction rating = new RatingTransaction();
 
-        try {
-            if (con != null) {
-                ps = con.prepareStatement("select ratingID, rating, ratedOn, reader, story from rating_transaction where story = ? and reader = ?");
-                ps.setInt(1, story.getStoryID());
-                ps.setInt(2, reader.getUserID());
-                rs = ps.executeQuery();
+        
+        if (getConnection()!=null) {
+            ps = getConnection().prepareStatement("select ratingID, rating, ratedOn, reader, story from rating_transaction where story = ? and reader = ?");
+            ps.setInt(1, story.getStoryID());
+            ps.setInt(2, reader.getUserID());
+            rs = ps.executeQuery();
+            
+            while (rs.next()) {
+                rating.setRatingID(rs.getInt("ratingID"));
+                rating.setRating(rs.getInt("rating"));
+                
+//                java.util.Date createdOn = rs.getDate("ratedOn");
+//                Calendar calendar = Calendar.getInstance();
+//                calendar.setTime(createdOn);
+                
+                rating.setReader(reader);
+                rating.setStory(story);
 
-                while (rs.next()) {
-                    rating.setRatingID(rs.getInt("ratingID"));
-                    rating.setRating(rs.getInt("rating"));
-
-                    java.util.Date createdOn = rs.getDate("ratedOn");
-                    Calendar calendar = Calendar.getInstance();
-                    calendar.setTime(createdOn);
-
-                    rating.setReader(reader);
-                    rating.setStory(story);
-                }
             }
         } finally {
             close();
