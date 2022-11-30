@@ -9,7 +9,7 @@ import java.util.List;
 
 public interface StoryController {
 
-    List<Story> searchStoriesByCategories(List<Category> categories);
+    List<Story> searchStoriesByCategories(Reader reader);
 
     List<Story> viewStoriesByWriter(Writer writer);
 

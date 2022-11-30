@@ -10,7 +10,7 @@ public interface Story_TransactionService {
     
     
     //remember to add a trigger to set is Approved to true on story
-    smsreq approvePendingStory(Editor editor, Story story);
+    String approvePendingStory(Editor editor, Story story);
     
     smsreq rejectPendingStory(Editor editor, Story story);
     

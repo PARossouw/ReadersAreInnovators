@@ -81,7 +81,7 @@ public class StoryServiceImpl implements StoryService {
                 Logger.getLogger(StoryServiceImpl.class.getName()).log(Level.SEVERE, null, ex);
             }
         }
-        return "Unfortunetely, the story has not been saved successfully.";
+        return "Unfortunetely, the story has not been saved successfully. " + story.toString();
     }
 
     @Override
@@ -90,19 +90,19 @@ public class StoryServiceImpl implements StoryService {
         try {
             if (story.getStoryID() != null
                     && story.getTitle() != null
-                    && story.getWriter() != null
+                  //  && story.getWriter() != null
                     && story.getDescription() != null
-                    && story.getImagePath() != null
-                    && story.getBody() != null
-                    && story.getCreatedOn() != null
-                    && story.getCategoryList() != null) {
+                  //  && story.getImagePath() != null
+                    && story.getBody() != null){
+                  //  && story.getCreatedOn() != null
+                 //   && story.getCategoryList() != null) {
                 return storyRepo.submitStory(story) ? "successfully submitted story" : "unsuccessful operation";
 
             }
         } catch (SQLException ex) {
             Logger.getLogger(StoryServiceImpl.class.getName()).log(Level.SEVERE, null, ex);
         }
-        return "Unsuccessful operation";
+        return "Unsuccessful operation "+ story.toString();
     }
 
     @Override
@@ -193,11 +193,11 @@ public class StoryServiceImpl implements StoryService {
 
     @Override
     public List<Story> getTop20RatedStoriesOfTheMonth() {
-         List<Story> stories = new ArrayList<>();
+        List<Story> stories = new ArrayList<>();
         try {
             stories = storyRepo.getHighestRatedStoriesForMonth();
-            if(stories.size()>20){
-                for(int i = 20; i<stories.size(); i++){
+            if (stories.size() > 20) {
+                for (int i = 20; i < stories.size(); i++) {
                     stories.remove(i);
                 }
             }
@@ -205,6 +205,27 @@ public class StoryServiceImpl implements StoryService {
             Logger.getLogger(StoryServiceImpl.class.getName()).log(Level.SEVERE, null, ex);
         }
         return stories;
+    }
+
+    @Override
+    public String turnOffComments(Story story) {
+        
+        try {
+        if(story.getAllowComments()){
+            if (storyRepo.turnOffComments(story)) {
+                return "Comments for " + story.getTitle() + " successfully disabled";
+            }
+        }
+        if(!story.getAllowComments()){
+            if (storyRepo.turnOffComments(story)) {
+                return "Comments for " + story.getTitle() + " enabled";
+            }
+        }
+        } catch (SQLException ex) {
+            Logger.getLogger(StoryServiceImpl.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return "something went wrong";
+
     }
 
 }

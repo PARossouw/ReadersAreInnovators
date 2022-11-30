@@ -8,6 +8,10 @@ import User.Model.Editor;
 import User.Model.User;
 import User.Model.Writer;
 import User_Interactions.Story_Transaction.Dao.StoryTransactionRepo;
+import jakarta.xml.bind.JAXBContext;
+import jakarta.xml.bind.JAXBException;
+import jakarta.xml.bind.Marshaller;
+import java.io.StringWriter;
 import java.sql.SQLException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -28,9 +32,10 @@ public class Story_TransactionServiceImpl implements Story_TransactionService {
     }
 
     @Override
-    public smsreq approvePendingStory(Editor editor, Story story) {
+    public String approvePendingStory(Editor editor, Story story) {
 
         smsreq sms = new smsreq();
+        StringWriter sw = new StringWriter();
         try {
             if (storyTransactionRepo.createEvent(story, editor, "Approved Pending Story")) {
                 Date date = new Date();
@@ -38,22 +43,33 @@ public class Story_TransactionServiceImpl implements Story_TransactionService {
 
                 //getting the writer so we can get their number
                 User user = new User();
-                user.setUsername("Anton");
-                
-                user.setPhoneNumber("0739068691");
-                //user = userRepo.getUser(user); GOTTA TEST THIS ON A DATABASE
+                user.setUsername(story.getWriter());
+                user = userRepo.getUser(user);
 
                 //building the sms
                 sms.setDatetime(sdf.format(date));
-                sms.setMsisdn(user.getPhoneNumber());
-                //sms.setMessage("Story with the title: \"" + story.getTitle() + "\" has been approved and is now available for public view");
-                sms.setMessage("Story with the title: xxxxxxxxxxx has been approved and is now available for public view");
-                return sms;
-            } 
+//                sms.setMsisdn(user.getPhoneNumber());
+                sms.setMsisdn("0739068691");
+                sms.setPass("2group");
+                sms.setUser("GROUP2");
+                sms.setMessage("Story with the title: " + story.getTitle() + " has been approved and is now available for public view");
+
+                //building a string with the structure of an xml document
+                JAXBContext jaxBContext = JAXBContext.newInstance(smsreq.class);
+
+                Marshaller marshaller = jaxBContext.createMarshaller();
+
+                marshaller.setProperty(Marshaller.JAXB_FRAGMENT, Boolean.TRUE);
+
+                marshaller.marshal(sms, sw);
+                //return sw.toString();
+            }
 //            else {
 //                return sms;
 //            }
         } catch (SQLException ex) {
+            Logger.getLogger(Story_TransactionServiceImpl.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (JAXBException ex) {
             Logger.getLogger(Story_TransactionServiceImpl.class.getName()).log(Level.SEVERE, null, ex);
         }
 
@@ -71,7 +87,7 @@ public class Story_TransactionServiceImpl implements Story_TransactionService {
 //        sms.setMessage("Story with the title: \"" + story.getTitle() + "\" has been approved and is now available for public view");
 //        //hardcoding above
         //return sms;
-        return sms;
+        return sw.toString();
     }
 
     @Override
