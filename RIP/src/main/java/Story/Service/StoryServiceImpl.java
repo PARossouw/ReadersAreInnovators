@@ -29,19 +29,21 @@ public class StoryServiceImpl implements StoryService {
 
         List<Story> storyList = new ArrayList<>();
 
-        if (categories == null) {
-            return null;
-        }
-
+//        if (categories == null) {
+//            return null;
+//        }
         try {
             storyList = storyRepo.getStoryByCategory(categories);
-            for (Story s : storyList) {
-                s.setCategoryList(categoryRepo.getStoryCategories(s));
-            }
+//            for (Story s : storyList) {
+//                s.setCategoryList(categoryRepo.getStoryCategories(s));
+//            }
         } catch (SQLException ex) {
             Logger.getLogger(StoryServiceImpl.class.getName()).log(Level.SEVERE, null, ex);
         }
-
+        
+//        Story s = new Story();
+//        s.setTitle("push");
+//        storyList.add(s);
         return storyList;
     }
 
@@ -71,18 +73,13 @@ public class StoryServiceImpl implements StoryService {
             return "The story is empty and could not be saved.";
         } else {
             try {
-                
-                if(story.getStoryID()==-1)
-                {
+
+                if (story.getStoryID() == -1) {
                     storySuccessfullySaved = storyRepo.createStory(story);
+                } else {
+                    storySuccessfullySaved = storyRepo.updateStory(story);
+                    categoryRepo.addCategoriesToStory(story, story.getCategoryList());
                 }
-                else
-                {
-                storySuccessfullySaved = storyRepo.updateStory(story);
-                categoryRepo.addCategoriesToStory(story, story.getCategoryList());
-                }
-                
-                
 
                 if (storySuccessfullySaved) {
                     return "Story has been successfully saved.";
@@ -101,19 +98,19 @@ public class StoryServiceImpl implements StoryService {
         try {
             if (story.getStoryID() != null
                     && story.getTitle() != null
-                  //  && story.getWriter() != null
+                    //  && story.getWriter() != null
                     && story.getDescription() != null
-                  //  && story.getImagePath() != null
-                    && story.getBody() != null){
-                  //  && story.getCreatedOn() != null
-                 //   && story.getCategoryList() != null) {
+                    //  && story.getImagePath() != null
+                    && story.getBody() != null) {
+                //  && story.getCreatedOn() != null
+                //   && story.getCategoryList() != null) {
                 return storyRepo.submitStory(story) ? "successfully submitted story" : "unsuccessful operation";
 
             }
         } catch (SQLException ex) {
             Logger.getLogger(StoryServiceImpl.class.getName()).log(Level.SEVERE, null, ex);
         }
-        return "Unsuccessful operation "+ story.toString();
+        return "Unsuccessful operation " + story.toString();
     }
 
     @Override
@@ -125,7 +122,6 @@ public class StoryServiceImpl implements StoryService {
             Logger.getLogger(StoryServiceImpl.class.getName()).log(Level.SEVERE, null, ex);
             return null;
         }
-
 
     }
 
@@ -210,18 +206,18 @@ public class StoryServiceImpl implements StoryService {
 
     @Override
     public String turnOffComments(Story story) {
-        
+
         try {
-        if(story.getAllowComments()){
-            if (storyRepo.turnOffComments(story)) {
-                return "Comments for " + story.getTitle() + " successfully disabled";
+            if (story.getAllowComments()) {
+                if (storyRepo.turnOffComments(story)) {
+                    return "Comments for " + story.getTitle() + " successfully disabled";
+                }
             }
-        }
-        if(!story.getAllowComments()){
-            if (storyRepo.turnOffComments(story)) {
-                return "Comments for " + story.getTitle() + " enabled";
+            if (!story.getAllowComments()) {
+                if (storyRepo.turnOffComments(story)) {
+                    return "Comments for " + story.getTitle() + " enabled";
+                }
             }
-        }
         } catch (SQLException ex) {
             Logger.getLogger(StoryServiceImpl.class.getName()).log(Level.SEVERE, null, ex);
         }
