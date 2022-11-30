@@ -9,84 +9,107 @@ import java.util.Calendar;
 import java.util.List;
 import User.Model.Reader;
 import User.Model.User;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 
-public class CategoryRepoImpl extends DBManager implements CategoryRepo {
+public class CategoryRepoImpl implements CategoryRepo {
+
+    private Connection con;
+    private PreparedStatement ps;
+    private ResultSet rs;
+    private Integer rowsAffected;
 
     @Override
     public Boolean createCategory(Category category) throws SQLException {
 
-        if (getConnection() != null) {
+        con = DBManager.getConnection();
 
-            ps = getConnection().prepareStatement("insert into Category (Category) values(?)");
-            ps.setString(1, category.getName());
-            rowsAffected = ps.executeUpdate();
+        try {
+            if (con != null) {
+
+                ps = con.prepareStatement("insert into Category (Category) values(?)");
+                ps.setString(1, category.getName());
+                rowsAffected = ps.executeUpdate();
+            }
+        } finally {
+            close();
         }
-        close();
         return rowsAffected == 1;
     }
 
     @Override
     public Category retrieveCategory(Category category) throws SQLException {
 
-        if (getConnection() != null) {
-            ps = getConnection().prepareStatement("select Category, dateAdded from Category where categoryID = ?");
-            ps.setInt(1, category.getCategoryID());
-            rs = ps.executeQuery();
+        con = DBManager.getConnection();
 
-            if (rs.next()) {
-                category.setName(rs.getString("Category"));
+        try {
+            if (con != null) {
+                ps = con.prepareStatement("select Category, dateAdded from Category where categoryID = ?");
+                ps.setInt(1, category.getCategoryID());
+                rs = ps.executeQuery();
 
-                Calendar calendar = Calendar.getInstance();
-                calendar.setTime(rs.getDate("dateAdded"));
-                category.setDateAdded(calendar);
+                if (rs.next()) {
+                    category.setName(rs.getString("Category"));
 
+                    Calendar calendar = Calendar.getInstance();
+                    calendar.setTime(rs.getDate("dateAdded"));
+                    category.setDateAdded(calendar);
+
+                }
             }
+        } finally {
+            close();
         }
-        close();
         return category;
     }
 
     @Override
     public Boolean updateCategory(Category category) throws SQLException {
 
-        if (getConnection() != null) {
+        con = DBManager.getConnection();
 
-            ps = getConnection().prepareStatement("update table category set Category = ? where categoryID = ?");
-            ps.setString(1, category.getName());
-            ps.setInt(2, category.getCategoryID());
+        try {
+            if (con != null) {
 
-            rowsAffected = ps.executeUpdate();
+                ps = con.prepareStatement("update table category set Category = ? where categoryID = ?");
+                ps.setString(1, category.getName());
+                ps.setInt(2, category.getCategoryID());
 
+                rowsAffected = ps.executeUpdate();
+
+            }
+        } finally {
+            close();
         }
-        close();
         return rowsAffected == 1;
     }
 
     @Override
     public List<Category> getAllCategories() throws SQLException {
 
+        con = DBManager.getConnection();
+
         List<Category> categoryList = new ArrayList<>();
 
-        if (getConnection() != null) {
-            ps = getConnection().prepareStatement("select categoryid, category, dateAdded from category");
-            rs = ps.executeQuery();
+        try {
+            if (con != null) {
+                ps = con.prepareStatement("select categoryid, category, dateAdded from category");
+                rs = ps.executeQuery();
 
-            while (rs.next()) {
+                while (rs.next()) {
 
-               // Calendar calendar = Calendar.getInstance();
-               // calendar.setTime(rs.getDate("dateAdded"));
-               Category category = new Category();
-               category.setName(rs.getString("category"));
-               category.setCategoryID(rs.getInt("categoryid"));
-               categoryList.add(category);
-               
+                    // Calendar calendar = Calendar.getInstance();
+                    // calendar.setTime(rs.getDate("dateAdded"));
+                    Category category = new Category();
+                    category.setName(rs.getString("category"));
+                    category.setCategoryID(rs.getInt("categoryid"));
+                    categoryList.add(category);
 
-               // categoryList.add(new Category(rs.getInt("categoryid"), rs.getString("category"), calendar));
+                    // categoryList.add(new Category(rs.getInt("categoryid"), rs.getString("category"), calendar));
+                }
 
             }
-         
-          
-        }
             //-----Testing code------
 //         List<Category> categoryListTest = new ArrayList<>();
 //            Category cat1 = new Category();
@@ -106,110 +129,146 @@ public class CategoryRepoImpl extends DBManager implements CategoryRepo {
 //            categoryListTest.add(cat2);
 //            categoryListTest.add(cat3);
             // --------------------
-            
-        close();
-       // return categoryListTest;
-       return categoryList;
+        } finally {
+            close();
+        }
+        return categoryList;
     }
 
     @Override
     public List<Category> getPreferredCategories(User reader) throws SQLException {
 
+        con = DBManager.getConnection();
+
         List<Category> categoryList = new ArrayList<>();
 
-        if (getConnection() != null) {
-            ps = getConnection().prepareStatement("select categoryID, category from Category "
-                    + "where CategoryID IN (select category from user_category where user = ?)");
-            ps.setInt(1, reader.getUserID());
-            rs = ps.executeQuery();
+        try {
+            if (con != null) {
+                ps = con.prepareStatement("select categoryID, category from Category "
+                        + "where CategoryID IN (select category from user_category where user = ?)");
+                ps.setInt(1, reader.getUserID());
+                rs = ps.executeQuery();
 
-            while (rs.next()) {
-                categoryList.add(new Category(rs.getInt("categoryID"), rs.getString("category"), null));
+                while (rs.next()) {
+                    categoryList.add(new Category(rs.getInt("categoryID"), rs.getString("category"), null));
+                }
             }
+        } finally {
+            close();
         }
-        close();
         return categoryList;
     }
 
     @Override
     public Boolean addPreferredCategories(Reader reader, List<Category> categories) throws SQLException {
 
-        if (getConnection() != null) {
-            ps = getConnection().prepareStatement("insert into user_category (user, category) values(?, ?)");
+        con = DBManager.getConnection();
 
-            for (int i = 0; i < categories.size(); i++) {
-                ps.setInt(1, reader.getUserID());
-                ps.setInt(2, categories.get(i).getCategoryID());
+        try {
+            if (con != null) {
+                ps = con.prepareStatement("insert into user_category (user, category) values(?, ?)");
 
+                for (int i = 0; i < categories.size(); i++) {
+                    ps.setInt(1, reader.getUserID());
+                    ps.setInt(2, categories.get(i).getCategoryID());
+
+                }
+                rowsAffected = ps.executeBatch().length;
             }
-            rowsAffected = ps.executeBatch().length;
+        } finally {
+            close();
         }
-        close();
         return rowsAffected == categories.size();
     }
 
     @Override
     public List<Category> getStoryCategories(Story story) throws SQLException {
 
+        con = DBManager.getConnection();
+
         List<Category> categories = new ArrayList<>();
 
-        if (getConnection() != null) {
-            ps = getConnection().prepareStatement("select categoryid, category, dateAdded from Category where categoryid IN (select category from story_category where story = ?)");
-            ps.setInt(1, story.getViews());
-            rs = ps.executeQuery();
+        try {
+            if (con != null) {
+                ps = con.prepareStatement("select categoryid, category, dateAdded from Category where categoryid IN (select category from story_category where story = ?)");
+                ps.setInt(1, story.getViews());
+                rs = ps.executeQuery();
 
-            while (rs.next()) {
+                while (rs.next()) {
 
-                Calendar calendar = Calendar.getInstance();
-                calendar.setTime(rs.getDate("dateAdded"));
+                    Calendar calendar = Calendar.getInstance();
+                    calendar.setTime(rs.getDate("dateAdded"));
 
-                categories.add(new Category(rs.getInt("categoryID"), rs.getString("category"), calendar));
+                    categories.add(new Category(rs.getInt("categoryID"), rs.getString("category"), calendar));
+                }
             }
+        } finally {
+            close();
         }
-        close();
         return categories;
     }
 
     @Override
     public List<Category> topCategoriesForMonth() throws SQLException { //DISCUSS WITH GROUP
 
+        con = DBManager.getConnection();
+
         List<Category> topCategories = new ArrayList<>();
 
-        if (getConnection() != null) {
-            ps = getConnection().prepareStatement("select categoryID, c.category, dateAdded, count(vt.story) as categoryViews from category c "
-                    + "inner join story_category sc on c.categoryID = sc.category "
-                    + "inner join story s on sc.story = s.storyID "
-                    + "inner join view_transaction vt on s.storyID = vt.story "
-                    + "where month(dateViewed) = month(current_timestamp) and year(dateViewed) = year(current_timestamp) "
-                    + "group by c.category order by categoryViews desc limit 5");
-            rs = ps.executeQuery();
+        try {
+            if (con != null) {
+                ps = con.prepareStatement("select categoryID, c.category, dateAdded, count(vt.story) as categoryViews from category c "
+                        + "inner join story_category sc on c.categoryID = sc.category "
+                        + "inner join story s on sc.story = s.storyID "
+                        + "inner join view_transaction vt on s.storyID = vt.story "
+                        + "where month(dateViewed) = month(current_timestamp) and year(dateViewed) = year(current_timestamp) "
+                        + "group by c.category order by categoryViews desc limit 5");
+                rs = ps.executeQuery();
 
-            while (rs.next()) {
-                Calendar calendar = Calendar.getInstance();
-                calendar.setTime(rs.getDate("dateAdded"));
+                while (rs.next()) {
+                    Calendar calendar = Calendar.getInstance();
+                    calendar.setTime(rs.getDate("dateAdded"));
 
-                topCategories.add(new Category(rs.getInt("categoryID"), rs.getString("category"), calendar));
+                    topCategories.add(new Category(rs.getInt("categoryID"), rs.getString("category"), calendar));
+                }
             }
+        } finally {
+            close();
         }
-        close();
-        
-        
         return topCategories;
     }
 
     @Override
     public Boolean addCategoriesToStory(Story story, List<Category> categories) throws SQLException {
 
-        if (getConnection() != null) {
-            ps = getConnection().prepareStatement("insert into story_category (story, category) values (?,?)");
-            for (Category category : categories) {
-                ps.setInt(1, story.getStoryID());
-                ps.setInt(2, category.getCategoryID());
-                ps.addBatch();
+        con = DBManager.getConnection();
+
+        try {
+            if (con != null) {
+                ps = con.prepareStatement("insert into story_category (story, category) values (?,?)");
+                for (Category category : categories) {
+                    ps.setInt(1, story.getStoryID());
+                    ps.setInt(2, category.getCategoryID());
+                    ps.addBatch();
+                }
+                rowsAffected = ps.executeBatch().length;
             }
-            rowsAffected = ps.executeBatch().length;
+        } finally {
+            close();
         }
-        close();
         return rowsAffected == categories.size();
+    }
+
+    public void close() throws SQLException {
+
+        if (ps != null) {
+            ps.close();
+        }
+        if (rs != null) {
+            rs.close();
+        }
+        if (con != null) {
+            con.close();
+        }
     }
 }

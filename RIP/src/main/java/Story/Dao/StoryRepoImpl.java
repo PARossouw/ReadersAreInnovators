@@ -2,14 +2,12 @@ package Story.Dao;
 
 import Category.Model.Category;
 import DBManager.DBManager;
-import static DBManager.DBManager.getConnection;
 import Story.Model.Story;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
-import User.Model.Reader;
 import User.Model.User;
 import User.Model.Writer;
 import java.sql.Connection;
@@ -17,7 +15,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.util.Collections;
 
-public class StoryRepoImpl /*extends DBManager*/ implements StoryRepo {
+public class StoryRepoImpl implements StoryRepo {
 
     private Connection con;
     private PreparedStatement ps;
@@ -32,49 +30,49 @@ public class StoryRepoImpl /*extends DBManager*/ implements StoryRepo {
         List<Story> allApprovedStories = new ArrayList<>();
         Story story = null;
 
-        con = DBManager.getConnection();
+        try {
+            if (con != null) {
 
-        if (con != null) {
+                ps = con.prepareStatement("select storyID, title, "
+                        + "writer, description, imagePath, body, isDraft, isActive, "
+                        + "createdOn, allowComments, isApproved, views, likes, "
+                        + "avgRating from story where isApproved = ?");
 
-            ps = con.prepareStatement("select storyID, title, "
-                    + "writer, description, imagePath, body, isDraft, isActive, "
-                    + "createdOn, allowComments, isApproved, views, likes, "
-                    + "avgRating from story where isApproved = ?");
+                ps.setInt(1, 1);
+                rs = ps.executeQuery();
 
-            ps.setInt(1, 1);
-            rs = ps.executeQuery();
+                while (rs.next()) {
 
-            while (rs.next()) {
+                    int storyID = rs.getInt("storyID");
+                    String title = rs.getString("title");
+                    String writer = rs.getString("writer");
+                    String description = rs.getString("description");
+                    String imagePath = rs.getString("imagePath");
+                    String body = rs.getString("body");
+                    boolean isDraft = rs.getBoolean("isDraft");
+                    boolean isActive = rs.getBoolean("isActive");
 
-                int storyID = rs.getInt("storyID");
-                String title = rs.getString("title");
-                String writer = rs.getString("writer");
-                String description = rs.getString("description");
-                String imagePath = rs.getString("imagePath");
-                String body = rs.getString("body");
-                boolean isDraft = rs.getBoolean("isDraft");
-                boolean isActive = rs.getBoolean("isActive");
+                    Date createdOn = rs.getDate("createdOn");
+                    Calendar calendar = Calendar.getInstance();
+                    calendar.setTime(createdOn);
 
-                Date createdOn = rs.getDate("createdOn");
-                Calendar calendar = Calendar.getInstance();
-                calendar.setTime(createdOn);
+                    boolean allowComments = rs.getBoolean("allowComments");
+                    boolean isApproved = rs.getBoolean("isApproved");
+                    int views = rs.getInt("views");
+                    int likes = rs.getInt("likes");
+                    double avgRating = rs.getDouble("avgRating");
 
-                boolean allowComments = rs.getBoolean("allowComments");
-                boolean isApproved = rs.getBoolean("isApproved");
-                int views = rs.getInt("views");
-                int likes = rs.getInt("likes");
-                double avgRating = rs.getDouble("avgRating");
+                    story = new Story(storyID, title, writer, description,
+                            imagePath, body, isDraft, isActive,
+                            calendar, allowComments, isApproved,
+                            views, likes, avgRating);
 
-                story = new Story(storyID, title, writer, description,
-                        imagePath, body, isDraft, isActive,
-                        calendar, allowComments, isApproved,
-                        views, likes, avgRating);
-
-                allApprovedStories.add(story);
+                    allApprovedStories.add(story);
+                }
             }
+        } finally {
+            close();
         }
-        close();
-
         return allApprovedStories;
     }
 
@@ -86,47 +84,48 @@ public class StoryRepoImpl /*extends DBManager*/ implements StoryRepo {
         List<Story> allRejectedStories = new ArrayList<>();
         Story story = null;
 
-        if (con != null) {
+        try {
+            if (con != null) {
 
-            ps = con.prepareStatement("select storyID, title, "
-                    + "writer, description, imagePath, body, isDraft, isActive, "
-                    + "createdOn, allowComment, isApproved, views, likes, "
-                    + "avgRating from story s inner join story_transaction st on s.storyid = st.story where storyid = story and isApproved = ? ");
+                ps = con.prepareStatement("select storyID, title, "
+                        + "writer, description, imagePath, body, isDraft, isActive, "
+                        + "createdOn, allowComment, isApproved, views, likes, "
+                        + "avgRating from story s inner join story_transaction st on s.storyid = st.story where storyid = story and isApproved = ? ");
 
-            ps.setInt(1, 0);
-            rs = ps.executeQuery();
+                ps.setInt(1, 0);
+                rs = ps.executeQuery();
 
-            while (rs.next()) {
+                while (rs.next()) {
 
-                int storyID = rs.getInt("storyID");
-                String title = rs.getString("title");
-                String writer = rs.getString("writer");
-                String description = rs.getString("description");
-                String imagePath = rs.getString("imagePath");
-                String body = rs.getString("body");
-                boolean isDraft = rs.getBoolean("isDraft");
-                boolean isActive = rs.getBoolean("isActive");
+                    int storyID = rs.getInt("storyID");
+                    String title = rs.getString("title");
+                    String writer = rs.getString("writer");
+                    String description = rs.getString("description");
+                    String imagePath = rs.getString("imagePath");
+                    String body = rs.getString("body");
+                    boolean isDraft = rs.getBoolean("isDraft");
+                    boolean isActive = rs.getBoolean("isActive");
 
-                Date createdOn = rs.getDate("createdOn");
-                Calendar calendar = Calendar.getInstance();
-                calendar.setTime(createdOn);
+                    Date createdOn = rs.getDate("createdOn");
+                    Calendar calendar = Calendar.getInstance();
+                    calendar.setTime(createdOn);
 
-                boolean allowComments = rs.getBoolean("allowComments");
-                boolean isApproved = rs.getBoolean("isApproved");
-                int views = rs.getInt("views");
-                int likes = rs.getInt("likes");
-                double avgRating = rs.getDouble("avgRating");
+                    boolean allowComments = rs.getBoolean("allowComments");
+                    boolean isApproved = rs.getBoolean("isApproved");
+                    int views = rs.getInt("views");
+                    int likes = rs.getInt("likes");
+                    double avgRating = rs.getDouble("avgRating");
 
-                story = new Story(storyID, title, writer, description,
-                        imagePath, body, isDraft, isActive,
-                        calendar, allowComments, isApproved,
-                        views, likes, avgRating);
-                allRejectedStories.add(story);
+                    story = new Story(storyID, title, writer, description,
+                            imagePath, body, isDraft, isActive,
+                            calendar, allowComments, isApproved,
+                            views, likes, avgRating);
+                    allRejectedStories.add(story);
+                }
             }
+        } finally {
+            close();
         }
-        
-        close();
-
         return allRejectedStories;
     }
 
@@ -138,42 +137,44 @@ public class StoryRepoImpl /*extends DBManager*/ implements StoryRepo {
         List<Story> readersLikesStories = new ArrayList<>();
         Story story = null;
 
-        if (con != null) {
+        try {
+            if (con != null) {
 
-            ps = con.prepareStatement("select storyID, title, "
-                    + "writer, description, imagePath, body, isDraft, isActive, "
-                    + "allowComment, isApproved, views, likes, avgRating "
-                    + "from story s inner join like_transaction lt on s.storyID = lt.story where lt.reader = ?");
+                ps = con.prepareStatement("select storyID, title, "
+                        + "writer, description, imagePath, body, isDraft, isActive, "
+                        + "allowComment, isApproved, views, likes, avgRating "
+                        + "from story s inner join like_transaction lt on s.storyID = lt.story where lt.reader = ?");
 
-            ps.setInt(1, reader.getUserID());
-            rs = ps.executeQuery();
+                ps.setInt(1, reader.getUserID());
+                rs = ps.executeQuery();
 
-            while (rs.next()) {
+                while (rs.next()) {
 
-                int storyID = rs.getInt("storyID");
-                String title = rs.getString("title");
-                String writer = rs.getString("writer");
-                String description = rs.getString("description");
-                String imagePath = rs.getString("imagePath");
-                String body = rs.getString("body");
-                boolean isDraft = rs.getBoolean("isDraft");
-                boolean isActive = rs.getBoolean("isActive");
+                    int storyID = rs.getInt("storyID");
+                    String title = rs.getString("title");
+                    String writer = rs.getString("writer");
+                    String description = rs.getString("description");
+                    String imagePath = rs.getString("imagePath");
+                    String body = rs.getString("body");
+                    boolean isDraft = rs.getBoolean("isDraft");
+                    boolean isActive = rs.getBoolean("isActive");
 
-                boolean allowComments = rs.getBoolean("allowComment");
-                boolean isApproved = rs.getBoolean("isApproved");
-                int views = rs.getInt("views");
-                int likes = rs.getInt("likes");
-                double avgRating = rs.getDouble("avgRating");
+                    boolean allowComments = rs.getBoolean("allowComment");
+                    boolean isApproved = rs.getBoolean("isApproved");
+                    int views = rs.getInt("views");
+                    int likes = rs.getInt("likes");
+                    double avgRating = rs.getDouble("avgRating");
 
-                story = new Story(storyID, title, writer, description,
-                        imagePath, body, isDraft, isActive,
-                        null, allowComments, isApproved,
-                        views, likes, avgRating);
-                readersLikesStories.add(story);
+                    story = new Story(storyID, title, writer, description,
+                            imagePath, body, isDraft, isActive,
+                            null, allowComments, isApproved,
+                            views, likes, avgRating);
+                    readersLikesStories.add(story);
+                }
             }
+        } finally {
+            close();
         }
-        
-        close();
         return readersLikesStories;
     }
 
@@ -182,14 +183,15 @@ public class StoryRepoImpl /*extends DBManager*/ implements StoryRepo {
 
         con = DBManager.getConnection();
 
-        if (con != null) {
-            ps = con.prepareStatement("update story set isDraft = 0 where storyID = ?");
-            ps.setInt(1, story.getStoryID());
-            rowsAffected = ps.executeUpdate();
+        try {
+            if (con != null) {
+                ps = con.prepareStatement("update story set isDraft = 0 where storyID = ?");
+                ps.setInt(1, story.getStoryID());
+                rowsAffected = ps.executeUpdate();
+            }
+        } finally {
+            close();
         }
-        
-        close();
-
         return rowsAffected == 1;
     }
 
@@ -201,40 +203,41 @@ public class StoryRepoImpl /*extends DBManager*/ implements StoryRepo {
         List<Story> draftStories = new ArrayList<>();
         Story storyObj;
 
-        if (con != null) {
-            ps = con.prepareStatement("select storyID, title, writer,description, imagePath, body, isDraft, isActive , createdOn, allowComments, isApproved, views, likes, avgRating from story where writer = ?");
+        try {
+            if (con != null) {
+                ps = con.prepareStatement("select storyID, title, writer,description, imagePath, body, isDraft, isActive , createdOn, allowComments, isApproved, views, likes, avgRating from story where writer = ?");
 
-            ps.setInt(1, writer.getUserID());
+                ps.setInt(1, writer.getUserID());
 
-            rs = ps.executeQuery();
+                rs = ps.executeQuery();
 
-            while (rs.next()) {
+                while (rs.next()) {
 
-                int storyID = rs.getInt("storyID");
-                String title = rs.getString("title");
-                String writer1 = rs.getString("writer");
-                String description = rs.getString("description");
-                String imagePath = rs.getString("imagePath");
-                String body = rs.getString("body");
-                boolean isDraft = rs.getBoolean("isDraft");
-                boolean isActive = rs.getBoolean("isActive");
+                    int storyID = rs.getInt("storyID");
+                    String title = rs.getString("title");
+                    String writer1 = rs.getString("writer");
+                    String description = rs.getString("description");
+                    String imagePath = rs.getString("imagePath");
+                    String body = rs.getString("body");
+                    boolean isDraft = rs.getBoolean("isDraft");
+                    boolean isActive = rs.getBoolean("isActive");
 
-                Calendar calendar = Calendar.getInstance();
-                calendar.setTime(rs.getDate("createdOn"));
+                    Calendar calendar = Calendar.getInstance();
+                    calendar.setTime(rs.getDate("createdOn"));
 
-                boolean allowComments = rs.getBoolean("allowComments");
-                boolean isApproved = rs.getBoolean("isApproved");
-                int views = rs.getInt("views");
-                int likes = rs.getInt("likes");
-                double avgRating = rs.getDouble("avgRating");
+                    boolean allowComments = rs.getBoolean("allowComments");
+                    boolean isApproved = rs.getBoolean("isApproved");
+                    int views = rs.getInt("views");
+                    int likes = rs.getInt("likes");
+                    double avgRating = rs.getDouble("avgRating");
 
-                storyObj = new Story(storyID, title, writer1, description, imagePath, body, isDraft, isActive, calendar, allowComments, isApproved, views, likes, avgRating);
-                draftStories.add(storyObj);
+                    storyObj = new Story(storyID, title, writer1, description, imagePath, body, isDraft, isActive, calendar, allowComments, isApproved, views, likes, avgRating);
+                    draftStories.add(storyObj);
+                }
             }
+        } finally {
+            close();
         }
-        
-        close();
-
         return draftStories;
     }
 
@@ -246,44 +249,45 @@ public class StoryRepoImpl /*extends DBManager*/ implements StoryRepo {
         Story storyObj = new Story();
         List<Story> stories = new ArrayList<>();
 
-        if (con != null) {
+        try {
+            if (con != null) {
 //            ps = con.prepareStatement("select storyID, title, writer,description, imagePath, body, isDraft, isActive, createdOn, allowComment, isApproved, views, likes, avgRating from story where isApproved = 0 and isDraft = 0");
 
-            ps = con.prepareStatement("select storyID, title, writer, description, imagePath, "
-                    + "body, isDraft, isActive, createdOn, allowComment, isApproved, views, likes, avgRating "
-                    + "from story where isapproved = 0 and isdraft = 0");
+                ps = con.prepareStatement("select storyID, title, writer, description, imagePath, "
+                        + "body, isDraft, isActive, createdOn, allowComment, isApproved, views, likes, avgRating "
+                        + "from story where isapproved = 0 and isdraft = 0");
 
-            rs = ps.executeQuery();
+                rs = ps.executeQuery();
 
-            while (rs.next()) {
+                while (rs.next()) {
 
-                int storyID = rs.getInt("storyid");
+                    int storyID = rs.getInt("storyid");
 
-                String title = rs.getString("title");
-                String writer1 = rs.getString("writer");
-                String description = rs.getString("description");
-                String imagePath = rs.getString("imagePath");
-                String body = rs.getString("body");
-                boolean isDraft = rs.getBoolean("isDraft");
-                boolean isActive = rs.getBoolean("isActive");
+                    String title = rs.getString("title");
+                    String writer1 = rs.getString("writer");
+                    String description = rs.getString("description");
+                    String imagePath = rs.getString("imagePath");
+                    String body = rs.getString("body");
+                    boolean isDraft = rs.getBoolean("isDraft");
+                    boolean isActive = rs.getBoolean("isActive");
 
-                Date createdOn = rs.getDate("createdOn");
-                Calendar calendar = Calendar.getInstance();
-                calendar.setTime(createdOn);
+                    Date createdOn = rs.getDate("createdOn");
+                    Calendar calendar = Calendar.getInstance();
+                    calendar.setTime(createdOn);
 
-                boolean allowComments = rs.getBoolean("allowComment");
-                boolean isApproved = rs.getBoolean("isApproved");
-                int views = rs.getInt("views");
-                int likes = rs.getInt("likes");
-                double avgRating = rs.getDouble("avgRating");
+                    boolean allowComments = rs.getBoolean("allowComment");
+                    boolean isApproved = rs.getBoolean("isApproved");
+                    int views = rs.getInt("views");
+                    int likes = rs.getInt("likes");
+                    double avgRating = rs.getDouble("avgRating");
 
-                storyObj = new Story(storyID, title, writer1, description, imagePath, body, isDraft, isActive, null, allowComments, isApproved, views, likes, avgRating);
-                stories.add(storyObj);
+                    storyObj = new Story(storyID, title, writer1, description, imagePath, body, isDraft, isActive, null, allowComments, isApproved, views, likes, avgRating);
+                    stories.add(storyObj);
+                }
             }
+        } finally {
+            close();
         }
-        
-        close();
-
         return stories;
 
 //
@@ -337,56 +341,57 @@ public class StoryRepoImpl /*extends DBManager*/ implements StoryRepo {
         Story storyObj;
 
         String more = "";
-        if (categories.size() > 1) {
-            for (int i = 1; i < categories.size(); i++) {
-                more += "or sc.category = ?";
-            }
-        }
-        if (con != null) {
-
-            ps = con.prepareStatement("select storyID, title, "
-                    + "writer, description, imagePath, body, isDraft, isActive, "
-                    + "createdOn, allowComments, isApproved, views, likes, "
-                    + "avgRating from story s inner join story_category sc on s.storyID = sc.story where sc.category = ?" + more);
-
-            ps.setInt(1, categories.get(1).getCategoryID());
-
+        try {
             if (categories.size() > 1) {
                 for (int i = 1; i < categories.size(); i++) {
-                    ps.setInt(i + 1, categories.get(i).getCategoryID());
+                    more += "or sc.category = ?";
                 }
             }
+            if (con != null) {
 
-            rs = ps.executeQuery();
+                ps = con.prepareStatement("select storyID, title, "
+                        + "writer, description, imagePath, body, isDraft, isActive, "
+                        + "createdOn, allowComments, isApproved, views, likes, "
+                        + "avgRating from story s inner join story_category sc on s.storyID = sc.story where sc.category = ?" + more);
 
-            while (rs.next()) {
+                ps.setInt(1, categories.get(1).getCategoryID());
 
-                int storyID = rs.getInt("storyid");
-                String title = rs.getString("title");
-                String writer1 = rs.getString("writer");
-                String description = rs.getString("description");
-                String imagePath = rs.getString("imagePath");
-                String body = rs.getString("body");
-                boolean isDraft = rs.getBoolean("isDraft");
-                boolean isActive = rs.getBoolean("isActive");
+                if (categories.size() > 1) {
+                    for (int i = 1; i < categories.size(); i++) {
+                        ps.setInt(i + 1, categories.get(i).getCategoryID());
+                    }
+                }
 
-                Date createdOn = rs.getDate("createdOn");
-                Calendar calendar = Calendar.getInstance();
-                calendar.setTime(createdOn);
+                rs = ps.executeQuery();
 
-                boolean allowComments = rs.getBoolean("allowComments");
-                boolean isApproved = rs.getBoolean("isApproved");
-                int views = rs.getInt("views");
-                int likes = rs.getInt("likes");
-                double avgRating = rs.getDouble("avgRating");
+                while (rs.next()) {
 
-                storyObj = new Story(storyID, title, writer1, description, imagePath, body, isDraft, isActive, calendar, allowComments, isApproved, views, likes, avgRating);
-                storiesByCategory.add(storyObj);
+                    int storyID = rs.getInt("storyid");
+                    String title = rs.getString("title");
+                    String writer1 = rs.getString("writer");
+                    String description = rs.getString("description");
+                    String imagePath = rs.getString("imagePath");
+                    String body = rs.getString("body");
+                    boolean isDraft = rs.getBoolean("isDraft");
+                    boolean isActive = rs.getBoolean("isActive");
+
+                    Date createdOn = rs.getDate("createdOn");
+                    Calendar calendar = Calendar.getInstance();
+                    calendar.setTime(createdOn);
+
+                    boolean allowComments = rs.getBoolean("allowComments");
+                    boolean isApproved = rs.getBoolean("isApproved");
+                    int views = rs.getInt("views");
+                    int likes = rs.getInt("likes");
+                    double avgRating = rs.getDouble("avgRating");
+
+                    storyObj = new Story(storyID, title, writer1, description, imagePath, body, isDraft, isActive, calendar, allowComments, isApproved, views, likes, avgRating);
+                    storiesByCategory.add(storyObj);
+                }
             }
+        } finally {
+            close();
         }
-
-        
-        close();
         return storiesByCategory;
     }
 
@@ -397,28 +402,30 @@ public class StoryRepoImpl /*extends DBManager*/ implements StoryRepo {
 
         Boolean createdStory = false;
 
-        if (con != null) {
+        try {
+            if (con != null) {
 
-            ps = con.prepareStatement("insert into story (title, writer, description, imagePath, body, isDraft, isActive, allowComment, isApproved, views, avgRating,likes) values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
-            ps.setString(1, story.getTitle());
-            ps.setString(2, story.getWriter());
-            ps.setString(3, story.getDescription());
-            ps.setString(4, story.getImagePath());
-            ps.setString(5, story.getBody());
-            ps.setBoolean(6, story.getIsDraft());
-            ps.setBoolean(7, story.getIsActive());
-            ps.setBoolean(8, story.getAllowComments());
-            ps.setBoolean(9, story.getIsApproved());
-            ps.setInt(10, story.getViews());
-            ps.setDouble(11, story.getAvgRating());
-            ps.setInt(12, story.getLikes());
+                ps = con.prepareStatement("insert into story (title, writer, description, imagePath, body, isDraft, isActive, allowComment, isApproved, views, avgRating,likes) values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
+                ps.setString(1, story.getTitle());
+                ps.setString(2, story.getWriter());
+                ps.setString(3, story.getDescription());
+                ps.setString(4, story.getImagePath());
+                ps.setString(5, story.getBody());
+                ps.setBoolean(6, story.getIsDraft());
+                ps.setBoolean(7, story.getIsActive());
+                ps.setBoolean(8, story.getAllowComments());
+                ps.setBoolean(9, story.getIsApproved());
+                ps.setInt(10, story.getViews());
+                ps.setDouble(11, story.getAvgRating());
+                ps.setInt(12, story.getLikes());
 
-            rowsAffected = ps.executeUpdate();
+                rowsAffected = ps.executeUpdate();
 
-            createdStory = true;
+                createdStory = true;
+            }
+        } finally {
+            close();
         }
-        
-        close();
         return createdStory;
 
     }
@@ -430,44 +437,44 @@ public class StoryRepoImpl /*extends DBManager*/ implements StoryRepo {
 
         Story storyObj = new Story();
 
-        if (con != null) {
-            ps = con.prepareStatement("select storyID, title, writer,description, "
-                    + "imagePath, body, isDraft, isActive , createdOn, allowComment, "
-                    + "isApproved, views, likes, avgRating from story where storyID = ? ");
-            ps.setInt(1, story.getStoryID());
+        try {
+            if (con != null) {
+                ps = con.prepareStatement("select storyID, title, writer,description, "
+                        + "imagePath, body, isDraft, isActive , createdOn, allowComment, "
+                        + "isApproved, views, likes, avgRating from story where storyID = ? ");
+                ps.setInt(1, story.getStoryID());
 
-            rs = ps.executeQuery();
+                rs = ps.executeQuery();
 
-            if (rs.next()) {
-                int storyID = rs.getInt("storyID");
-                String title = rs.getString("title");
-                String writer = rs.getString("writer");
-                String description = rs.getString("description");
-                String imagePath = rs.getString("imagePath");
-                String body = rs.getString("body");
-                boolean isDraft = rs.getBoolean("isDraft");
-                boolean isActive = rs.getBoolean("isActive");
+                if (rs.next()) {
+                    int storyID = rs.getInt("storyID");
+                    String title = rs.getString("title");
+                    String writer = rs.getString("writer");
+                    String description = rs.getString("description");
+                    String imagePath = rs.getString("imagePath");
+                    String body = rs.getString("body");
+                    boolean isDraft = rs.getBoolean("isDraft");
+                    boolean isActive = rs.getBoolean("isActive");
 
-                Date createdOn = rs.getDate("createdOn");
-                Calendar calendar = Calendar.getInstance();
-                calendar.setTime(createdOn);
+                    Date createdOn = rs.getDate("createdOn");
+                    Calendar calendar = Calendar.getInstance();
+                    calendar.setTime(createdOn);
 
-                boolean allowComments = rs.getBoolean("allowComment");
-                boolean isApproved = rs.getBoolean("isApproved");
-                int views = rs.getInt("views");
-                int likes = rs.getInt("likes");
-                double avgRating = rs.getDouble("avgRating");
+                    boolean allowComments = rs.getBoolean("allowComment");
+                    boolean isApproved = rs.getBoolean("isApproved");
+                    int views = rs.getInt("views");
+                    int likes = rs.getInt("likes");
+                    double avgRating = rs.getDouble("avgRating");
 
-                storyObj = new Story(storyID, title, writer, description, imagePath, body,
-                        isDraft, isActive, null, allowComments, isApproved, views, likes, avgRating);
+                    storyObj = new Story(storyID, title, writer, description, imagePath, body,
+                            isDraft, isActive, null, allowComments, isApproved, views, likes, avgRating);
 
+                }
             }
+        } finally {
+            close();
         }
-
-        
-        close();
         return storyObj;
-
     }
 
     @Override
@@ -476,22 +483,22 @@ public class StoryRepoImpl /*extends DBManager*/ implements StoryRepo {
         con = DBManager.getConnection();
 
         int rowsAffected = 0;
-        if (con != null) {
+        try {
+            if (con != null) {
 
-            ps = con.prepareStatement("update story set title = ?, description = ?, imagePath = ?,"
-                    + "body = ? where storyID = ?");
-            ps.setString(1, story.getTitle());
-            ps.setString(2, story.getDescription());
-            ps.setString(3, story.getImagePath());
-            ps.setString(4, story.getBody());
-            ps.setInt(5, story.getStoryID());
+                ps = con.prepareStatement("update story set title = ?, description = ?, imagePath = ?,"
+                        + "body = ? where storyID = ?");
+                ps.setString(1, story.getTitle());
+                ps.setString(2, story.getDescription());
+                ps.setString(3, story.getImagePath());
+                ps.setString(4, story.getBody());
+                ps.setInt(5, story.getStoryID());
 
-            rowsAffected = ps.executeUpdate();
+                rowsAffected = ps.executeUpdate();
+            }
+        } finally {
+            close();
         }
-
-        
-        close();
-
         return rowsAffected == 1;
     }
 
@@ -500,16 +507,18 @@ public class StoryRepoImpl /*extends DBManager*/ implements StoryRepo {
 
         con = DBManager.getConnection();
 
-        if (con != null) {
-            ps = con.prepareStatement("update story set isActive = ? where storyID = ? ");
+        try {
+            if (con != null) {
+                ps = con.prepareStatement("update story set isActive = ? where storyID = ? ");
 
-            ps.setInt(1, 0);
-            ps.setInt(2, story.getStoryID());
-            rowsAffected = ps.executeUpdate();
+                ps.setInt(1, 0);
+                ps.setInt(2, story.getStoryID());
+                rowsAffected = ps.executeUpdate();
 
+            }
+        } finally {
+            close();
         }
-        
-        close();
         return rowsAffected == 1;
 
     }
@@ -521,45 +530,48 @@ public class StoryRepoImpl /*extends DBManager*/ implements StoryRepo {
 
         List<Story> storyList = new ArrayList<>();
 
-        if (con != null) {
+        try {
+            if (con != null) {
 
-            ps = con.prepareStatement("select storyID, title,writer, description, imagePath, "
-                    + "body, isDraft , isActive, createdOn, allowComments, isApproved, views, likes, "
-                    + " avg(rt.rating) as averageRating from Story s"
-                    + " inner join rating_transaction rt on s.storyID = rt.story "
-                    + "where month(ratedOn) = month(CURRENT_TIMESTAMP) and "
-                    + "year(ratedOn) = year(current_timestamp) group by story "
-                    + "order by averageRating desc;");
+                ps = con.prepareStatement("select storyID, title,writer, description, imagePath, "
+                        + "body, isDraft , isActive, createdOn, allowComments, isApproved, views, likes, "
+                        + " avg(rt.rating) as averageRating from Story s"
+                        + " inner join rating_transaction rt on s.storyID = rt.story "
+                        + "where month(ratedOn) = month(CURRENT_TIMESTAMP) and "
+                        + "year(ratedOn) = year(current_timestamp) group by story "
+                        + "order by averageRating desc;");
 
-            while (rs.next()) {
+                while (rs.next()) {
 
-                int storyID = rs.getInt("storyID");
-                String title = rs.getString("title");
-                String writer = rs.getString("writer");
-                String description = rs.getString("description");
-                String imagePath = rs.getString("imagePath");
-                String body = rs.getString("body");
-                boolean isDraft = rs.getBoolean("isDraft");
-                boolean isActive = rs.getBoolean("isActive");
+                    int storyID = rs.getInt("storyID");
+                    String title = rs.getString("title");
+                    String writer = rs.getString("writer");
+                    String description = rs.getString("description");
+                    String imagePath = rs.getString("imagePath");
+                    String body = rs.getString("body");
+                    boolean isDraft = rs.getBoolean("isDraft");
+                    boolean isActive = rs.getBoolean("isActive");
 
-                Date createdOn = rs.getDate("createdOn");
-                Calendar calendar = Calendar.getInstance();
-                calendar.setTime(createdOn);
+                    Date createdOn = rs.getDate("createdOn");
+                    Calendar calendar = Calendar.getInstance();
+                    calendar.setTime(createdOn);
 
-                boolean allowComments = rs.getBoolean("allowComments");
-                boolean isApproved = rs.getBoolean("isApproved");
-                int views = rs.getInt("views");
-                int likes = rs.getInt("likes");
-                double avgRating = rs.getDouble("averageRating");
+                    boolean allowComments = rs.getBoolean("allowComments");
+                    boolean isApproved = rs.getBoolean("isApproved");
+                    int views = rs.getInt("views");
+                    int likes = rs.getInt("likes");
+                    double avgRating = rs.getDouble("averageRating");
 
-                Story story = new Story(storyID, title, writer, description,
-                        imagePath, body, isDraft, isActive,
-                        calendar, allowComments, isApproved,
-                        views, likes, avgRating);
+                    Story story = new Story(storyID, title, writer, description,
+                            imagePath, body, isDraft, isActive,
+                            calendar, allowComments, isApproved,
+                            views, likes, avgRating);
 
-                storyList.add(story);
+                    storyList.add(story);
+                }
             }
-
+        } finally {
+            close();
         }
         for (int i = 0; i < storyList.size(); i++) {
 
@@ -583,46 +595,47 @@ public class StoryRepoImpl /*extends DBManager*/ implements StoryRepo {
         List<Story> stories = new ArrayList<>();
         Story storyObj;
 
-        if (con != null) {
+        try {
+            if (con != null) {
 
-            ps = con.prepareStatement("select storyID, title, "
-                    + "writer, description, imagePath, body, isDraft, isActive, "
-                    + "createdOn, allowComments, isApproved, views, likes, "
-                    + "avgRating from story where title like '%?%' or writer like '%?%'");
+                ps = con.prepareStatement("select storyID, title, "
+                        + "writer, description, imagePath, body, isDraft, isActive, "
+                        + "createdOn, allowComments, isApproved, views, likes, "
+                        + "avgRating from story where title like '%?%' or writer like '%?%'");
 
-            ps.setString(1, text);
-            ps.setString(2, text);
+                ps.setString(1, text);
+                ps.setString(2, text);
 
-            rs = ps.executeQuery();
+                rs = ps.executeQuery();
 
-            while (rs.next()) {
+                while (rs.next()) {
 
-                int storyID = rs.getInt("storyid");
-                String title = rs.getString("title");
-                String writer1 = rs.getString("writer");
-                String description = rs.getString("description");
-                String imagePath = rs.getString("imagePath");
-                String body = rs.getString("body");
-                boolean isDraft = rs.getBoolean("isDraft");
-                boolean isActive = rs.getBoolean("isActive");
+                    int storyID = rs.getInt("storyid");
+                    String title = rs.getString("title");
+                    String writer1 = rs.getString("writer");
+                    String description = rs.getString("description");
+                    String imagePath = rs.getString("imagePath");
+                    String body = rs.getString("body");
+                    boolean isDraft = rs.getBoolean("isDraft");
+                    boolean isActive = rs.getBoolean("isActive");
 
-                Date createdOn = rs.getDate("createdOn");
-                Calendar calendar = Calendar.getInstance();
-                calendar.setTime(createdOn);
+                    Date createdOn = rs.getDate("createdOn");
+                    Calendar calendar = Calendar.getInstance();
+                    calendar.setTime(createdOn);
 
-                boolean allowComments = rs.getBoolean("allowComments");
-                boolean isApproved = rs.getBoolean("isApproved");
-                int views = rs.getInt("views");
-                int likes = rs.getInt("likes");
-                double avgRating = rs.getDouble("avgRating");
+                    boolean allowComments = rs.getBoolean("allowComments");
+                    boolean isApproved = rs.getBoolean("isApproved");
+                    int views = rs.getInt("views");
+                    int likes = rs.getInt("likes");
+                    double avgRating = rs.getDouble("avgRating");
 
-                storyObj = new Story(storyID, title, writer1, description, imagePath, body, isDraft, isActive, calendar, allowComments, isApproved, views, likes, avgRating);
-                stories.add(storyObj);
+                    storyObj = new Story(storyID, title, writer1, description, imagePath, body, isDraft, isActive, calendar, allowComments, isApproved, views, likes, avgRating);
+                    stories.add(storyObj);
+                }
             }
+        } finally {
+            close();
         }
-
-        
-        close();
         return stories;
     }
 
@@ -636,46 +649,46 @@ public class StoryRepoImpl /*extends DBManager*/ implements StoryRepo {
 
         con = DBManager.getConnection();
 
-        if (con != null) {
+        try {
+            if (con != null) {
 //            ps = con.prepareStatement("select storyID, title, writer,description, imagePath, body, isDraft, isActive, createdOn, allowComment, isApproved, views, likes, avgRating from story where isApproved = 0 and isDraft = 0");
 
-            ps = con.prepareStatement("select storyID, title, writer, description, imagePath, "
-                    + "body, isDraft, isActive, createdOn, allowComment, isApproved, views, likes, avgRating "
-                    + "from story where isApproved = 1 and isDraft = 0 ORDER BY RAND() limit 6");
+                ps = con.prepareStatement("select storyID, title, writer, description, imagePath, "
+                        + "body, isDraft, isActive, createdOn, allowComment, isApproved, views, likes, avgRating "
+                        + "from story where isApproved = 1 and isDraft = 0 ORDER BY RAND() limit 6");
 
-            rs = ps.executeQuery();
+                rs = ps.executeQuery();
 
-            while (rs.next()) {
+                while (rs.next()) {
 
-                int storyID = rs.getInt("storyid");
+                    int storyID = rs.getInt("storyid");
 
-                String title = rs.getString("title");
-                String writer1 = rs.getString("writer");
-                String description = rs.getString("description");
-                String imagePath = rs.getString("imagePath");
-                String body = rs.getString("body");
-                boolean isDraft = rs.getBoolean("isDraft");
-                boolean isActive = rs.getBoolean("isActive");
+                    String title = rs.getString("title");
+                    String writer1 = rs.getString("writer");
+                    String description = rs.getString("description");
+                    String imagePath = rs.getString("imagePath");
+                    String body = rs.getString("body");
+                    boolean isDraft = rs.getBoolean("isDraft");
+                    boolean isActive = rs.getBoolean("isActive");
 
-                Date createdOn = rs.getDate("createdOn");
-                Calendar calendar = Calendar.getInstance();
-                calendar.setTime(createdOn);
+                    Date createdOn = rs.getDate("createdOn");
+                    Calendar calendar = Calendar.getInstance();
+                    calendar.setTime(createdOn);
 
-                boolean allowComments = rs.getBoolean("allowComment");
-                boolean isApproved = rs.getBoolean("isApproved");
-                int views = rs.getInt("views");
-                int likes = rs.getInt("likes");
-                double avgRating = rs.getDouble("avgRating");
+                    boolean allowComments = rs.getBoolean("allowComment");
+                    boolean isApproved = rs.getBoolean("isApproved");
+                    int views = rs.getInt("views");
+                    int likes = rs.getInt("likes");
+                    double avgRating = rs.getDouble("avgRating");
 
-                storyObj = new Story(storyID, title, writer1, description, imagePath, body, isDraft, isActive, null, allowComments, isApproved, views, likes, avgRating);
-                stories.add(storyObj);
+                    storyObj = new Story(storyID, title, writer1, description, imagePath, body, isDraft, isActive, null, allowComments, isApproved, views, likes, avgRating);
+                    stories.add(storyObj);
+                }
             }
+        } finally {
+            close();
         }
-        
-        close();
-
         return stories;
-
     }
 
     @Override
@@ -684,21 +697,20 @@ public class StoryRepoImpl /*extends DBManager*/ implements StoryRepo {
         con = DBManager.getConnection();
 
         int rowsAffected = 0;
-        if (con != null) {
-            ps = con.prepareStatement("UPDATE story SET allowcomment = IF(allowcomment != 0, 0, 1) WHERE storyid = ?;");
 
-            ps.setInt(1, story.getStoryID());
+        try {
+            if (con != null) {
+                ps = con.prepareStatement("UPDATE story SET allowcomment = IF(allowcomment != 0, 0, 1) WHERE storyid = ?;");
+                ps.setInt(1, story.getStoryID());
 
-            rowsAffected = ps.executeUpdate();
-            
+                rowsAffected = ps.executeUpdate();;
+            }
+        } finally {
             close();
-
-            return rowsAffected == 1;
         }
-
-        return false;
+        return rowsAffected == 1;
     }
-    
+
     public void close() throws SQLException {
 
         if (ps != null) {
