@@ -444,30 +444,20 @@ public class StoryRepoImpl extends DBManager implements StoryRepo {
         
         int rowsAffected = 0;
         if (getConnection() != null) {
-            ps = getConnection().prepareStatement("update story set title = ?, writer = ? ,description = ? , "
-                    + "imagePath = ? , body = ? , isDraft = ?, isActive = ? , createdOn = ?, allowComment = ?, "
-                    + "isApproved = ?, views = ?, likes = ?, avgRating = ?  where storyID = ? ");
 
-            ps.setString(1, story.getTitle());
-            ps.setString(2, story.getWriter());
-            ps.setString(3, story.getDescription());
-            ps.setString(4, story.getImagePath());
-            ps.setString(5, story.getBody());
-            ps.setBoolean(6, story.getIsDraft());
-//            ps.setBoolean(7, story.getIsActive());
-//            ps.setDate(Date)(8, story.getCreatedOn();
-//            ps.setBoolean(9, story.getAllowComments());
-            ps.setBoolean(10, story.getIsApproved());
-            ps.setInt(11, story.getViews());
-            ps.setInt(12, story.getLikes());
-            ps.setDouble(13, story.getAvgRating());
-            ps.setInt(14, 1);
+        ps = getConnection().prepareStatement("update story set title = ?, description = ?, imagePath = ?,"
+                + "body = ? where storyID = ?");
+         ps.setString(1, story.getTitle());
+         ps.setString(2, story.getDescription());
+         ps.setString(3, story.getImagePath());
+         ps.setString(4, story.getBody());
+         ps.setInt(5, story.getStoryID());
+        
+        
 
             rowsAffected = ps.executeUpdate(); 
-            
-            
-
         }
+        
         close();
 
         return rowsAffected ==1;
@@ -608,7 +598,7 @@ public class StoryRepoImpl extends DBManager implements StoryRepo {
 
             ps = getConnection().prepareStatement("select storyID, title, writer, description, imagePath, "
                     + "body, isDraft, isActive, createdOn, allowComment, isApproved, views, likes, avgRating "
-                    + "from story ORDER BY RAND() limit 6");
+                    + "from story where isApproved = 1 and isDraft = 0 ORDER BY RAND() limit 6");
 
             rs = ps.executeQuery();
 

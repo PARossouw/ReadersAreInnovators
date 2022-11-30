@@ -81,7 +81,7 @@ public class StoryServiceImpl implements StoryService {
                 Logger.getLogger(StoryServiceImpl.class.getName()).log(Level.SEVERE, null, ex);
             }
         }
-        return "Unfortunetely, the story has not been saved successfully.";
+        return "Unfortunetely, the story has not been saved successfully. " + story.toString();
     }
 
     @Override
@@ -90,19 +90,19 @@ public class StoryServiceImpl implements StoryService {
         try {
             if (story.getStoryID() != null
                     && story.getTitle() != null
-                    && story.getWriter() != null
+                  //  && story.getWriter() != null
                     && story.getDescription() != null
-                    && story.getImagePath() != null
-                    && story.getBody() != null
-                    && story.getCreatedOn() != null
-                    && story.getCategoryList() != null) {
+                  //  && story.getImagePath() != null
+                    && story.getBody() != null){
+                  //  && story.getCreatedOn() != null
+                 //   && story.getCategoryList() != null) {
                 return storyRepo.submitStory(story) ? "successfully submitted story" : "unsuccessful operation";
 
             }
         } catch (SQLException ex) {
             Logger.getLogger(StoryServiceImpl.class.getName()).log(Level.SEVERE, null, ex);
         }
-        return "Unsuccessful operation";
+        return "Unsuccessful operation "+ story.toString();
     }
 
     @Override

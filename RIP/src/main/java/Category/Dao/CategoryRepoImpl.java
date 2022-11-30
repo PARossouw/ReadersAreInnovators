@@ -73,37 +73,43 @@ public class CategoryRepoImpl extends DBManager implements CategoryRepo {
 
             while (rs.next()) {
 
-                Calendar calendar = Calendar.getInstance();
-                calendar.setTime(rs.getDate("dateAdded"));
+               // Calendar calendar = Calendar.getInstance();
+               // calendar.setTime(rs.getDate("dateAdded"));
+               Category category = new Category();
+               category.setName(rs.getString("category"));
+               category.setCategoryID(rs.getInt("categoryid"));
+               categoryList.add(category);
+               
 
-                categoryList.add(new Category(rs.getInt("categoryid"), rs.getString("category"), calendar));
+               // categoryList.add(new Category(rs.getInt("categoryid"), rs.getString("category"), calendar));
 
             }
          
           
         }
             //-----Testing code------
-         List<Category> categoryListTest = new ArrayList<>();
-            Category cat1 = new Category();
-            Category cat2 = new Category();
-            Category cat3 = new Category();
-            
-            cat1.setName("Thriller");
-            cat2.setName("Science");
-            cat3.setName("Religious");
-            
-            
-            
-            
-            
-            
-            categoryListTest.add(cat1);
-            categoryListTest.add(cat2);
-            categoryListTest.add(cat3);
+//         List<Category> categoryListTest = new ArrayList<>();
+//            Category cat1 = new Category();
+//            Category cat2 = new Category();
+//            Category cat3 = new Category();
+//            
+//            cat1.setName("Thriller");
+//            cat2.setName("Science");
+//            cat3.setName("Religious");
+//            
+//            
+//            
+//            
+//            
+//            
+//            categoryListTest.add(cat1);
+//            categoryListTest.add(cat2);
+//            categoryListTest.add(cat3);
             // --------------------
             
         close();
-        return categoryListTest;
+       // return categoryListTest;
+       return categoryList;
     }
 
     @Override
