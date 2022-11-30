@@ -399,7 +399,7 @@ public class StoryRepoImpl implements StoryRepo {
     public Boolean createStory(Story story) throws SQLException {
 
         con = DBManager.getConnection();
-
+        
         try {
             if (con != null) {
 
@@ -422,7 +422,7 @@ public class StoryRepoImpl implements StoryRepo {
         } finally {
             close();
         }
-        return rowsAffected == 1;
+            return rowsAffected == 1;
     }
 
     @Override
