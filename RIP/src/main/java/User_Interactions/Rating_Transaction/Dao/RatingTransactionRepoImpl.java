@@ -14,7 +14,7 @@ public class RatingTransactionRepoImpl extends DBManager implements RatingTransa
 
         if (getConnection() != null) {
 
-            ps = getConnection().prepareStatement("insert into rating_Transaction (rating, reader, storyID) values (?, ?, ?)");
+            ps = getConnection().prepareStatement("insert into rating_Transaction (rating, reader, story) values (?, ?, ?)");
             ps.setInt(1, rating);
             ps.setInt(2, reader.getUserID());
             ps.setInt(3, story.getStoryID());
@@ -41,9 +41,9 @@ public class RatingTransactionRepoImpl extends DBManager implements RatingTransa
                 rating.setRatingID(rs.getInt("ratingID"));
                 rating.setRating(rs.getInt("rating"));
                 
-                java.util.Date createdOn = rs.getDate("ratedOn");
-                Calendar calendar = Calendar.getInstance();
-                calendar.setTime(createdOn);
+//                java.util.Date createdOn = rs.getDate("ratedOn");
+//                Calendar calendar = Calendar.getInstance();
+//                calendar.setTime(createdOn);
                 
                 rating.setReader(reader);
                 rating.setStory(story);

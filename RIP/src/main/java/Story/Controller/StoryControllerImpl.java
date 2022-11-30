@@ -64,7 +64,7 @@ public class StoryControllerImpl {
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
     public Response saveStory(Story story) {
-        String goodStory = "Mellisa saved the story";
+       // String goodStory = "Mellisa saved the story";
         return Response.status(Response.Status.OK).entity(storyService.saveStory(story)).build();
 //        return Response.status(Response.Status.OK).entity(goodStory).build();
     }

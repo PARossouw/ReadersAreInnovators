@@ -447,12 +447,17 @@ public class StoryRepoImpl extends DBManager implements StoryRepo {
         if (getConnection() != null) {
 
         ps = getConnection().prepareStatement("update story set title = ?, description = ?, imagePath = ?,"
-                + "body = ? where storyID = ?");
+                + "body = ?, isDraft = ? where storyID = ?");
          ps.setString(1, story.getTitle());
          ps.setString(2, story.getDescription());
          ps.setString(3, story.getImagePath());
          ps.setString(4, story.getBody());
-         ps.setInt(5, story.getStoryID());
+         
+         ps.setBoolean(5, story.getIsDraft());
+         
+         
+         ps.setInt(6, story.getStoryID());
+      
         
         
 
