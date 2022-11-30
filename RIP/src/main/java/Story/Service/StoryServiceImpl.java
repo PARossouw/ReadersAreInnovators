@@ -71,7 +71,18 @@ public class StoryServiceImpl implements StoryService {
             return "The story is empty and could not be saved.";
         } else {
             try {
+                
+                if(story.getStoryID()==-1)
+                {
+                    storySuccessfullySaved = storyRepo.createStory(story);
+                }
+                else
+                {
                 storySuccessfullySaved = storyRepo.updateStory(story);
+                categoryRepo.addCategoriesToStory(story, story.getCategoryList());
+                }
+                
+                
 
                 if (storySuccessfullySaved) {
                     return "Story has been successfully saved.";
@@ -115,17 +126,7 @@ public class StoryServiceImpl implements StoryService {
             return null;
         }
 
-//Story storyObj = new Story();
-//storyObj.setStoryID(420);
-//        storyObj.setTitle("DAO practice Title");
-//        storyObj.setAvgRating(2.9);
-//        storyObj.setWriter("Anton  Tarun Sing");
-//        storyObj.setDescription("DAO Practice Description");
-//        storyObj.setBody("DAO Practice Body");
-//        storyObj.setViews(888);
-//        storyObj.setLikes(666);
-//
-//        return storyObj;
+
     }
 
     @Override
@@ -193,11 +194,11 @@ public class StoryServiceImpl implements StoryService {
 
     @Override
     public List<Story> getTop20RatedStoriesOfTheMonth() {
-         List<Story> stories = new ArrayList<>();
+        List<Story> stories = new ArrayList<>();
         try {
             stories = storyRepo.getHighestRatedStoriesForMonth();
-            if(stories.size()>20){
-                for(int i = 20; i<stories.size(); i++){
+            if (stories.size() > 20) {
+                for (int i = 20; i < stories.size(); i++) {
                     stories.remove(i);
                 }
             }
@@ -205,6 +206,27 @@ public class StoryServiceImpl implements StoryService {
             Logger.getLogger(StoryServiceImpl.class.getName()).log(Level.SEVERE, null, ex);
         }
         return stories;
+    }
+
+    @Override
+    public String turnOffComments(Story story) {
+        
+        try {
+        if(story.getAllowComments()){
+            if (storyRepo.turnOffComments(story)) {
+                return "Comments for " + story.getTitle() + " successfully disabled";
+            }
+        }
+        if(!story.getAllowComments()){
+            if (storyRepo.turnOffComments(story)) {
+                return "Comments for " + story.getTitle() + " enabled";
+            }
+        }
+        } catch (SQLException ex) {
+            Logger.getLogger(StoryServiceImpl.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return "something went wrong";
+
     }
 
 }

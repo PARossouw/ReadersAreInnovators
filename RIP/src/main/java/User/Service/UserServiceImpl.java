@@ -84,38 +84,19 @@ public class UserServiceImpl implements UserService {
     public String registerUser(User user) {
 
         try {
-            if (userRepo.getUser(user) != null) {
+            if (userRepo.getUser(user).getUsername().equals(user.getUsername())) {
                 return "This username or email is already in use.";
             } else {
 
                 // return userRepo.createUser(user) ? "User registered successfully." : "Could not complete registration at this time.";
+                userRepo.createUser(user);
                 return "Registration was successful. Please log in above. ";
             }
         } catch (SQLException ex) {
             Logger.getLogger(UserServiceImpl.class.getName()).log(Level.SEVERE, null, ex);
         }
-        return "Operation unsuccessful, please try again later.";
+        return "Operation unsuccessful, please try again later." +user.toString();
     }
-
-
-
-    public String blockWriter(String[] results, ArrayList<Writer> writers) {
-
-//        try {
-//            if (userRepo.getUser(writer) == null) {
-//                return "No such user exists.";
-//            } else if (userRepo.getUser(writer).getRoleID() != 2) {
-//                return "This user is not a writer.";
-//            } else {
-//                return userRepo.blockWriter(writer) ? "Writer status removed." : "Could not removed writer status from this account at this time.";
-//            }
-//        } catch (SQLException ex) {
-//            Logger.getLogger(UserServiceImpl.class.getName()).log(Level.SEVERE, null, ex);
-//        }
-//        return "Opertaion unsuccessful, please try again later.";
-return null;
-    }
-
 
     public String blockWriter(Writer writer) {
 
