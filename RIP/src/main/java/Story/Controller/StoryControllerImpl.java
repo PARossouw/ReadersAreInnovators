@@ -36,15 +36,32 @@ public class StoryControllerImpl {
         this.storyService = new StoryServiceImpl(new StoryRepoImpl(), new CategoryRepoImpl());
     }
 
-    @Path("/search/categories")
-    @POST
+    @Path("/search/categories")//"/search/categories/{reader}"
+    @GET
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
-    public Response searchStoriesByCategories(Reader reader) {
+    public Response searchStoriesByCategories(User reader) {//@PathParam("reader") String reader
         List<Category> categories = new ArrayList<>();
-        categories = reader.getPreferredCategories();
+        //categories = reader.getPreferredCategories();
 
-        return Response.status(Response.Status.OK).entity(storyService.searchStoriesByCategories(categories)).build();
+//        return Response.status(Response.Status.OK).entity(storyService.searchStoriesByCategories(categories)).build();
+
+
+        //hardcoding
+        List<Story> sts = new ArrayList<>();
+        Story story1 = new Story();
+        story1.setTitle("Pieter McJeter1");
+        sts.add(story1);
+        
+        Story story2 = new Story();
+        story2.setTitle("Pieter McJeter2");
+        sts.add(story2);
+        
+        Story story3 = new Story();
+        story3.setTitle("Pieter McJeter3");
+        sts.add(story3);
+        
+        return Response.status(Response.Status.OK).entity(sts).build();
     }
 
     @Path("/viewByWriter")
