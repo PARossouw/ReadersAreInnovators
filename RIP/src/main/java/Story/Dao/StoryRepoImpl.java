@@ -598,7 +598,7 @@ public class StoryRepoImpl extends DBManager implements StoryRepo {
 
             ps = getConnection().prepareStatement("select storyID, title, writer, description, imagePath, "
                     + "body, isDraft, isActive, createdOn, allowComment, isApproved, views, likes, avgRating "
-                    + "from story ORDER BY RAND() limit 6");
+                    + "from story where isApproved = 1 and isDraft = 0 ORDER BY RAND() limit 6");
 
             rs = ps.executeQuery();
 
