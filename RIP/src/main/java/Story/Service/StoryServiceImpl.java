@@ -71,7 +71,18 @@ public class StoryServiceImpl implements StoryService {
             return "The story is empty and could not be saved.";
         } else {
             try {
+                
+                if(story.getStoryID()==-1)
+                {
+                    storySuccessfullySaved = storyRepo.createStory(story);
+                }
+                else
+                {
                 storySuccessfullySaved = storyRepo.updateStory(story);
+                categoryRepo.addCategoriesToStory(story, story.getCategoryList());
+                }
+                
+                
 
                 if (storySuccessfullySaved) {
                     return "Story has been successfully saved.";
@@ -115,17 +126,7 @@ public class StoryServiceImpl implements StoryService {
             return null;
         }
 
-//Story storyObj = new Story();
-//storyObj.setStoryID(420);
-//        storyObj.setTitle("DAO practice Title");
-//        storyObj.setAvgRating(2.9);
-//        storyObj.setWriter("Anton  Tarun Sing");
-//        storyObj.setDescription("DAO Practice Description");
-//        storyObj.setBody("DAO Practice Body");
-//        storyObj.setViews(888);
-//        storyObj.setLikes(666);
-//
-//        return storyObj;
+
     }
 
     @Override

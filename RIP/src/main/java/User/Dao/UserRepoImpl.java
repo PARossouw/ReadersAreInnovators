@@ -18,7 +18,7 @@ public class UserRepoImpl extends DBManager implements UserRepo {
     @Override
     public Boolean createUser(User user) throws SQLException {
 
-        if (user instanceof Editor && getConnection() != null) {
+        if (getConnection() != null) {
 
             ps = getConnection().prepareStatement("insert into User (username, email, password, role) values (?, ?, ?, ?)");
             ps.setString(1, user.getUsername());
@@ -26,16 +26,16 @@ public class UserRepoImpl extends DBManager implements UserRepo {
             ps.setString(3, user.getPassword());
             ps.setInt(4, 3);
             rowsAffected = ps.executeUpdate();
-
-        } else if (user instanceof Reader && getConnection() != null) {
-
-            ps = getConnection().prepareStatement("insert into User (username, email, password) values (?, ?, ?)");
-            ps.setString(1, user.getUsername());
-            ps.setString(2, user.getEmail());
-            ps.setString(3, user.getPassword());
-            rowsAffected = ps.executeUpdate();
-
         }
+//        else if (user instanceof Reader && getConnection() != null) {
+//
+//            ps = getConnection().prepareStatement("insert into User (username, email, password) values (?, ?, ?)");
+//            ps.setString(1, user.getUsername());
+//            ps.setString(2, user.getEmail());
+//            ps.setString(3, user.getPassword());
+//            rowsAffected = ps.executeUpdate();
+//
+//        }
         close();
         return rowsAffected == 1;
     }
@@ -94,18 +94,13 @@ public class UserRepoImpl extends DBManager implements UserRepo {
                     u.setIsActive(isActive);
                     u.setDateAdded(calendar);
                 }
-                return u;
+                return u ;
             }
         } finally {
             close();
         }
 
         close();
-
-//        u.setUsername("amet");
-//        u.setEmail("amet1@gmail.com");
-//        u.setPassword("password");
-        //return null;
 
 
         return u;
