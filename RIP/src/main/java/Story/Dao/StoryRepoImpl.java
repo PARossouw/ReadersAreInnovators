@@ -400,8 +400,6 @@ public class StoryRepoImpl implements StoryRepo {
 
         con = DBManager.getConnection();
 
-        Boolean createdStory = false;
-
         try {
             if (con != null) {
 
@@ -420,14 +418,11 @@ public class StoryRepoImpl implements StoryRepo {
                 ps.setInt(12, story.getLikes());
 
                 rowsAffected = ps.executeUpdate();
-
-                createdStory = true;
             }
         } finally {
             close();
         }
-        return createdStory;
-
+        return rowsAffected == 1;
     }
 
     @Override
