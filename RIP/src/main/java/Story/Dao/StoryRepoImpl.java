@@ -402,6 +402,7 @@ public class StoryRepoImpl implements StoryRepo {
 
         Boolean createdStory = false;
 
+
         try {
             if (con != null) {
 
@@ -425,6 +426,28 @@ public class StoryRepoImpl implements StoryRepo {
             }
         } finally {
             close();
+
+        if (getConnection() != null) {
+
+            ps = getConnection().prepareStatement("insert into story (title, writer, description, imagePath, body) values (?, ?, ?,?,?)");
+                  //  + " isDraft, isActive, allowComment, isApproved, views, avgRating,likes) values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
+            ps.setString(1, story.getTitle());
+            ps.setInt(2, 73);  // Test writer
+            ps.setString(3, story.getDescription());
+            ps.setString(4, story.getImagePath());
+            ps.setString(5, story.getBody());
+//            ps.setBoolean(6, story.getIsDraft());
+//            ps.setBoolean(7, story.getIsActive());
+//            ps.setBoolean(8, story.getAllowComments());
+//            ps.setBoolean(9, story.getIsApproved());
+//            ps.setInt(10, story.getViews());
+//            ps.setDouble(11, story.getAvgRating());
+//            ps.setInt(12, story.getLikes());
+
+            rowsAffected = ps.executeUpdate();
+
+            createdStory = true;
+
         }
         return createdStory;
 

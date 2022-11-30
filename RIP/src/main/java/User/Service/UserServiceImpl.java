@@ -84,17 +84,18 @@ public class UserServiceImpl implements UserService {
     public String registerUser(User user) {
 
         try {
-            if (userRepo.getUser(user) != null) {
+            if (userRepo.getUser(user).getUsername().equals(user.getUsername())) {
                 return "This username or email is already in use.";
             } else {
 
                 // return userRepo.createUser(user) ? "User registered successfully." : "Could not complete registration at this time.";
+                userRepo.createUser(user);
                 return "Registration was successful. Please log in above. ";
             }
         } catch (SQLException ex) {
             Logger.getLogger(UserServiceImpl.class.getName()).log(Level.SEVERE, null, ex);
         }
-        return "Operation unsuccessful, please try again later.";
+        return "Operation unsuccessful, please try again later." +user.toString();
     }
 
     public String blockWriter(Writer writer) {
