@@ -3,23 +3,23 @@ package DBManager;
 import jakarta.activation.DataSource;
 import org.apache.commons.dbcp2.BasicDataSource;
 import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
+//import java.sql.PreparedStatement;
+//import java.sql.ResultSet;
 import java.sql.SQLException;
 
 public class DBManager {
 
     private static DataSource dSource;
-    private final static BasicDataSource dataSource;
-    protected PreparedStatement ps;
-    protected ResultSet rs;
+    private /*final*/ static BasicDataSource dataSource;
+//    protected PreparedStatement ps;
+//    protected ResultSet rs;
     protected Integer rowsAffected;
 
     public DBManager() {
     }
 
     static {
-        DBProperties prop = new DBProperties();
+        //DBProperties prop = new DBProperties();
         
         dataSource = new BasicDataSource();
 
@@ -37,16 +37,16 @@ public class DBManager {
         return dataSource.getConnection();
     }
 
-    public void close() throws SQLException {
-
-        if (ps != null) {
-            ps.close();
-        }
-        if (rs != null) {
-            rs.close();
-        }
-        if (getConnection() != null) {
-            getConnection().close();
-        }
-    }
+//    public void close() throws SQLException {
+//
+//        if (ps != null) {
+//            ps.close();
+//        }
+//        if (rs != null) {
+//            rs.close();
+//        }
+//        if (getConnection() != null) {
+//            getConnection().close();
+//        }
+//    }
 }
