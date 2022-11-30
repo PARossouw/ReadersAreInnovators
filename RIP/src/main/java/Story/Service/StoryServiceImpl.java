@@ -81,7 +81,7 @@ public class StoryServiceImpl implements StoryService {
                 Logger.getLogger(StoryServiceImpl.class.getName()).log(Level.SEVERE, null, ex);
             }
         }
-        return "Unfortunetely, the story has not been saved successfully.";
+        return "Unfortunetely, the story has not been saved successfully. " + story.toString();
     }
 
     @Override
@@ -90,19 +90,19 @@ public class StoryServiceImpl implements StoryService {
         try {
             if (story.getStoryID() != null
                     && story.getTitle() != null
-                    && story.getWriter() != null
+                  //  && story.getWriter() != null
                     && story.getDescription() != null
-                    && story.getImagePath() != null
-                    && story.getBody() != null
-                    && story.getCreatedOn() != null
-                    && story.getCategoryList() != null) {
+                  //  && story.getImagePath() != null
+                    && story.getBody() != null){
+                  //  && story.getCreatedOn() != null
+                 //   && story.getCategoryList() != null) {
                 return storyRepo.submitStory(story) ? "successfully submitted story" : "unsuccessful operation";
 
             }
         } catch (SQLException ex) {
             Logger.getLogger(StoryServiceImpl.class.getName()).log(Level.SEVERE, null, ex);
         }
-        return "Unsuccessful operation";
+        return "Unsuccessful operation "+ story.toString();
     }
 
     @Override
@@ -114,6 +114,18 @@ public class StoryServiceImpl implements StoryService {
             Logger.getLogger(StoryServiceImpl.class.getName()).log(Level.SEVERE, null, ex);
             return null;
         }
+
+//Story storyObj = new Story();
+//storyObj.setStoryID(420);
+//        storyObj.setTitle("DAO practice Title");
+//        storyObj.setAvgRating(2.9);
+//        storyObj.setWriter("Anton  Tarun Sing");
+//        storyObj.setDescription("DAO Practice Description");
+//        storyObj.setBody("DAO Practice Body");
+//        storyObj.setViews(888);
+//        storyObj.setLikes(666);
+//
+//        return storyObj;
     }
 
     @Override
@@ -137,7 +149,7 @@ public class StoryServiceImpl implements StoryService {
     public List<Story> getLikedStory(User reader) {
 
         List<Story> likedStories = new ArrayList<>();
-        if (reader == null) {
+        if (reader.getUserID() == null) {
             return null;
         }
 

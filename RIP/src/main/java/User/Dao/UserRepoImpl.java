@@ -86,6 +86,7 @@ public class UserRepoImpl extends DBManager implements UserRepo {
                     }
 
                     u.setUserID(userID);
+                    u.setRoleID(role);
                     u.setUsername(username);
                     u.setEmail(email);
                     u.setPhoneNumber(phoneNumber);
@@ -98,6 +99,15 @@ public class UserRepoImpl extends DBManager implements UserRepo {
         } finally {
             close();
         }
+
+        close();
+
+//        u.setUsername("amet");
+//        u.setEmail("amet1@gmail.com");
+//        u.setPassword("password");
+        //return null;
+
+
         return u;
     }
 
@@ -267,6 +277,7 @@ public class UserRepoImpl extends DBManager implements UserRepo {
         }
         close();
         return rowsAffected == 1;
+
     }
 
     @Override
@@ -302,6 +313,7 @@ public class UserRepoImpl extends DBManager implements UserRepo {
 //                calendar.setTime(rs.getDate("dateadded"));
                 Integer role = (rs.getInt("role"));
 
+                writer.setRoleID(role);
                 writer.setUserID(userID);
                 writer.setUsername(username);
                 writer.setEmail(email);

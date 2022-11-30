@@ -16,15 +16,16 @@ public class DBManager {
     protected Integer rowsAffected;
 
     public DBManager() {
-
     }
 
     static {
+        DBProperties prop = new DBProperties();
+        
         dataSource = new BasicDataSource();
-        dataSource.setDriverClassName("com.mysql.jdbc.Driver");
-        dataSource.setUrl("jdbc:mysql://localhost:3306/readersareinnovators?autoReconnect=true&useSSL=false");
-        dataSource.setUsername("root");
-        dataSource.setPassword("root");
+        dataSource.setDriverClassName(prop.readProperty("db.driver"));
+        dataSource.setUrl(prop.readProperty("db.url"));
+        dataSource.setUsername(prop.readProperty("db.user"));
+        dataSource.setPassword(prop.readProperty("db.password"));
         dataSource.setMinIdle(10);
         dataSource.setMaxIdle(10);
         dataSource.setMaxOpenPreparedStatements(100);

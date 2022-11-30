@@ -5,7 +5,6 @@ import User.Model.Editor;
 import User.Model.Reader;
 import User.Model.User;
 import User.Model.Writer;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -17,7 +16,7 @@ public interface UserService {
 
     String registerUser(User user);
 
-    String blockWriter(String[] results, ArrayList<Writer> writers);
+    String blockWriter(Writer writer);
 
     String addNewEditor(Editor editor);
 

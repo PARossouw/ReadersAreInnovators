@@ -14,6 +14,7 @@ import jakarta.ws.rs.Consumes;
 import jakarta.ws.rs.GET;
 import jakarta.ws.rs.POST;
 import jakarta.ws.rs.Path;
+import jakarta.ws.rs.PathParam;
 import jakarta.ws.rs.Produces;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
@@ -42,7 +43,7 @@ public class StoryControllerImpl {
     public Response searchStoriesByCategories(Reader reader) {
         List<Category> categories = new ArrayList<>();
         categories = reader.getPreferredCategories();
-        
+
         return Response.status(Response.Status.OK).entity(storyService.searchStoriesByCategories(categories)).build();
     }
 
@@ -59,7 +60,9 @@ public class StoryControllerImpl {
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
     public Response saveStory(Story story) {
+        String goodStory = "Mellisa saved the story";
         return Response.status(Response.Status.OK).entity(storyService.saveStory(story)).build();
+//        return Response.status(Response.Status.OK).entity(goodStory).build();
     }
 
     @Path("/submit")
@@ -75,7 +78,81 @@ public class StoryControllerImpl {
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
     public Response retrieveStory(Story story) {
-        return Response.status(Response.Status.OK).entity(storyService.retrieveStory(story)).build();
+//        return Response.status(Response.Status.OK).entity(storyService.retrieveStory(story)).build();
+
+        //Testing purposes below only
+        Story storyObj = new Story();
+        storyObj.setStoryID(420);
+        storyObj.setTitle("DAO practice Title");
+        storyObj.setAvgRating(6.0);
+        storyObj.setWriter("DAO Pratice Author Tarun Sing");
+        storyObj.setViews(69);
+        storyObj.setLikes(20);
+        storyObj.setDescription("DAO Practice Description");
+        storyObj.setBody("DAO Practice Body");
+
+//        return storyObj;
+        return Response.status(Response.Status.OK).entity(storyObj).build();
+
+    }
+
+    @Path("/getStory/{storyID}")
+    @GET
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response storySearch(@PathParam("storyID") String storySearch) {
+
+//        writers = userService.writerSearch(writerSearch);
+
+    
+      Story storyObj = new Story();
+      storyObj.setStoryID(Integer.parseInt(storySearch));
+      
+      storyObj = storyService.retrieveStory(storyObj);
+
+        return Response.status(Response.Status.OK).entity(storyObj).build();
+        
+
+//        Story storyObj = new Story();
+//        storyObj.setStoryID(Integer.parseInt(storySearch));
+//
+//        storyObj = storyService.retrieveStory(storyObj);
+//        storyObj.setStoryID(420);
+//        storyObj.setTitle("DAO practice Title");
+//        storyObj.setAvgRating(8.0);
+//        storyObj.setWriter("Controller Pratice Author Tarun Sing");
+//        storyObj.setViews(30);
+//        storyObj.setLikes(300);
+//        storyObj.setDescription("ControllerPractice Description");
+//        storyObj.setBody("DAO Practice Body");
+
+
+//Story storyObj = new Story();
+//storyObj.setStoryID(420);
+//        storyObj.setTitle("DAO practice Title");
+//        storyObj.setAvgRating(2.9);
+//        storyObj.setWriter("DAO Pratice Author Tarun Sing");
+//        storyObj.setDescription("DAO Practice Description");
+//        storyObj.setBody("DAO Practice Body");
+//        storyObj.setViews(504);
+//        storyObj.setLikes(88);
+//
+//        return Response.status(Response.Status.OK).entity(storyObj).build();
+
+//        return Response.status(Response.Status.OK).entity(storyObj).build();
+//
+//        Story storyObj = new Story();
+//        storyObj.setStoryID(420);
+//        storyObj.setTitle("DAO practice Title");
+//        storyObj.setAvgRating(2.9);
+//        storyObj.setWriter("DAO Pratice Author Tarun Sing");
+//        storyObj.setDescription("DAO Practice Description");
+//        storyObj.setBody("DAO Practice Body");
+//        storyObj.setViews(504);
+//        storyObj.setLikes(88);
+
+       // return Response.status(Response.Status.OK).entity(storyObj).build();
+
+
     }
 
     @Path("/search")
@@ -86,15 +163,16 @@ public class StoryControllerImpl {
         return Response.status(Response.Status.OK).entity(storyService.searchForStory(StoryParameter)).build();
     }
 
-    
-    @Path("/viewLikedStories")
+    @Path("/viewLikedStories/{readerID}")
     @GET
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
-    public Response viewLikedStories(User reader){
-        return Response.status(Response.Status.OK).entity(storyService.getLikedStory(reader)).build();
+    public Response viewLikedStories(@PathParam("readerID") Integer readerID) {
+        User reader = new User();
+        reader.setUserID(readerID);
+        List<Story> likedStories = storyService.getLikedStory(reader);
+        return Response.status(Response.Status.OK).entity(likedStories).build();
     }
-    
 
     @Path("/getPendingStories")
     @GET
@@ -102,7 +180,7 @@ public class StoryControllerImpl {
     public Response getPendingStories() {
         return Response.status(Response.Status.OK).entity(storyService.getPendingStories()).build();
     }
-    
+
     @Path("/getStoriesForStoryOfTheDay")
     @GET
     @Consumes(MediaType.APPLICATION_JSON)
@@ -110,7 +188,7 @@ public class StoryControllerImpl {
     public Response getStoriesForStoryOfTheDay() {
         return Response.status(Response.Status.OK).entity(storyService.getStoriesForStoryOfTheDay()).build();
     }
-    
+
     @Path("/getTop20StoriesForMonth")
     @GET
     @Produces(MediaType.APPLICATION_JSON)
