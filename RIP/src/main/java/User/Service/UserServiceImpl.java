@@ -97,6 +97,7 @@ public class UserServiceImpl implements UserService {
         return "Operation unsuccessful, please try again later.";
     }
 
+
     public String blockWriter(Writer writer) {
 
         try {

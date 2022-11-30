@@ -646,4 +646,22 @@ public class StoryRepoImpl extends DBManager implements StoryRepo {
         
     }
 
+    @Override
+    public Boolean turnOffComments(Story story) throws SQLException{
+        
+        int rowsAffected = 0;
+        if (getConnection() != null) {
+            ps = getConnection().prepareStatement("UPDATE story SET allowcomment = IF(allowcomment != 0, 0, 1) WHERE storyid = ?;");
+
+            ps.setInt(1, story.getStoryID());
+
+            rowsAffected = ps.executeUpdate(); 
+            close();
+
+            return rowsAffected == 1;
+        }
+                
+        return false;
+    }
+
 }
