@@ -26,6 +26,7 @@ public class UserRepoImpl implements UserRepo {
     @Override
     public Boolean createUser(User user) throws SQLException {
 
+
         con = DBManager.getConnection();
 
         try {
@@ -50,6 +51,27 @@ public class UserRepoImpl implements UserRepo {
         } finally {
             close();
         }
+
+        if (getConnection() != null) {
+
+            ps = getConnection().prepareStatement("insert into User (username, email, password, role) values (?, ?, ?, ?)");
+            ps.setString(1, user.getUsername());
+            ps.setString(2, user.getEmail());
+            ps.setString(3, user.getPassword());
+            ps.setInt(4, 3);
+            rowsAffected = ps.executeUpdate();
+        }
+//        else if (user instanceof Reader && getConnection() != null) {
+//
+//            ps = getConnection().prepareStatement("insert into User (username, email, password) values (?, ?, ?)");
+//            ps.setString(1, user.getUsername());
+//            ps.setString(2, user.getEmail());
+//            ps.setString(3, user.getPassword());
+//            rowsAffected = ps.executeUpdate();
+//
+//        }
+        close();
+
         return rowsAffected == 1;
     }
 
@@ -109,10 +131,18 @@ public class UserRepoImpl implements UserRepo {
                     u.setIsActive(isActive);
                     u.setDateAdded(calendar);
                 }
+
+                return u ;
+
             }
         } finally {
             close();
         }
+
+
+        close();
+
+
         return u;
     }
 
