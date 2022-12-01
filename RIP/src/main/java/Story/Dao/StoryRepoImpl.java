@@ -1,6 +1,7 @@
 package Story.Dao;
 
 import Category.Model.Category;
+import static DBManager.DBManager.getConnection;
 import DBManager.DBManager;
 import Story.Model.Story;
 import java.sql.SQLException;
@@ -475,28 +476,7 @@ public class StoryRepoImpl implements StoryRepo {
     @Override
     public Boolean updateStory(Story story) throws SQLException {
 
-
         con = DBManager.getConnection();
-
-        
-        int rowsAffected = 0;
-        if (getConnection() != null) {
-
-        ps = getConnection().prepareStatement("update story set title = ?, description = ?, imagePath = ?,"
-                + "body = ?, isDraft = ? where storyID = ?");
-         ps.setString(1, story.getTitle());
-         ps.setString(2, story.getDescription());
-         ps.setString(3, story.getImagePath());
-         ps.setString(4, story.getBody());
-         
-         ps.setBoolean(5, story.getIsDraft());
-         
-         
-         ps.setInt(6, story.getStoryID());
-      
-        
-        
-
 
         int rowsAffected = 0;
         try {
@@ -671,7 +651,7 @@ public class StoryRepoImpl implements StoryRepo {
 
                 ps = con.prepareStatement("select storyID, title, writer, description, imagePath, "
                         + "body, isDraft, isActive, createdOn, allowComment, isApproved, views, likes, avgRating "
-                        + "from story where isApproved = 1 and isDraft = 0 ORDER BY RAND() limit 6");
+                        + "from story where isApproved = 1 and isDraft = 0 ORDER BY RAND() limit 46");
 
                 rs = ps.executeQuery();
 

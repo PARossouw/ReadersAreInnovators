@@ -1,6 +1,7 @@
 package User_Interactions.Rating_Transaction.Dao;
 
 import DBManager.DBManager;
+import static DBManager.DBManager.getConnection;
 import Story.Model.Story;
 import User.Model.Reader;
 import User_Interactions.Rating_Transaction.Model.RatingTransaction;
@@ -66,9 +67,10 @@ public class RatingTransactionRepoImpl implements RatingTransactionRepo {
                 rating.setStory(story);
 
             }
-        } finally {
-            close();
         }
+        
+            close();
+        
         return rating;
     }
 
