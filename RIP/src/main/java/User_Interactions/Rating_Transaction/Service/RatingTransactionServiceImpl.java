@@ -19,18 +19,18 @@ public class RatingTransactionServiceImpl implements RatingTransactionService {
     }
 
     @Override
-    public Double rateStory(Story story, Reader reader, Integer rating) {
+    public String rateStory(Story story, Reader reader, Integer rating) {
         
         try {
-            if (ratingRepo.getRating(story, reader) == null) {
+         //   if (ratingRepo.getRating(story, reader) == null) {
                 ratingRepo.createRating(story, reader, rating);
-            } else {
-                ratingRepo.updateRating(story, reader, rating);
-            }
-            return storyRepo.retrieveStory(story).getAvgRating();
+//            } else {
+//                ratingRepo.updateRating(story, reader, rating);
+//            }
+            return "Story has been rated " + rating +" stars!";
         } catch (SQLException ex) {
             Logger.getLogger(RatingTransactionServiceImpl.class.getName()).log(Level.SEVERE, null, ex);
-            return null;
+            return "Story has not been rated";
         }
     }
 }

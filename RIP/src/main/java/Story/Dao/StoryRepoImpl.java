@@ -344,15 +344,15 @@ public class StoryRepoImpl implements StoryRepo {
         try {
             if (categories.size() > 1) {
                 for (int i = 1; i < categories.size(); i++) {
-                    more += "or sc.category = ?";
+                    more += " or sc.category = ?";
                 }
             }
             if (con != null) {
 
                 ps = con.prepareStatement("select storyID, title, "
                         + "writer, description, imagePath, body, isDraft, isActive, "
-                        + "createdOn, allowComments, isApproved, views, likes, "
-                        + "avgRating from story s inner join story_category sc on s.storyID = sc.story where sc.category = ?" + more);
+                        + "createdOn, allowComment, isApproved, views, likes, "
+                        + "avgRating from story s inner join story_category sc on s.storyID = sc.story where sc.category = ?" + more + " ORDER BY RAND() limit 6");
 
                 ps.setInt(1, categories.get(1).getCategoryID());
 
@@ -379,13 +379,13 @@ public class StoryRepoImpl implements StoryRepo {
                     Calendar calendar = Calendar.getInstance();
                     calendar.setTime(createdOn);
 
-                    boolean allowComments = rs.getBoolean("allowComments");
+                    boolean allowComments = rs.getBoolean("allowComment");
                     boolean isApproved = rs.getBoolean("isApproved");
                     int views = rs.getInt("views");
                     int likes = rs.getInt("likes");
                     double avgRating = rs.getDouble("avgRating");
 
-                    storyObj = new Story(storyID, title, writer1, description, imagePath, body, isDraft, isActive, calendar, allowComments, isApproved, views, likes, avgRating);
+                    storyObj = new Story(storyID, title, writer1, description, imagePath, body, isDraft, isActive, null, allowComments, isApproved, views, likes, avgRating);
                     storiesByCategory.add(storyObj);
                 }
             }
@@ -475,7 +475,28 @@ public class StoryRepoImpl implements StoryRepo {
     @Override
     public Boolean updateStory(Story story) throws SQLException {
 
+
         con = DBManager.getConnection();
+
+        
+        int rowsAffected = 0;
+        if (getConnection() != null) {
+
+        ps = getConnection().prepareStatement("update story set title = ?, description = ?, imagePath = ?,"
+                + "body = ?, isDraft = ? where storyID = ?");
+         ps.setString(1, story.getTitle());
+         ps.setString(2, story.getDescription());
+         ps.setString(3, story.getImagePath());
+         ps.setString(4, story.getBody());
+         
+         ps.setBoolean(5, story.getIsDraft());
+         
+         
+         ps.setInt(6, story.getStoryID());
+      
+        
+        
+
 
         int rowsAffected = 0;
         try {
