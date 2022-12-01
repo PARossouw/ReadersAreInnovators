@@ -43,11 +43,9 @@ public class StoryControllerImpl {
     @Produces(MediaType.APPLICATION_JSON)
     public Response searchStoriesByCategories(@PathParam("reader") String reader) {//@PathParam("reader") String reader
         List<Category> categories = new ArrayList<>();
-        StringBuffer sb = new StringBuffer(reader);
-        sb.deleteCharAt(reader.length()-1);
         
         Reader r = new Reader();
-        r.setUserID(Integer.parseInt(sb.toString()));
+        r.setUserID(Integer.parseInt(reader));
         
         //works
         categories = categoryService.getPreferredCategories(r);
@@ -56,8 +54,6 @@ public class StoryControllerImpl {
 
         List<Story> stories = new ArrayList<>();
         stories = storyService.searchStoriesByCategories(categories);
-        
-        
         
         return Response.status(Response.Status.OK).entity(stories).build();
 
