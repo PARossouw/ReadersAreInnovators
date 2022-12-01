@@ -354,7 +354,7 @@ public class StoryRepoImpl implements StoryRepo {
                         + "imagePath, body, isDraft, isActive, createdOn, allowComment, "
                         + "isApproved, views, likes, avgRating from story s "
                         + "inner join story_category sc on s.storyID = sc.story "
-                        + "where sc.category = ?" + more + " ORDER BY RAND() limit 6");
+                        + "where sc.category = ?" + more + " ORDER BY RAND() limit 46");
 
                 ps.setInt(1, categories.get(0).getCategoryID());
 
@@ -481,21 +481,29 @@ public class StoryRepoImpl implements StoryRepo {
 
         int rowsAffected = 0;
         try {
+
             if (con != null) {
 
-                ps = con.prepareStatement("update story set title = ?, description = ?, imagePath = ?,"
-                        + "body = ? where storyID = ?");
-                ps.setString(1, story.getTitle());
-                ps.setString(2, story.getDescription());
-                ps.setString(3, story.getImagePath());
-                ps.setString(4, story.getBody());
-                ps.setInt(5, story.getStoryID());
 
-                rowsAffected = ps.executeUpdate();
+                rowsAffected = 0;
+                if (con != null) {
+
+                    ps = con.prepareStatement("update story set title = ?, description = ?, imagePath = ?,"
+                            + "body = ? where storyID = ?");
+                    ps.setString(1, story.getTitle());
+                    ps.setString(2, story.getDescription());
+                    ps.setString(3, story.getImagePath());
+                    ps.setString(4, story.getBody());
+                    ps.setInt(5, story.getStoryID());
+
+                    rowsAffected = ps.executeUpdate();
+                }
+
             }
         } finally {
             close();
         }
+
         return rowsAffected == 1;
     }
 
