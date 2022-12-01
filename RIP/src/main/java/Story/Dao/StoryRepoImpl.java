@@ -353,7 +353,7 @@ public class StoryRepoImpl implements StoryRepo {
                         + "imagePath, body, isDraft, isActive, createdOn, allowComment, "
                         + "isApproved, views, likes, avgRating from story s "
                         + "inner join story_category sc on s.storyID = sc.story "
-                        + "where sc.category = ?" + more + " ORDER BY RAND() limit 6");
+                        + "where sc.category = ?" + more + " ORDER BY RAND() limit 46");
 
                 ps.setInt(1, categories.get(0).getCategoryID());
 
@@ -479,10 +479,10 @@ public class StoryRepoImpl implements StoryRepo {
         con = DBManager.getConnection();
 
         try {
+
             if (con != null) {
 
-            rowsAffected = 0;
-            try {
+                rowsAffected = 0;
                 if (con != null) {
 
                     ps = con.prepareStatement("update story set title = ?, description = ?, imagePath = ?,"
@@ -495,10 +495,11 @@ public class StoryRepoImpl implements StoryRepo {
 
                     rowsAffected = ps.executeUpdate();
                 }
-            } finally {
-                close();
             }
+        } finally {
+            close();
         }
+
         return rowsAffected == 1;
     }
 
@@ -669,8 +670,8 @@ public class StoryRepoImpl implements StoryRepo {
                     int likes = rs.getInt("likes");
                     double avgRating = rs.getDouble("avgRating");
 
-                    storyObj = new Story(storyID, title, writer1, description, 
-                            imagePath, body, isDraft, isActive, null, allowComments, 
+                    storyObj = new Story(storyID, title, writer1, description,
+                            imagePath, body, isDraft, isActive, null, allowComments,
                             isApproved, views, likes, avgRating);
                     stories.add(storyObj);
                 }
