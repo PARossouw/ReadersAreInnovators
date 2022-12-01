@@ -23,8 +23,6 @@ import java.util.List;
 import jakarta.ws.rs.core.Response;
 import java.util.ArrayList;
 
-
-
 @Path("/Story")
 public class StoryControllerImpl {
 
@@ -43,24 +41,18 @@ public class StoryControllerImpl {
     @Produces(MediaType.APPLICATION_JSON)
     public Response searchStoriesByCategories(@PathParam("reader") String reader) {//@PathParam("reader") String reader
         List<Category> categories = new ArrayList<>();
-        StringBuffer sb = new StringBuffer(reader);
-        sb.deleteCharAt(reader.length()-1);
         
         Reader r = new Reader();
-        r.setUserID(Integer.parseInt(sb.toString()));
+        r.setUserID(Integer.parseInt(reader));
         
         //works
         categories = categoryService.getPreferredCategories(r);
-        
-        //categories = reader.getPreferredCategories();
 
+        //categories = reader.getPreferredCategories();
         List<Story> stories = new ArrayList<>();
         stories = storyService.searchStoriesByCategories(categories);
-        
-        
-        
-        return Response.status(Response.Status.OK).entity(stories).build();
 
+        return Response.status(Response.Status.OK).entity(stories).build();
 
         //hardcoding
 //        List<Story> sts = new ArrayList<>();
@@ -94,7 +86,7 @@ public class StoryControllerImpl {
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
     public Response saveStory(Story story) {
-       // String goodStory = "Mellisa saved the story";
+        // String goodStory = "Mellisa saved the story";
         return Response.status(Response.Status.OK).entity(storyService.saveStory(story)).build();
 //        return Response.status(Response.Status.OK).entity(goodStory).build();
     }
@@ -207,7 +199,11 @@ public class StoryControllerImpl {
     @GET
     @Produces(MediaType.APPLICATION_JSON)
     public Response getTop20StoriesForMonth() {
-        return Response.status(Response.Status.OK).entity(storyService.getTop20RatedStoriesOfTheMonth()).build();
+
+        List<Story> stories = new ArrayList<>();
+        stories = storyService.getTop20RatedStoriesOfTheMonth();
+
+        return Response.status(Response.Status.OK).entity(stories).build();
 
     }
 
