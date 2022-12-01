@@ -481,23 +481,18 @@ public class StoryRepoImpl implements StoryRepo {
         try {
             if (con != null) {
 
-            rowsAffected = 0;
-            try {
-                if (con != null) {
+                ps = con.prepareStatement("update story set title = ?, description = ?, imagePath = ?,"
+                        + "body = ? where storyID = ?");
+                ps.setString(1, story.getTitle());
+                ps.setString(2, story.getDescription());
+                ps.setString(3, story.getImagePath());
+                ps.setString(4, story.getBody());
+                ps.setInt(5, story.getStoryID());
 
-                    ps = con.prepareStatement("update story set title = ?, description = ?, imagePath = ?,"
-                            + "body = ? where storyID = ?");
-                    ps.setString(1, story.getTitle());
-                    ps.setString(2, story.getDescription());
-                    ps.setString(3, story.getImagePath());
-                    ps.setString(4, story.getBody());
-                    ps.setInt(5, story.getStoryID());
-
-                    rowsAffected = ps.executeUpdate();
-                }
-            } finally {
-                close();
+                rowsAffected = ps.executeUpdate();
             }
+        } finally {
+            close();
         }
         return rowsAffected == 1;
     }
@@ -538,7 +533,7 @@ public class StoryRepoImpl implements StoryRepo {
                         + " avg(rt.rating) as averageRating from Story s"
                         + " inner join rating_transaction rt on s.storyID = rt.story "
                         + "group by story "
-                        + "order by averageRating desc limit 50;");
+                        + "order by averageRating desc limit 20");
 
                 while (rs.next()) {
 
@@ -563,7 +558,7 @@ public class StoryRepoImpl implements StoryRepo {
 
                     Story story = new Story(storyID, title, writer, description,
                             imagePath, body, isDraft, isActive,
-                            calendar, allowComments, isApproved,
+                            null, allowComments, isApproved,
                             views, likes, avgRating);
 
                     storyList.add(story);
@@ -572,7 +567,6 @@ public class StoryRepoImpl implements StoryRepo {
         } finally {
             close();
         }
-
         return storyList;
     }
 
@@ -669,8 +663,8 @@ public class StoryRepoImpl implements StoryRepo {
                     int likes = rs.getInt("likes");
                     double avgRating = rs.getDouble("avgRating");
 
-                    storyObj = new Story(storyID, title, writer1, description, 
-                            imagePath, body, isDraft, isActive, null, allowComments, 
+                    storyObj = new Story(storyID, title, writer1, description,
+                            imagePath, body, isDraft, isActive, null, allowComments,
                             isApproved, views, likes, avgRating);
                     stories.add(storyObj);
                 }
