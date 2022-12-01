@@ -194,11 +194,7 @@ public class StoryServiceImpl implements StoryService {
         List<Story> stories = new ArrayList<>();
         try {
             stories = storyRepo.getHighestRatedStoriesForMonth();
-            if (stories.size() > 20) {
-                for (int i = 20; i < stories.size(); i++) {
-                    stories.remove(i);
-                }
-            }
+            return stories;
         } catch (SQLException ex) {
             Logger.getLogger(StoryServiceImpl.class.getName()).log(Level.SEVERE, null, ex);
         }

@@ -192,19 +192,13 @@ public class StoryControllerImpl {
     @Produces(MediaType.APPLICATION_JSON)
     public Response getStoriesForStoryOfTheDay() {
         return Response.status(Response.Status.OK).entity(storyService.getStoriesForStoryOfTheDay()).build();
-
     }
 
     @Path("/getTop20StoriesForMonth")
     @GET
     @Produces(MediaType.APPLICATION_JSON)
     public Response getTop20StoriesForMonth() {
-
-        List<Story> stories = new ArrayList<>();
-        stories = storyService.getTop20RatedStoriesOfTheMonth();
-
-        return Response.status(Response.Status.OK).entity(stories).build();
-
+        return Response.status(Response.Status.OK).entity(storyService.getTop20RatedStoriesOfTheMonth()).build();
     }
 
     @Path("/turnOffComments")
