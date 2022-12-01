@@ -349,12 +349,13 @@ public class StoryRepoImpl implements StoryRepo {
             }
             if (con != null) {
 
-                ps = con.prepareStatement("select storyID, title, "
-                        + "writer, description, imagePath, body, isDraft, isActive, "
-                        + "createdOn, allowComment, isApproved, views, likes, "
-                        + "avgRating from story s inner join story_category sc on s.storyID = sc.story where sc.category = ?" + more + " ORDER BY RAND() limit 6");
+                ps = con.prepareStatement("select storyID, title, writer, description, "
+                        + "imagePath, body, isDraft, isActive, createdOn, allowComment, "
+                        + "isApproved, views, likes, avgRating from story s "
+                        + "inner join story_category sc on s.storyID = sc.story "
+                        + "where sc.category = ?" + more + " ORDER BY RAND() limit 6");
 
-                ps.setInt(1, categories.get(1).getCategoryID());
+                ps.setInt(1, categories.get(0).getCategoryID());
 
                 if (categories.size() > 1) {
                     for (int i = 1; i < categories.size(); i++) {
@@ -477,19 +478,8 @@ public class StoryRepoImpl implements StoryRepo {
 
         con = DBManager.getConnection();
 
-        int rowsAffected = 0;
-        if (con != null) {
-
-            ps = con.prepareStatement("update story set title = ?, description = ?, imagePath = ?,"
-                    + "body = ?, isDraft = ? where storyID = ?");
-            ps.setString(1, story.getTitle());
-            ps.setString(2, story.getDescription());
-            ps.setString(3, story.getImagePath());
-            ps.setString(4, story.getBody());
-
-            ps.setBoolean(5, story.getIsDraft());
-
-            ps.setInt(6, story.getStoryID());
+        try {
+            if (con != null) {
 
             rowsAffected = 0;
             try {
@@ -679,7 +669,9 @@ public class StoryRepoImpl implements StoryRepo {
                     int likes = rs.getInt("likes");
                     double avgRating = rs.getDouble("avgRating");
 
-                    storyObj = new Story(storyID, title, writer1, description, imagePath, body, isDraft, isActive, null, allowComments, isApproved, views, likes, avgRating);
+                    storyObj = new Story(storyID, title, writer1, description, 
+                            imagePath, body, isDraft, isActive, null, allowComments, 
+                            isApproved, views, likes, avgRating);
                     stories.add(storyObj);
                 }
             }
