@@ -400,7 +400,7 @@ public class StoryRepoImpl implements StoryRepo {
     public Boolean createStory(Story story) throws SQLException {
 
         con = DBManager.getConnection();
-        
+
         try {
             if (con != null) {
 
@@ -423,7 +423,7 @@ public class StoryRepoImpl implements StoryRepo {
         } finally {
             close();
         }
-            return rowsAffected == 1;
+        return rowsAffected == 1;
     }
 
     @Override
@@ -481,18 +481,23 @@ public class StoryRepoImpl implements StoryRepo {
         try {
             if (con != null) {
 
-                ps = con.prepareStatement("update story set title = ?, description = ?, imagePath = ?,"
-                        + "body = ? where storyID = ?");
-                ps.setString(1, story.getTitle());
-                ps.setString(2, story.getDescription());
-                ps.setString(3, story.getImagePath());
-                ps.setString(4, story.getBody());
-                ps.setInt(5, story.getStoryID());
+            rowsAffected = 0;
+            try {
+                if (con != null) {
 
-                rowsAffected = ps.executeUpdate();
+                    ps = con.prepareStatement("update story set title = ?, description = ?, imagePath = ?,"
+                            + "body = ? where storyID = ?");
+                    ps.setString(1, story.getTitle());
+                    ps.setString(2, story.getDescription());
+                    ps.setString(3, story.getImagePath());
+                    ps.setString(4, story.getBody());
+                    ps.setInt(5, story.getStoryID());
+
+                    rowsAffected = ps.executeUpdate();
+                }
+            } finally {
+                close();
             }
-        } finally {
-            close();
         }
         return rowsAffected == 1;
     }
@@ -529,12 +534,11 @@ public class StoryRepoImpl implements StoryRepo {
             if (con != null) {
 
                 ps = con.prepareStatement("select storyID, title,writer, description, imagePath, "
-                        + "body, isDraft , isActive, createdOn, allowComments, isApproved, views, likes, "
+                        + "body, isDraft , isActive, createdOn, allowComment, isApproved, views, likes, "
                         + " avg(rt.rating) as averageRating from Story s"
                         + " inner join rating_transaction rt on s.storyID = rt.story "
-                        + "where month(ratedOn) = month(CURRENT_TIMESTAMP) and "
-                        + "year(ratedOn) = year(current_timestamp) group by story "
-                        + "order by averageRating desc;");
+                        + "group by story "
+                        + "order by averageRating desc limit 50;");
 
                 while (rs.next()) {
 
@@ -551,7 +555,7 @@ public class StoryRepoImpl implements StoryRepo {
                     Calendar calendar = Calendar.getInstance();
                     calendar.setTime(createdOn);
 
-                    boolean allowComments = rs.getBoolean("allowComments");
+                    boolean allowComments = rs.getBoolean("allowComment");
                     boolean isApproved = rs.getBoolean("isApproved");
                     int views = rs.getInt("views");
                     int likes = rs.getInt("likes");
@@ -568,18 +572,7 @@ public class StoryRepoImpl implements StoryRepo {
         } finally {
             close();
         }
-        for (int i = 0; i < storyList.size(); i++) {
 
-            if (i == storyList.size() - 2) {
-                break;
-            }
-
-            if (storyList.get(i).getAvgRating() < storyList.get(i + 1).getAvgRating()) {
-
-                Collections.swap(storyList, i, i + 1);
-                i = 0;
-            }
-        }
         return storyList;
     }
 

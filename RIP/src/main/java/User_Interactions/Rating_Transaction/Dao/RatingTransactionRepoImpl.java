@@ -47,6 +47,7 @@ public class RatingTransactionRepoImpl implements RatingTransactionRepo {
 
         try {
             if (con == null) {
+
                 ps = con.prepareStatement("select ratingID, rating, ratedOn, reader, story from rating_transaction where story = ? and reader = ?");
                 ps.setInt(1, story.getStoryID());
                 ps.setInt(2, reader.getUserID());
@@ -64,9 +65,11 @@ public class RatingTransactionRepoImpl implements RatingTransactionRepo {
 
                 }
             }
-        } finally {
-            close();
-        }
+            } finally {
+                close();
+              }
+            
+        
         return rating;
     }
 
