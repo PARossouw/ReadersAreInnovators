@@ -1,6 +1,7 @@
 package Story.Dao;
 
 import Category.Model.Category;
+import static DBManager.DBManager.getConnection;
 import DBManager.DBManager;
 import Story.Model.Story;
 import java.sql.SQLException;
@@ -478,6 +479,7 @@ public class StoryRepoImpl implements StoryRepo {
 
         con = DBManager.getConnection();
 
+        int rowsAffected = 0;
         try {
             if (con != null) {
 
@@ -637,7 +639,7 @@ public class StoryRepoImpl implements StoryRepo {
 
                 ps = con.prepareStatement("select storyID, title, writer, description, imagePath, "
                         + "body, isDraft, isActive, createdOn, allowComment, isApproved, views, likes, avgRating "
-                        + "from story where isApproved = 1 and isDraft = 0 ORDER BY RAND() limit 6");
+                        + "from story where isApproved = 1 and isDraft = 0 ORDER BY RAND() limit 46");
 
                 rs = ps.executeQuery();
 
