@@ -10,7 +10,6 @@ import Story.Service.StoryService;
 import Story.Service.StoryServiceImpl;
 import User.Model.Reader;
 import User.Model.User;
-import User.Model.Writer;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.ws.rs.Consumes;
 import jakarta.ws.rs.GET;
@@ -124,12 +123,24 @@ public class StoryControllerImpl {
 
     }
 
-    @Path("/viewByWriter")
-    @POST
+    @Path("/viewByWriter/{writerID}")
+    @GET
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
-    public Response viewStoriesByWriter(Writer writer) {
+    public Response viewStoriesByWriter(@PathParam("writerID") Integer writerID) {
+        User writer = new User();
+        writer.setUserID(writerID);
         return Response.status(Response.Status.OK).entity(storyService.viewStoriesByWriter(writer)).build();
+    }
+
+    @Path("/viewLikedStories/{readerID}")
+    @GET
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response viewLikedStories(@PathParam("readerID") Integer readerID) {
+        User reader = new User();
+        reader.setUserID(readerID);
+        return Response.status(Response.Status.OK).entity(storyService.getLikedStory(reader)).build();
     }
 
     @Path("/save")
@@ -251,17 +262,6 @@ public class StoryControllerImpl {
 //        storyObj.setBody("DAO Practice Body");
 //        storyObj.setViews(504);
 //        storyObj.setLikes(88);
-    }
-
-    @Path("/viewLikedStories/{readerID}")
-    @GET
-    @Consumes(MediaType.APPLICATION_JSON)
-    @Produces(MediaType.APPLICATION_JSON)
-    public Response viewLikedStories(@PathParam("readerID") Integer readerID) {
-        User reader = new User();
-        reader.setUserID(readerID);
-        List<Story> likedStories = storyService.getLikedStory(reader);
-        return Response.status(Response.Status.OK).entity(likedStories).build();
     }
 
     @Path("/getPendingStories")

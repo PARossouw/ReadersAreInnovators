@@ -10,10 +10,7 @@ import java.sql.SQLException;
 public class DBManager {
 
     private static DataSource dSource;
-    private final static BasicDataSource dataSource;
-    protected PreparedStatement ps;
-    protected ResultSet rs;
-    protected Integer rowsAffected;
+    private static BasicDataSource dataSource;
 
     public DBManager() {
     }
@@ -22,7 +19,6 @@ public class DBManager {
    //     DBProperties prop = new DBProperties();
         
         dataSource = new BasicDataSource();
-
         dataSource.setDriverClassName("com.mysql.jdbc.Driver");
         dataSource.setUrl("jdbc:mysql://localhost:3306/RIP_V1.5?autoReconnect=true&useSSL=false");
         dataSource.setUsername("root");
@@ -35,18 +31,5 @@ public class DBManager {
 
     public static Connection getConnection() throws SQLException {
         return dataSource.getConnection();
-    }
-
-    public void close() throws SQLException {
-
-        if (ps != null) {
-            ps.close();
-        }
-        if (rs != null) {
-            rs.close();
-        }
-        if (getConnection() != null) {
-            getConnection().close();
-        }
     }
 }
