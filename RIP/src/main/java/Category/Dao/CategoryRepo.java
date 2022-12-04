@@ -21,6 +21,8 @@ public interface CategoryRepo {
 
     Boolean addPreferredCategories(Reader reader, List<Category> categories) throws SQLException;
     
+    Boolean addPreferredCategoriesToUser(Reader reader) throws SQLException;
+    
     List<Category> getStoryCategories(Story story) throws SQLException;
     
     List<Category> topCategoriesForMonth() throws SQLException;

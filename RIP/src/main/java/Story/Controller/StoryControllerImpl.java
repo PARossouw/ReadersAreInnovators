@@ -10,7 +10,6 @@ import Story.Service.StoryService;
 import Story.Service.StoryServiceImpl;
 import User.Model.Reader;
 import User.Model.User;
-import User.Model.Writer;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.ws.rs.Consumes;
 import jakarta.ws.rs.GET;
@@ -22,6 +21,7 @@ import jakarta.ws.rs.core.MediaType;
 import java.util.List;
 import jakarta.ws.rs.core.Response;
 import java.util.ArrayList;
+import java.util.Collections;
 
 @Path("/Story")
 public class StoryControllerImpl {
@@ -41,10 +41,10 @@ public class StoryControllerImpl {
     @Produces(MediaType.APPLICATION_JSON)
     public Response searchStoriesByCategories(@PathParam("reader") String reader) {//@PathParam("reader") String reader
         List<Category> categories = new ArrayList<>();
-        
+
         Reader r = new Reader();
         r.setUserID(Integer.parseInt(reader));
-        
+
         //works
         categories = categoryService.getPreferredCategories(r);
 
@@ -53,32 +53,94 @@ public class StoryControllerImpl {
         stories = storyService.searchStoriesByCategories(categories);
 
         return Response.status(Response.Status.OK).entity(stories).build();
-
-        //hardcoding
-//        List<Story> sts = new ArrayList<>();
-//        Story story1 = new Story();
-//        story1.setTitle(categories.get(0).getName());
-//        sts.add(story1);
-//        
-//        
-//        
-//        Story story2 = new Story();
-//        story2.setTitle("Pieter McJeter2");
-//        sts.add(story2);
-//        
-//        Story story3 = new Story();
-//        story3.setTitle("Pieter McJeter3");
-//        sts.add(story3);
-//        
-//        return Response.status(Response.Status.OK).entity(sts).build();
     }
 
-    @Path("/viewByWriter")
-    @POST
+    @Path("/search/categories/random/{categoryStr}")//"/search/categories/{reader}"
+    @GET
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
-    public Response viewStoriesByWriter(Writer writer) {
+    public Response searchStoriesByRandomCategoriesChosen(@PathParam("categoryStr") String categoryStr) {//@PathParam("reader") String reader
+        List<Category> categories = new ArrayList<>();
+
+       
+        String[] str = categoryStr.split(":");
+       // List<Category> al = new ArrayList<Category>();
+        Category category = new Category();
+        
+        for(int i =0 ; i<str.length; i++)
+        {
+            category.setCategoryID(Integer.parseInt(str[i]));
+            categories.add(category);
+        }
+        
+        List<Story> stories = new ArrayList<>();
+        stories = storyService.searchStoriesByCategories(categories);
+        
+
+
+        return Response.status(Response.Status.OK).entity(stories).build();
+    }
+
+    @Path("/search/stories/{searchText}")//"/search/categories/{reader}"
+    @GET
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response searchStoriesByTitleorAuthor(@PathParam("searchText") String searchText) {//@PathParam("reader") String reader
+        List<Story> stories = new ArrayList<>();
+        stories = storyService.searchForStory(searchText);
+
+//        Story story1 = new Story();
+//        story1.setStoryID(8778);
+//        story1.setTitle("seatched title");
+//        story1.setWriter("Quicny jones");
+//        story1.setViews(22);
+//        story1.setAvgRating(3.2);
+//        
+//        
+//                Story story2 = new Story();
+//        story2.setStoryID(8778);
+//        story2.setTitle("faba` title");
+//        story2.setWriter("Tarun jones");
+//        story2.setViews(22);
+//        story2.setAvgRating(3.2);
+//        
+//        
+//                Story story3 = new Story();
+//        story3.setStoryID(8778);
+//        story3.setTitle("ffvvfd title");
+//        story3.setWriter("Mike jones");
+//        story3.setViews(22);
+//        story3.setAvgRating(3.2);
+//        
+//        
+//        
+//        
+//        stories.add(story1);
+//        stories.add(story2);
+//        stories.add(story3);
+//        
+        return Response.status(Response.Status.OK).entity(stories).build();
+
+    }
+
+    @Path("/viewByWriter/{writerID}")
+    @GET
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response viewStoriesByWriter(@PathParam("writerID") Integer writerID) {
+        User writer = new User();
+        writer.setUserID(writerID);
         return Response.status(Response.Status.OK).entity(storyService.viewStoriesByWriter(writer)).build();
+    }
+
+    @Path("/viewLikedStories/{readerID}")
+    @GET
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response viewLikedStories(@PathParam("readerID") Integer readerID) {
+        User reader = new User();
+        reader.setUserID(readerID);
+        return Response.status(Response.Status.OK).entity(storyService.getLikedStory(reader)).build();
     }
 
     @Path("/save")
@@ -165,18 +227,41 @@ public class StoryControllerImpl {
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
     public Response searchForStory(String StoryParameter) {
-        return Response.status(Response.Status.OK).entity(storyService.searchForStory(StoryParameter)).build();
-    }
+//        return Response.status(Response.Status.OK).entity(storyService.searchForStory(StoryParameter)).build();
 
-    @Path("/viewLikedStories/{readerID}")
-    @GET
-    @Consumes(MediaType.APPLICATION_JSON)
-    @Produces(MediaType.APPLICATION_JSON)
-    public Response viewLikedStories(@PathParam("readerID") Integer readerID) {
-        User reader = new User();
-        reader.setUserID(readerID);
-        List<Story> likedStories = storyService.getLikedStory(reader);
-        return Response.status(Response.Status.OK).entity(likedStories).build();
+        List<Story> stories = new ArrayList<>();
+        Story story1 = new Story();
+        story1.setStoryID(8778);
+        story1.setTitle("seatched title");
+        story1.setWriter("Quicny jones");
+        story1.setViews(22);
+        story1.setAvgRating(3.2);
+
+        stories.add(story1);
+
+        return Response.status(Response.Status.OK).entity(stories).build();
+
+        // Story storyObj = new Story();
+//        storyObj.setStoryID(Integer.parseInt(storySearch));
+//
+//        storyObj = storyService.retrieveStory(storyObj);
+//        storyObj.setStoryID(420);
+//        storyObj.setTitle("DAO practice Title");
+//        storyObj.setAvgRating(8.0);
+//        storyObj.setWriter("Controller Pratice Author Tarun Sing");
+//        storyObj.setViews(30);
+//        storyObj.setLikes(300);
+//        storyObj.setDescription("ControllerPractice Description");
+//        storyObj.setBody("DAO Practice Body");
+//Story storyObj = new Story();
+//storyObj.setStoryID(420);
+//        storyObj.setTitle("DAO practice Title");
+//        storyObj.setAvgRating(2.9);
+//        storyObj.setWriter("DAO Pratice Author Tarun Sing");
+//        storyObj.setDescription("DAO Practice Description");
+//        storyObj.setBody("DAO Practice Body");
+//        storyObj.setViews(504);
+//        storyObj.setLikes(88);
     }
 
     @Path("/getPendingStories")
@@ -198,7 +283,16 @@ public class StoryControllerImpl {
     @GET
     @Produces(MediaType.APPLICATION_JSON)
     public Response getTop20StoriesForMonth() {
+
         return Response.status(Response.Status.OK).entity(storyService.getTop20RatedStoriesOfTheMonth()).build();
+    }
+
+    @Path("/getRandomApprovedStories")
+    @GET
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response getRandomApprovedStories() {
+
+        return Response.status(Response.Status.OK).entity(storyService.getRandomApprovedStories()).build();
     }
 
     @Path("/turnOffComments")
