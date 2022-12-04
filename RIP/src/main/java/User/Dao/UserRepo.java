@@ -17,11 +17,11 @@ public interface UserRepo {
 
     Boolean deleteUser(User user) throws SQLException;
 
-    Map<Writer, Integer> topWriters() throws SQLException;
+    Map<String, Integer> topWriters() throws SQLException;
 
-    Map<Writer, Integer> topRejectedWritersForMonth() throws SQLException;
+    Map<String, Integer> topRejectedWritersForMonth() throws SQLException;
 
-    Map<Editor, Integer> topApprovingEditors() throws SQLException;
+    Map<String, Integer> topApprovingEditors() throws SQLException;
 
     Boolean blockWriter(Writer writer) throws SQLException;
 

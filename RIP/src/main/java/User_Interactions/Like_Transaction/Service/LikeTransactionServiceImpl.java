@@ -3,7 +3,11 @@ package User_Interactions.Like_Transaction.Service;
 import Story.Model.Story;
 import User.Model.Reader;
 import User_Interactions.Like_Transaction.Dao.LikeTransactionRepo;
+import java.sql.Date;
 import java.sql.SQLException;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.time.LocalDate;
 import java.util.Calendar;
 import java.util.HashMap;
 import java.util.Map;
@@ -40,38 +44,29 @@ public class LikeTransactionServiceImpl implements LikeTransactionService {
     }
 
     @Override
-    public Map<Story, Integer> getAllLikesInPeriod(Calendar month) {
+    public Map<String, Integer> getAllLikesInPeriod(String month) {
 
         Boolean dateCheck = false;
-        Map<Story, Integer> storyLikesMap = new HashMap<Story, Integer>();
+        Map<String, Integer> storyLikesMap = new HashMap<String, Integer>();
         try {
 
             if (month == null) {
                 dateCheck = false;
             }
-            month = Calendar.getInstance();
-            int startMonth = month.get(Calendar.MONTH);
-            int startYear = month.get(Calendar.YEAR);
-            int startDay = month.get(Calendar.DATE);
 
-            Calendar endDate = Calendar.getInstance();
-            int endMonth = endDate.get(Calendar.MONTH);
-            int endYear = endDate.get(Calendar.YEAR);
-            int endDay = endDate.get(Calendar.DATE);
-
-            if (endYear > startYear) {
-                dateCheck = true;
-            } else if (endYear == startYear && endMonth > startMonth) {
-                dateCheck = true;
-            } else if (endYear == startYear && endMonth == startMonth && endDay > startDay) {
+            if (new SimpleDateFormat("yyyy-mm").parse(month).before(Date.valueOf(LocalDate.now()))){
                 dateCheck = true;
             }
-
+            if (!new SimpleDateFormat("yyyy-mm").parse(month).equals(Date.valueOf(LocalDate.now()))){
+                dateCheck = true;
+            }
             if (dateCheck) {
                 storyLikesMap = likeTransactionRepo.getAllLikesInPeriod(month);
             }
 
         } catch (SQLException ex) {
+            Logger.getLogger(LikeTransactionServiceImpl.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (ParseException ex) {
             Logger.getLogger(LikeTransactionServiceImpl.class.getName()).log(Level.SEVERE, null, ex);
         }
         return storyLikesMap;

@@ -7,7 +7,11 @@ import Story.Model.Story;
 import User.Model.User;
 import java.sql.SQLException;
 import java.util.ArrayList;
+
+import java.util.HashMap;
+
 import java.util.List;
+import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -208,10 +212,10 @@ public class StoryServiceImpl implements StoryService {
     }
 
     @Override
-    public List<Story> getTop20RatedStoriesOfTheMonth() {
-        List<Story> stories = new ArrayList<>();
+    public Map<String, Integer> getTop20RatedStoriesOfTheMonth(String month) {
+        Map<String, Integer> stories = new HashMap<>();
         try {
-            stories = storyRepo.getHighestRatedStoriesForMonth();
+            stories = storyRepo.getHighestRatedStoriesForMonth(month);
             return stories;
         } catch (SQLException ex) {
             Logger.getLogger(StoryServiceImpl.class.getName()).log(Level.SEVERE, null, ex);
