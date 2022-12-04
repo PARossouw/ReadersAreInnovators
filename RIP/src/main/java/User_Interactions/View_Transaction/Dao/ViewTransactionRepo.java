@@ -10,6 +10,6 @@ public interface ViewTransactionRepo {
     
     Boolean createView(Story story, Reader reader) throws SQLException;
     
-    Map<Story, Integer> getAllStoryViewsInPeriod(Calendar startDate, Calendar endDate) throws SQLException;
+    Map<String, Integer> getAllStoryViewsInPeriod(String startDate, String endDate) throws SQLException;
     
 }

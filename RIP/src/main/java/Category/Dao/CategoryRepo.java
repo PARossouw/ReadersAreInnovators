@@ -6,6 +6,7 @@ import java.sql.SQLException;
 import java.util.List;
 import User.Model.Reader;
 import User.Model.User;
+import java.util.HashMap;
 
 public interface CategoryRepo {
 
@@ -21,9 +22,11 @@ public interface CategoryRepo {
 
     Boolean addPreferredCategories(Reader reader, List<Category> categories) throws SQLException;
     
+    Boolean addPreferredCategoriesToUser(Reader reader) throws SQLException;
+    
     List<Category> getStoryCategories(Story story) throws SQLException;
     
-    List<Category> topCategoriesForMonth() throws SQLException;
+    HashMap<String, Integer> topCategoriesForMonth(String month) throws SQLException;
     
     Boolean addCategoriesToStory(Story story, List<Category> categories) throws SQLException;
 

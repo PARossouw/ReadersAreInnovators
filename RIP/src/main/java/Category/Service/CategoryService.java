@@ -4,6 +4,7 @@ import Category.Model.Category;
 import Story.Model.Story;
 import User.Model.Reader;
 import User.Model.User;
+import java.util.HashMap;
 import java.util.List;
 
 public interface CategoryService {
@@ -12,7 +13,7 @@ public interface CategoryService {
     
     String addCategoriesToStory(List<Category> categories, Story story);
 
-    List<Category> topCategoriesForTheMonth();
+    HashMap<String, Integer> topCategoriesForTheMonth(String month);
     
     List<Category> getPreferredCategories(User reader);
 
