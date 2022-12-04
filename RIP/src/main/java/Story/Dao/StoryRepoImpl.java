@@ -38,7 +38,7 @@ public class StoryRepoImpl implements StoryRepo {
                 ps = con.prepareStatement("select storyID, title, "
                         + "writer, description, imagePath, body, isDraft, isActive, "
                         + "createdOn, allowComment, isApproved, views, likes, "
-                        + "avgRating from story where isApproved = ? ORDER BY RAND() limit 20");
+                        + "avgRating from story where isApproved = ? ORDER BY RAND(), avgRating limit 20");
 
                 ps.setInt(1, 1);
                 rs = ps.executeQuery();
@@ -57,7 +57,6 @@ public class StoryRepoImpl implements StoryRepo {
 //                    Date createdOn = rs.getDate("createdOn");
 //                    Calendar calendar = Calendar.getInstance();
 //                    calendar.setTime(createdOn);
-
                     boolean allowComment = rs.getBoolean("allowComment");
                     boolean isApproved = rs.getBoolean("isApproved");
                     int views = rs.getInt("views");
@@ -68,7 +67,6 @@ public class StoryRepoImpl implements StoryRepo {
                             imagePath, body, isDraft, isActive,
                             null, allowComment, isApproved,
                             views, likes, avgRating);
-        
 
                     allApprovedStories.add(story);
                 }
@@ -372,9 +370,6 @@ public class StoryRepoImpl implements StoryRepo {
                 ps.setString(4, story.getImagePath());
                 ps.setString(5, story.getBody());
 
-
-
-
                 rowsAffected = ps.executeUpdate();
             }
         } finally {
@@ -382,10 +377,7 @@ public class StoryRepoImpl implements StoryRepo {
         }
         return rowsAffected == 1;
     }
-    
-    
-    
-    
+
     /*
     
        public Boolean createUser(User user) throws SQLException {
@@ -415,17 +407,7 @@ public class StoryRepoImpl implements StoryRepo {
         }
         return rowsAffected == 1;
     }
-    */
-    
-    
-    
-    
-    
-    
-    
-    
-    
-
+     */
     @Override
     public Story retrieveStory(Story story) throws SQLException {
 
@@ -490,7 +472,6 @@ public class StoryRepoImpl implements StoryRepo {
 
             if (con != null) {
 
-
                 rowsAffected = 0;
                 if (con != null) {
 
@@ -539,30 +520,21 @@ public class StoryRepoImpl implements StoryRepo {
 
 //        con = DBManager.getConnection();
 //
-
 //        Map<String, Integer> storyList = new HashMap<>();
-
 //        List<Story> storyList = new ArrayList<>();
-
 //
 //        try {
 //            if (con != null) {
 //
-
 //                //this sql sattement is wrong, no month is mentioned
 //                ps = con.prepareStatement("select title,writer, description, imagePath, "
-
 //                ps = con.prepareStatement("select storyID, title,writer, description, imagePath, "
-
 //                        + "body, isDraft , isActive, createdOn, allowComment, isApproved, views, likes, "
 //                        + " avg(rt.rating) as averageRating from Story s"
 //                        + " inner join rating_transaction rt on s.storyID = rt.story "
 //                        + "group by story "
-
 //                        + "order by averageRating desc limit 20");
-
 //                        + "order by averageRating desc limit 23");
-
 //
 //                while (rs.next()) {
 //
@@ -590,44 +562,36 @@ public class StoryRepoImpl implements StoryRepo {
 //                            null, allowComments, isApproved,
 //                            views, likes, avgRating);
 //
-
 //                    //storyList.add(story); commented out temporarily
-
 //                    storyList.add(story);
-
 //                }
 //            }
 //        } finally {
 //            close();
 //        }
 //        return storyList;
-
-
-                  //hardcoding
+        //hardcoding
         Map<String, Integer> hCodeMap = new HashMap<>();
-        
+
         String story1 = "frettel and nettel";
         String story2 = "becky and krekel";
         String story3 = "tekkle and mekkle";
-        
+
         int a = 2;
         int b = 3;
         int c = 4;
-        
+
         hCodeMap.put(story1, a);
         hCodeMap.put(story2, b);
         hCodeMap.put(story3, c);
-        
+
         return hCodeMap;
 
-
-
-
     }
-    
+
     @Override
-    public List<Story> getHighestRatedStoriesForMonth() throws SQLException{
-        
+    public List<Story> getHighestRatedStoriesForMonth() throws SQLException {
+
         con = DBManager.getConnection();
 
         List<Story> allApprovedStories = new ArrayList<>();
@@ -639,8 +603,6 @@ public class StoryRepoImpl implements StoryRepo {
                 ps = con.prepareStatement("select storyID, title, writer, description, imagePath, body, isDraft , isActive, "
                         + "createdOn, allowComment, isApproved, views, likes,  avg(rt.rating) as averageRating from Story s "
                         + "inner join rating_transaction rt on s.storyID = rt.story group by story order by averageRating desc limit 20");
-
-
 
                 rs = ps.executeQuery();
 
@@ -658,18 +620,16 @@ public class StoryRepoImpl implements StoryRepo {
 //                    Date createdOn = rs.getDate("createdOn");
 //                    Calendar calendar = Calendar.getInstance();
 //                    calendar.setTime(createdOn);
-
                     boolean allowComment = rs.getBoolean("allowComment");
                     boolean isApproved = rs.getBoolean("isApproved");
                     int views = rs.getInt("views");
                     int likes = rs.getInt("likes");
-                   // double avgRating = rs.getDouble("averateRating");
+                    // double avgRating = rs.getDouble("averateRating");
 
                     story = new Story(storyID, title, writer, description,
                             imagePath, body, isDraft, isActive,
                             null, allowComment, isApproved,
                             views, likes, null);
-        
 
                     allApprovedStories.add(story);
                 }
@@ -682,8 +642,8 @@ public class StoryRepoImpl implements StoryRepo {
 
     @Override
     public List<Story> searchForStory(String text) throws SQLException {
-
-con = DBManager.getConnection();
+        text = "%"+text+"%";
+        con = DBManager.getConnection();
 
         List<Story> allApprovedStories = new ArrayList<>();
         Story story = null;
@@ -691,10 +651,11 @@ con = DBManager.getConnection();
         try {
             if (con != null) {
 
-                ps = con.prepareStatement("select storyID, title, writer, description, imagePath, body, isDraft, isActive, "
-                        + "createdOn, allowComment, isApproved, views, likes, avgRating from story where title like '%"+text+"%' or writer like '%"+text+"%'");
-
-                
+                ps = con.prepareStatement("select storyID, title, writer, description, imagePath, body, isDraft, s.isActive, "
+                        + "createdOn, allowComment, isApproved, views, likes, avgRating from story s inner join user u on s.writer = u.userid "
+                        + "where title like ? or u.username like ?");
+                ps.setString(1, text);
+                ps.setString(2, text);
                 rs = ps.executeQuery();
 
                 while (rs.next()) {
@@ -718,7 +679,6 @@ con = DBManager.getConnection();
                             imagePath, body, isDraft, isActive,
                             null, allowComment, isApproved,
                             views, likes, avgRating);
-        
 
                     allApprovedStories.add(story);
                 }
@@ -727,7 +687,6 @@ con = DBManager.getConnection();
             close();
         }
         return allApprovedStories;
-
 
     }
 
@@ -817,7 +776,5 @@ con = DBManager.getConnection();
             con.close();
         }
     }
-
-    
 
 }
