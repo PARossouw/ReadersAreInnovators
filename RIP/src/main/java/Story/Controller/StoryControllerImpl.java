@@ -92,7 +92,7 @@ public class StoryControllerImpl {
     @Produces(MediaType.APPLICATION_JSON)
     public Response searchStoriesByTitleorAuthor(@PathParam("searchText") String searchText) {//@PathParam("reader") String reader
         List<Story> stories = new ArrayList<>();
-        stories = storyService.searchForStory(searchText);     
+        stories = storyService.searchForStory(searchText);
         return Response.status(Response.Status.OK).entity(stories).build();
 
     }
@@ -259,6 +259,33 @@ public class StoryControllerImpl {
 
     public Response getTop20StoriesForMonth(@PathParam("month") String month) {
         return Response.status(Response.Status.OK).entity(storyService.getTop20RatedStoriesOfTheMonth(month)).build();
+        
+//        //hardcoding
+//        Map<String, Integer> hCodeMap = new HashMap<>();
+//        
+//        String story1 = "Hansel and Gretel";
+//        String story2 = "Lady and the tramp";
+//        String story3 = "Beauty and the Beast";
+//        
+//        int a = 2;
+//        int b = 3;
+//        int c = 4;
+//        
+//        hCodeMap.put(story1, a);
+//        hCodeMap.put(story2, b);
+//        hCodeMap.put(story3, c);
+//        
+//        return Response.status(Response.Status.OK).entity(hCodeMap).build();
+        
+        
+
+    }
+    @Path("/getTop20StoriesForMonth")
+    @GET
+    @Produces(MediaType.APPLICATION_JSON)
+
+    public Response getTop20StoriesForMonth() {
+        return Response.status(Response.Status.OK).entity(storyService.getTop20RatedStoriesOfTheMonth()).build();
         
 //        //hardcoding
 //        Map<String, Integer> hCodeMap = new HashMap<>();

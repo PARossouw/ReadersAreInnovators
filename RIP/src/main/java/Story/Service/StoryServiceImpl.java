@@ -129,7 +129,6 @@ public class StoryServiceImpl implements StoryService {
         } catch (SQLException ex) {
             Logger.getLogger(StoryServiceImpl.class.getName()).log(Level.SEVERE, null, ex);
         }
-
         
         return null;
     }
@@ -195,6 +194,19 @@ public class StoryServiceImpl implements StoryService {
 
         
     }
+    @Override
+    public List<Story> getTop20RatedStoriesOfTheMonth() {
+        List<Story> stories = new ArrayList<>();
+        try {
+            stories = storyRepo.getHighestRatedStoriesForMonth();
+            return stories;
+        } catch (SQLException ex) {
+            Logger.getLogger(StoryServiceImpl.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return stories;
+
+        
+    }
     
         @Override
     public List<Story> getRandomApprovedStories() {
@@ -208,9 +220,6 @@ public class StoryServiceImpl implements StoryService {
         return stories;
     }
     
-    
-    
-
     @Override
     public String turnOffComments(Story story) {
 
@@ -231,7 +240,5 @@ public class StoryServiceImpl implements StoryService {
         return "something went wrong";
 
     }
-
     
-
 }

@@ -29,10 +29,11 @@ public interface StoryService {
 
     Map<String, Integer> getTop20RatedStoriesOfTheMonth(String month);
 
-   // List<Story> getTop20RatedStoriesOfTheMonth();
     
     List<Story> getRandomApprovedStories();
 
 
     String turnOffComments(Story story);
+
+    List<Story> getTop20RatedStoriesOfTheMonth();
 }

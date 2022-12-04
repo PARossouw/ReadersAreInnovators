@@ -42,4 +42,6 @@ public interface StoryRepo {
 
     Boolean turnOffComments(Story story) throws SQLException;
 
+    List<Story> getHighestRatedStoriesForMonth()throws SQLException;
+
 }
