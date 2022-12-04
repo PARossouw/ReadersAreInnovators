@@ -8,6 +8,7 @@ import User.Model.Reader;
 import User.Model.User;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -48,11 +49,11 @@ public class CategoryServiceImpl extends DBManager implements CategoryService {
     }
 
     @Override
-    public List<Category> topCategoriesForTheMonth() {
+    public HashMap<String, Integer> topCategoriesForTheMonth(String month) {
 
-        List<Category> categoryList = new ArrayList<>();
+        HashMap<String, Integer> categoryList = new HashMap<String, Integer>();
         try {
-            return categoryList = categoryRepo.topCategoriesForMonth();
+            return categoryList = categoryRepo.topCategoriesForMonth(month);
         } catch (SQLException ex) {
             Logger.getLogger(CategoryServiceImpl.class.getName()).log(Level.SEVERE, null, ex);
 //            List<Category> listCat = new ArrayList<>();

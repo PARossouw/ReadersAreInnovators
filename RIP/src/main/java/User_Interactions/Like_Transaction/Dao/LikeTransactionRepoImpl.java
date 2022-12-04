@@ -90,57 +90,76 @@ public class LikeTransactionRepoImpl implements LikeTransactionRepo {
 
     @Override//supposed to get the total number of likes for each book - so you a map(key = story, value = amount of likes in that period)
     //getting top 20 ,most liked books of a certain period
-    public Map<Story, Integer> getAllLikesInPeriod(Calendar month) throws SQLException {
+    public Map<String, Integer> getAllLikesInPeriod(String month) throws SQLException {
 
-        con = DBManager.getConnection();
-        Map<Story, Integer> likeMap = new HashMap<>();
+//        con = DBManager.getConnection();
+//        Map<Story, Integer> likeMap = new HashMap<>();
+//
+//        try {
+//            if (con != null) {
+//
+//                ps = con.prepareStatement("select storyID, title, count(distinct lt.reader) as likes from story s "
+//                        + "inner join like_transaction lt on s.storyID = lt.story "
+//                        + "where month(likedOn) = ? and isLiked = 1 group by storyId order by likes desc");
+//
+//                ps.setDate(1, (Date) month.getTime());
+//                rs = ps.executeQuery();
+//
+//                while (rs.next()) {
+//
+//                    int storyID = rs.getInt("storyID");
+//                    String title = rs.getString("title");
+//                    String writer = rs.getString("writer");
+//                    String description = rs.getString("description");
+//                    String imagePath = rs.getString("imagePath");
+//                    String body = rs.getString("body");
+//                    boolean isDraft = rs.getBoolean("isDraft");
+//                    boolean isActive = rs.getBoolean("isActive");
+//
+//                    Calendar calendar = Calendar.getInstance();
+//                    calendar.setTime(rs.getDate("createdOn"));
+//
+//                    boolean allowComments = rs.getBoolean("allowComments");
+//                    boolean isApproved = rs.getBoolean("isApproved");
+//                    int views = rs.getInt("views");
+//                    int likes = rs.getInt("likes");
+//                    double avgRating = rs.getDouble("avgRating");
+//
+//                    Story story = new Story(storyID, title, writer, description,
+//                            imagePath, body, isDraft, isActive,
+//                            calendar, allowComments, isApproved,
+//                            views, likes, avgRating);
+//
+//                    likeMap.put(story, rs.getInt("likes"));
+//
+//                    if (likeMap.size() == 20) {
+//                        break;
+//                    }
+//                }
+//            }
+//        } finally {
+//            close();
+//        }
+//        return likeMap;
 
-        try {
-            if (con != null) {
 
-                ps = con.prepareStatement("select storyID, title, count(distinct lt.reader) as likes from story s "
-                        + "inner join like_transaction lt on s.storyID = lt.story "
-                        + "where month(likedOn) = ? and isLiked = 1 group by storyId order by likes desc");
 
-                ps.setDate(1, (Date) month.getTime());
-                rs = ps.executeQuery();
-
-                while (rs.next()) {
-
-                    int storyID = rs.getInt("storyID");
-                    String title = rs.getString("title");
-                    String writer = rs.getString("writer");
-                    String description = rs.getString("description");
-                    String imagePath = rs.getString("imagePath");
-                    String body = rs.getString("body");
-                    boolean isDraft = rs.getBoolean("isDraft");
-                    boolean isActive = rs.getBoolean("isActive");
-
-                    Calendar calendar = Calendar.getInstance();
-                    calendar.setTime(rs.getDate("createdOn"));
-
-                    boolean allowComments = rs.getBoolean("allowComments");
-                    boolean isApproved = rs.getBoolean("isApproved");
-                    int views = rs.getInt("views");
-                    int likes = rs.getInt("likes");
-                    double avgRating = rs.getDouble("avgRating");
-
-                    Story story = new Story(storyID, title, writer, description,
-                            imagePath, body, isDraft, isActive,
-                            calendar, allowComments, isApproved,
-                            views, likes, avgRating);
-
-                    likeMap.put(story, rs.getInt("likes"));
-
-                    if (likeMap.size() == 20) {
-                        break;
-                    }
-                }
-            }
-        } finally {
-            close();
-        }
-        return likeMap;
+        //hardcoding
+        Map<String, Integer> myMap = new HashMap<>();
+        String s1 = "storyID1";
+        String s2 = "storyID2";
+        String s3 = "storyID3";
+        
+        int i = 200;
+        int j = 400;
+        int k = 600;
+        
+        myMap.put(s1, i);
+        myMap.put(s2, j);
+        myMap.put(s3, k);
+        
+        return myMap;
+        
     }
 
     public void close() throws SQLException {

@@ -2,10 +2,10 @@ package Story.Service;
 
 import Category.Model.Category;
 import Story.Model.Story;
-import User.Model.Reader;
 import User.Model.User;
 import User.Model.Writer;
 import java.util.List;
+import java.util.Map;
 
 public interface StoryService {
 
@@ -27,7 +27,7 @@ public interface StoryService {
     
     List<Story> getStoriesForStoryOfTheDay();
 
-    List<Story> getTop20RatedStoriesOfTheMonth();
+    Map<String, Integer> getTop20RatedStoriesOfTheMonth(String month);
 
     String turnOffComments(Story story);
 }

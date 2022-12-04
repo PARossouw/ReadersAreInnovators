@@ -22,11 +22,11 @@ public interface UserService {
 
     String removeEditor(Editor editor);
 
-    Map<Writer, Integer> topWriters() ;
+    Map<String, Integer> topWriters() ;
 
-    Map<Writer, Integer> topRejectedWritersForMonth();
+    Map<String, Integer> topRejectedWritersForMonth();
 
-    Map<Writer, Integer> topApprovingEditors();
+    Map<String, Integer> topApprovingEditors();
 
     List<Writer> writerSearch(String writerSearch);
 }

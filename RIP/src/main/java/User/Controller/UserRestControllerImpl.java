@@ -20,6 +20,7 @@ import jakarta.ws.rs.Produces;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import org.json.simple.JSONObject;
@@ -112,23 +113,25 @@ public class UserRestControllerImpl {
     @GET
     @Produces(MediaType.APPLICATION_JSON)
     public Response topWriters() {
-        Map<Writer, Integer> topWriters = userService.topWriters();
+        Map<String, Integer> topWriters = userService.topWriters();
         return Response.status(Response.Status.OK).entity(topWriters).build();
+
     }
 
     @Path("/writer/mostRejected")
     @GET
     @Produces(MediaType.APPLICATION_JSON)
     public Response topRejectedWritersForMonth() {
-        Map<Writer, Integer> topRejectedWriters = userService.topRejectedWritersForMonth();
+        Map<String, Integer> topRejectedWriters = userService.topRejectedWritersForMonth();
         return Response.status(Response.Status.OK).entity(topRejectedWriters).build();
+
     }
 
     @Path("/editor/mostApproving")
     @GET
     @Produces(MediaType.APPLICATION_JSON)
     public Response topApprovingEditors() {
-        Map<Writer, Integer> topApprovingEditors = userService.topApprovingEditors();
+        Map<String, Integer> topApprovingEditors = userService.topApprovingEditors();
         return Response.status(Response.Status.OK).entity(topApprovingEditors).build();
     }
 
@@ -139,6 +142,5 @@ public class UserRestControllerImpl {
         List<Writer> writers = new ArrayList<>();
         writers = userService.writerSearch(writerSearch);
         return Response.status(Response.Status.OK).entity(writers).build();
-
     }
 }

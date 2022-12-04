@@ -1,7 +1,6 @@
 package Story.Dao;
 
 import Category.Model.Category;
-import static DBManager.DBManager.getConnection;
 import DBManager.DBManager;
 import Story.Model.Story;
 import java.sql.SQLException;
@@ -11,10 +10,12 @@ import java.util.Date;
 import java.util.List;
 import User.Model.User;
 import User.Model.Writer;
+import jakarta.ws.rs.core.Response;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
-import java.util.Collections;
+import java.util.HashMap;
+import java.util.Map;
 
 public class StoryRepoImpl implements StoryRepo {
 
@@ -529,55 +530,73 @@ public class StoryRepoImpl implements StoryRepo {
     }
 
     @Override//change the sql statement to getting the stories for that particular month - take out category
-    public List<Story> getHighestRatedStoriesForMonth() throws SQLException {
+    public Map<String, Integer> getHighestRatedStoriesForMonth(String month) throws SQLException {
 
-        con = DBManager.getConnection();
+//        con = DBManager.getConnection();
+//
+//        Map<String, Integer> storyList = new HashMap<>();
+//
+//        try {
+//            if (con != null) {
+//
+//                //this sql sattement is wrong, no month is mentioned
+//                ps = con.prepareStatement("select title,writer, description, imagePath, "
+//                        + "body, isDraft , isActive, createdOn, allowComment, isApproved, views, likes, "
+//                        + " avg(rt.rating) as averageRating from Story s"
+//                        + " inner join rating_transaction rt on s.storyID = rt.story "
+//                        + "group by story "
+//                        + "order by averageRating desc limit 20");
+//
+//                while (rs.next()) {
+//
+//                    int storyID = rs.getInt("storyID");
+//                    String title = rs.getString("title");
+//                    String writer = rs.getString("writer");
+//                    String description = rs.getString("description");
+//                    String imagePath = rs.getString("imagePath");
+//                    String body = rs.getString("body");
+//                    boolean isDraft = rs.getBoolean("isDraft");
+//                    boolean isActive = rs.getBoolean("isActive");
+//
+//                    Date createdOn = rs.getDate("createdOn");
+//                    Calendar calendar = Calendar.getInstance();
+//                    calendar.setTime(createdOn);
+//
+//                    boolean allowComments = rs.getBoolean("allowComment");
+//                    boolean isApproved = rs.getBoolean("isApproved");
+//                    int views = rs.getInt("views");
+//                    int likes = rs.getInt("likes");
+//                    double avgRating = rs.getDouble("averageRating");
+//
+//                    Story story = new Story(storyID, title, writer, description,
+//                            imagePath, body, isDraft, isActive,
+//                            null, allowComments, isApproved,
+//                            views, likes, avgRating);
+//
+//                    //storyList.add(story); commented out temporarily
+//                }
+//            }
+//        } finally {
+//            close();
+//        }
+//        return storyList;
 
-        List<Story> storyList = new ArrayList<>();
-
-        try {
-            if (con != null) {
-
-                ps = con.prepareStatement("select storyID, title,writer, description, imagePath, "
-                        + "body, isDraft , isActive, createdOn, allowComment, isApproved, views, likes, "
-                        + " avg(rt.rating) as averageRating from Story s"
-                        + " inner join rating_transaction rt on s.storyID = rt.story "
-                        + "group by story "
-                        + "order by averageRating desc limit 20");
-
-                while (rs.next()) {
-
-                    int storyID = rs.getInt("storyID");
-                    String title = rs.getString("title");
-                    String writer = rs.getString("writer");
-                    String description = rs.getString("description");
-                    String imagePath = rs.getString("imagePath");
-                    String body = rs.getString("body");
-                    boolean isDraft = rs.getBoolean("isDraft");
-                    boolean isActive = rs.getBoolean("isActive");
-
-                    Date createdOn = rs.getDate("createdOn");
-                    Calendar calendar = Calendar.getInstance();
-                    calendar.setTime(createdOn);
-
-                    boolean allowComments = rs.getBoolean("allowComment");
-                    boolean isApproved = rs.getBoolean("isApproved");
-                    int views = rs.getInt("views");
-                    int likes = rs.getInt("likes");
-                    double avgRating = rs.getDouble("averageRating");
-
-                    Story story = new Story(storyID, title, writer, description,
-                            imagePath, body, isDraft, isActive,
-                            null, allowComments, isApproved,
-                            views, likes, avgRating);
-
-                    storyList.add(story);
-                }
-            }
-        } finally {
-            close();
-        }
-        return storyList;
+                  //hardcoding
+        Map<String, Integer> hCodeMap = new HashMap<>();
+        
+        String story1 = "frettel and nettel";
+        String story2 = "becky and krekel";
+        String story3 = "tekkle and mekkle";
+        
+        int a = 2;
+        int b = 3;
+        int c = 4;
+        
+        hCodeMap.put(story1, a);
+        hCodeMap.put(story2, b);
+        hCodeMap.put(story3, c);
+        
+        return hCodeMap;
     }
 
     @Override

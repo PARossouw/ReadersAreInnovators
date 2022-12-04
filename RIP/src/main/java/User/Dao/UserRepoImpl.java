@@ -109,16 +109,14 @@ public class UserRepoImpl implements UserRepo {
                     u.setDateAdded(calendar);
                 }
 
-                return u ;
+                return u;
 
             }
         } finally {
             close();
         }
 
-
         close();
-
 
         return u;
     }
@@ -160,148 +158,201 @@ public class UserRepoImpl implements UserRepo {
     }
 
     @Override
-    public Map<Writer, Integer> topWriters() throws SQLException {
-        con = DBManager.getConnection();
-        Map<Writer, Integer> topWriters = new HashMap<>();
+    public Map<String, Integer> topWriters() throws SQLException {//this method must return the username as the key so i can send it back from the servlet and get a full writer object
+//        con = DBManager.getConnection();                            
+//        Map<String, Integer> topWriters = new HashMap<>();
 
-        try {
-            if (con != null) {  //Confirm sql call once database is populated
-                ps = con.prepareStatement("select userid, username, email, phonenumber, password, "
-                        + "u.isactive, dateadded, role, sum(views) as allViews from user u "
-                        + "inner join story s on u.userid = s.writer order by allViews desc");
-                rs = ps.executeQuery();
+//        try {
+//            if (con != null) {  //Confirm sql call once database is populated
+//                ps = con.prepareStatement("select userid, username, email, phonenumber, password, "
+//                        + "u.isactive, dateadded, role, sum(views) as allViews from user u "
+//                        + "inner join story s on u.userid = s.writer order by allViews desc");
+//                rs = ps.executeQuery();
+//
+//                while (rs.next()) {
+//
+//                    int userID = (rs.getInt("userid"));
+//                    String username = (rs.getString("username"));
+//                    String email = (rs.getString("email"));
+//                    String phoneNumber = (rs.getString("phonenumber"));
+//                    String password = (rs.getString("password"));
+//                    boolean isActive = (rs.getBoolean("isactive"));
+//
+//                    Calendar calendar = Calendar.getInstance();
+//                    calendar.setTime(rs.getDate("dateadded"));
+//
+//                    int role = (rs.getInt("role"));
+//                    int views = rs.getInt("allViews");
+//
+//                    if (role == 2) {
+//                        Writer writer = new Writer();
+//                        writer.setUserID(userID);
+//                        writer.setUsername(username);
+//                        writer.setEmail(email);
+//                        writer.setPhoneNumber(phoneNumber);
+//                        writer.setPassword(password);
+//                        writer.setIsActive(isActive);
+//                        writer.setDateAdded(calendar);
+//                        topWriters.put(writer, views);
+//                    }
+//                }
+//            }
+//        } finally {
+//            close();
+//        }
+//        return topWriters;
 
-                while (rs.next()) {
-
-                    int userID = (rs.getInt("userid"));
-                    String username = (rs.getString("username"));
-                    String email = (rs.getString("email"));
-                    String phoneNumber = (rs.getString("phonenumber"));
-                    String password = (rs.getString("password"));
-                    boolean isActive = (rs.getBoolean("isactive"));
-
-                    Calendar calendar = Calendar.getInstance();
-                    calendar.setTime(rs.getDate("dateadded"));
-
-                    int role = (rs.getInt("role"));
-                    int views = rs.getInt("allViews");
-
-                    if (role == 2) {
-                        Writer writer = new Writer();
-                        writer.setUserID(userID);
-                        writer.setUsername(username);
-                        writer.setEmail(email);
-                        writer.setPhoneNumber(phoneNumber);
-                        writer.setPassword(password);
-                        writer.setIsActive(isActive);
-                        writer.setDateAdded(calendar);
-                        topWriters.put(writer, views);
-                    }
-                }
-            }
-        } finally {
-            close();
-        }
+        //hardcoding
+        Map<String, Integer> topWriters = new HashMap<>();
+        
+        String writer1 = "Anton";
+        String writer2 = "Pieter";
+        String writer3 = "Ryan";
+        
+        int views1 = 10;
+        int views2 = 20;
+        int views3 = 30;
+        
+        topWriters.put(writer1, views1);
+        topWriters.put(writer2, views2);
+        topWriters.put(writer3, views3);
+        
         return topWriters;
+
     }
 
     @Override
-    public Map<Writer, Integer> topRejectedWritersForMonth() throws SQLException {
-        con = DBManager.getConnection();
-        Map<Writer, Integer> topRejectedWriters = new HashMap<>();
+    public Map<String, Integer> topRejectedWritersForMonth() throws SQLException {
+//        con = DBManager.getConnection();
+//        Map<Writer, Integer> topRejectedWriters = new HashMap<>();
+//
+//        try {
+//            if (con != null) {
+//                ps = con.prepareStatement("select userid, username, email, phonenumber, password, "
+//                        + "u.isactive, dateadded, role, count(action) as timesRejected from user u "
+//                        + "inner join story s on u.userid = s.writer "
+//                        + "inner join story_transaction st on s.storyID = st.story "
+//                        + "where st.action like '%rejected%' and "
+//                        + "month(actionperformedon) = month(current_timestamp) and year(actionperformedon) = year(current_timestamp) "
+//                        + "order by timesRejected desc limit 30");
+//                rs = ps.executeQuery();
+//
+//                while (rs.next()) {
+//
+//                    rs = ps.executeQuery();
+//                    int userID = (rs.getInt("userid"));
+//                    String username = (rs.getString("username"));
+//                    String email = (rs.getString("email"));
+//                    String phoneNumber = (rs.getString("phonenumber"));
+//                    String password = (rs.getString("password"));
+//                    boolean isActive = (rs.getBoolean("isactive"));
+//
+//                    Calendar date = Calendar.getInstance();
+//                    date.setTime(rs.getDate("dateadded"));
+//
+//                    int role = (rs.getInt("role"));
+//                    int rejectedCount = rs.getInt("timesRejected");
+//
+//                    if (role == 2) {
+//                        Writer writer = new Writer();
+//                        writer.setUserID(userID);
+//                        writer.setUsername(username);
+//                        writer.setEmail(email);
+//                        writer.setPhoneNumber(phoneNumber);
+//                        writer.setPassword(password);
+//                        writer.setIsActive(isActive);
+//                        writer.setDateAdded(date);
+//                        topRejectedWriters.put(writer, rejectedCount);
+//                    }
+//                }
+//            }
+//        } finally {
+//            close();
+//        }
+//        return topRejectedWriters;
 
-        try {
-            if (con != null) {
-                ps = con.prepareStatement("select userid, username, email, phonenumber, password, "
-                        + "u.isactive, dateadded, role, count(action) as timesRejected from user u "
-                        + "inner join story s on u.userid = s.writer "
-                        + "inner join story_transaction st on s.storyID = st.story "
-                        + "where st.action like '%rejected%' and "
-                        + "month(actionperformedon) = month(current_timestamp) and year(actionperformedon) = year(current_timestamp) "
-                        + "order by timesRejected desc limit 30");
-                rs = ps.executeQuery();
 
-                while (rs.next()) {
-
-                    rs = ps.executeQuery();
-                    int userID = (rs.getInt("userid"));
-                    String username = (rs.getString("username"));
-                    String email = (rs.getString("email"));
-                    String phoneNumber = (rs.getString("phonenumber"));
-                    String password = (rs.getString("password"));
-                    boolean isActive = (rs.getBoolean("isactive"));
-
-                    Calendar date = Calendar.getInstance();
-                    date.setTime(rs.getDate("dateadded"));
-
-                    int role = (rs.getInt("role"));
-                    int rejectedCount = rs.getInt("timesRejected");
-
-                    if (role == 2) {
-                        Writer writer = new Writer();
-                        writer.setUserID(userID);
-                        writer.setUsername(username);
-                        writer.setEmail(email);
-                        writer.setPhoneNumber(phoneNumber);
-                        writer.setPassword(password);
-                        writer.setIsActive(isActive);
-                        writer.setDateAdded(date);
-                        topRejectedWriters.put(writer, rejectedCount);
-                    }
-                }
-            }
-        } finally {
-            close();
-        }
-        return topRejectedWriters;
+            //hardcoding
+    Map<String, Integer> topRejectedWriters = new HashMap<>();
+    
+    String writer1 = "RoscoeNossBlow";
+    String writer2 = "Buffy";
+    String writer3 = "Jared";
+    
+    int a = 12;
+    int b = 34;
+    int c = 56;
+    
+    topRejectedWriters.put(writer1, a);
+    topRejectedWriters.put(writer2, b);
+    topRejectedWriters.put(writer3, c);
+    
+    return topRejectedWriters;
     }
 
     @Override
-    public Map<Editor, Integer> topApprovingEditors() throws SQLException {
+    public Map<String, Integer> topApprovingEditors() throws SQLException {
 
-        con = DBManager.getConnection();
-        Map<Editor, Integer> editorList = new HashMap<>();
+//        con = DBManager.getConnection();
+//        Map<String, Integer> editorList = new HashMap<>();
+//
+//        try {
+//            if (con != null) {
+//                ps = con.prepareStatement("select u.userid, username, email, phonenumber, password, "
+//                        + "u.isactive, dateadded, role, count(action) as timesApproved from user u "
+//                        + "inner join story_transaction st on u.userid = st.user "
+//                        + "where st.action like '%approved%' order by timesApproved desc limit 3");
+//                rs = ps.executeQuery();
+//
+//                while (rs.next()) {
+//
+//                    int userID = (rs.getInt("userid"));
+//                    String username = (rs.getString("username"));
+//                    String email = (rs.getString("email"));
+//                    String phoneNumber = (rs.getString("phonenumber"));
+//                    String password = (rs.getString("password"));
+//                    boolean isActive = (rs.getBoolean("isactive"));
+//
+//                    Calendar date = Calendar.getInstance();
+//                    date.setTime(rs.getDate("dateadded"));
+//
+//                    int role = (rs.getInt("role"));
+//                    int timesApproved = rs.getInt("timesApproved");
+//
+//                    if (role == 2) {
+//                        Editor editor = new Editor();
+//                        editor.setUserID(userID);
+//                        editor.setUsername(username);
+//                        editor.setEmail(email);
+//                        editor.setPhoneNumber(phoneNumber);
+//                        editor.setPassword(password);
+//                        editor.setIsActive(isActive);
+//                        editor.setDateAdded(date);
+//                        editorList.put(editor.toString(), timesApproved);//put the toString there temporarily
+//                    }
+//                }
+//            }
+//        } finally {
+//            close();
+//        }
+//        return editorList;
 
-        try {
-            if (con != null) {
-                ps = con.prepareStatement("select u.userid, username, email, phonenumber, password, "
-                        + "u.isactive, dateadded, role, count(action) as timesApproved from user u "
-                        + "inner join story_transaction st on u.userid = st.user "
-                        + "where st.action like '%approved%' order by timesApproved desc limit 3");
-                rs = ps.executeQuery();
-
-                while (rs.next()) {
-
-                    int userID = (rs.getInt("userid"));
-                    String username = (rs.getString("username"));
-                    String email = (rs.getString("email"));
-                    String phoneNumber = (rs.getString("phonenumber"));
-                    String password = (rs.getString("password"));
-                    boolean isActive = (rs.getBoolean("isactive"));
-
-                    Calendar date = Calendar.getInstance();
-                    date.setTime(rs.getDate("dateadded"));
-
-                    int role = (rs.getInt("role"));
-                    int timesApproved = rs.getInt("timesApproved");
-
-                    if (role == 2) {
-                        Editor editor = new Editor();
-                        editor.setUserID(userID);
-                        editor.setUsername(username);
-                        editor.setEmail(email);
-                        editor.setPhoneNumber(phoneNumber);
-                        editor.setPassword(password);
-                        editor.setIsActive(isActive);
-                        editor.setDateAdded(date);
-                        editorList.put(editor, timesApproved);
-                    }
-                }
-            }
-        } finally {
-            close();
-        }
-        return editorList;
+        //hardcoding
+        Map<String, Integer> topApprovingEditors = new HashMap<>();
+        
+        String editor1 = "Jason";
+        String editor2 = "Michael";
+        String editor3 = "Aidan";
+        
+        int approved1 = 365;
+        int approved2 = 52;
+        int approved3 = 24;
+        
+        topApprovingEditors.put(editor1, approved1);
+        topApprovingEditors.put(editor2, approved2);
+        topApprovingEditors.put(editor3, approved3);
+        
+        return topApprovingEditors;
     }
 
     @Override
