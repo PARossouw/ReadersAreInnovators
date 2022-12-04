@@ -29,7 +29,7 @@ public class LikeTransactionServiceImpl implements LikeTransactionService {
         {
             try {
                 if (likeTransactionRepo.getLike(reader, story)) {
-                    likeTransactionRepo.updateLike(reader, story);
+//                    likeTransactionRepo.updateLike(reader, story);
                     return  "The story like status has been successfully updated ";
                     
                 } else {
