@@ -311,6 +311,33 @@ public class StoryControllerImpl {
         
 
     }
+    @Path("/getTop20StoriesForMonth")
+    @GET
+    @Produces(MediaType.APPLICATION_JSON)
+
+    public Response getTop20StoriesForMonth() {
+        return Response.status(Response.Status.OK).entity(storyService.getTop20RatedStoriesOfTheMonth()).build();
+        
+//        //hardcoding
+//        Map<String, Integer> hCodeMap = new HashMap<>();
+//        
+//        String story1 = "Hansel and Gretel";
+//        String story2 = "Lady and the tramp";
+//        String story3 = "Beauty and the Beast";
+//        
+//        int a = 2;
+//        int b = 3;
+//        int c = 4;
+//        
+//        hCodeMap.put(story1, a);
+//        hCodeMap.put(story2, b);
+//        hCodeMap.put(story3, c);
+//        
+//        return Response.status(Response.Status.OK).entity(hCodeMap).build();
+        
+        
+
+    }
 
     @Path("/getRandomApprovedStories")
     @GET

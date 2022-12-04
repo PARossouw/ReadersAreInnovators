@@ -224,6 +224,19 @@ public class StoryServiceImpl implements StoryService {
 
         
     }
+    @Override
+    public List<Story> getTop20RatedStoriesOfTheMonth() {
+        List<Story> stories = new ArrayList<>();
+        try {
+            stories = storyRepo.getHighestRatedStoriesForMonth();
+            return stories;
+        } catch (SQLException ex) {
+            Logger.getLogger(StoryServiceImpl.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return stories;
+
+        
+    }
     
         @Override
     public List<Story> getRandomApprovedStories() {
