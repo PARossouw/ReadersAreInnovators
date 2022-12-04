@@ -363,12 +363,13 @@ public class StoryRepoImpl implements StoryRepo {
         try {
             if (con != null) {
 
-                ps = con.prepareStatement("insert into story (title, writer, description, imagePath, body) values (?, ?, ?, ?, ?)");
+                ps = con.prepareStatement("insert into story (title, writer, description, imagePath, body, isdraft) values (?, ?, ?, ?, ?, ?)");
                 ps.setString(1, story.getTitle());
                 ps.setInt(2, Integer.parseInt(story.getWriter())); // We put in the writer id
                 ps.setString(3, story.getDescription());
                 ps.setString(4, story.getImagePath());
                 ps.setString(5, story.getBody());
+                ps.setBoolean(6, story.getIsDraft());
 
                 rowsAffected = ps.executeUpdate();
             }
