@@ -614,56 +614,7 @@ public class StoryRepoImpl implements StoryRepo {
         return hCodeMap;
 
 
-//        con = DBManager.getConnection();
 
-//        List<Story> allApprovedStories = new ArrayList<>();
-//        Story story = null;
-
- //       try {
- //           if (con != null) {
-//
-//                ps = con.prepareStatement("select storyID, title, writer, description, imagePath, body, isDraft , isActive, "
-//                        + "createdOn, allowComment, isApproved, views, likes,  avg(rt.rating) as averageRating from Story s "
-  //                      + "inner join rating_transaction rt on s.storyID = rt.story group by story order by averageRating desc limit 23");
-
-
-//
-//                rs = ps.executeQuery();
-//
-//                while (rs.next()) {
-//
-//                    int storyID = rs.getInt("storyID");
-//                    String title = rs.getString("title");
-//                    String writer = rs.getString("writer");
-//                    String description = rs.getString("description");
-//                    String imagePath = rs.getString("imagePath");
-//                    String body = rs.getString("body");
-//                    boolean isDraft = rs.getBoolean("isDraft");
-//                    boolean isActive = rs.getBoolean("isActive");
-
-//                    Date createdOn = rs.getDate("createdOn");
-//                    Calendar calendar = Calendar.getInstance();
-//                    calendar.setTime(createdOn);
-
-//                    boolean allowComment = rs.getBoolean("allowComment");
-//                    boolean isApproved = rs.getBoolean("isApproved");
-//                    int views = rs.getInt("views");
-//                    int likes = rs.getInt("likes");
-                   // double avgRating = rs.getDouble("averateRating");
-//
-//                    story = new Story(storyID, title, writer, description,
-//                            imagePath, body, isDraft, isActive,
-//                            null, allowComment, isApproved,
-//                            views, likes, null);
-//        
-//
-//                    allApprovedStories.add(story);
-//                }
-//            }
-//        } finally {
-//            close();
-//        }
-//        return allApprovedStories;
 
     }
 
