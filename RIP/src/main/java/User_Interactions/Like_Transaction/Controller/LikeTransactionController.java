@@ -11,6 +11,6 @@ public interface LikeTransactionController {
     
     String changeLike(Reader reader, Story story);
     
-    Map<Story, Integer> getAllLikesInPeriod(Calendar month);
+    Map<String, Integer> getAllLikesInPeriod(Calendar month);
     
 }

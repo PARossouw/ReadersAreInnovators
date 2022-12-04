@@ -4,6 +4,7 @@ import Category.Model.Category;
 import Story.Model.Story;
 import User.Model.User;
 import java.util.List;
+import java.util.Map;
 
 public interface StoryService {
 
@@ -25,9 +26,13 @@ public interface StoryService {
     
     List<Story> getStoriesForStoryOfTheDay();
 
+
+    Map<String, Integer> getTop20RatedStoriesOfTheMonth(String month);
+
     List<Story> getTop20RatedStoriesOfTheMonth();
     
     List<Story> getRandomApprovedStories();
+
 
     String turnOffComments(Story story);
 }

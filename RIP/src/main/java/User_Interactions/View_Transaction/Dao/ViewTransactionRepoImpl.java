@@ -38,54 +38,36 @@ public class ViewTransactionRepoImpl implements ViewTransactionRepo {
     }
 
     @Override
-    public Map<Story, Integer> getAllStoryViewsInPeriod(Calendar startDate, Calendar endDate) throws SQLException {
+    public Map<String, Integer> getAllStoryViewsInPeriod(String startDate, String endDate) throws SQLException {
 
         con = DBManager.getConnection();
-        Map<Story, Integer> allStoryViews = new HashMap<>();
+        Map<String, Integer> allStoryViews = new HashMap<>();
 
         try {
             if (con != null) {
-                ps = con.prepareStatement("select storyID, title, writer, description, "
-                        + "imagePath, body, isDraft, isActive, createdOn, allowComment, isApproved, "
-                        + "views, avgRating, likes, count(vt.story) as viewsInPeriod from story s "
-                        + "inner join view_transaction vt on s.storyID = vt.story where vt.dateViewed "
-                        + "between ? and ? order by count(vt.story) desc");
-
-                ps.setDate(1, (Date) startDate.getTime());
-                ps.setDate(2, (Date) endDate.getTime());
+                ps = con.prepareStatement("select storyid, title, writer, count(vt.story) as viewsInPeriod "
+                        + "from story s inner join view_transaction vt on s.storyID = vt.story "
+                        + "where vt.dateViewed between ? and ? group "
+                        + "by storyid order by count(vt.story) desc limit 10;");
+                ps.setString(1, startDate);
+                ps.setString(2, endDate);
                 rs = ps.executeQuery();
 
                 while (rs.next()) {
 
-                    int storyID = rs.getInt("storyID");
-                    String title = rs.getString("title");
+                    //String title = rs.getString("title");
+                    int title = rs.getInt("storyID");
                     String writer = rs.getString("writer");
-                    String description = rs.getString("description");
-                    String imagePath = rs.getString("imagePath");
-                    String body = rs.getString("body");
-                    boolean isDraft = rs.getBoolean("isDraft");
-                    boolean isActive = rs.getBoolean("isActive");
 
-                    java.util.Date createdOn = rs.getDate("createdOn");
-                    Calendar calendar = Calendar.getInstance();
-                    calendar.setTime(createdOn);
-
-                    boolean allowComments = rs.getBoolean("allowComments");
-                    boolean isApproved = rs.getBoolean("isApproved");
-                    int views = rs.getInt("views");
-                    int likes = rs.getInt("likes");
-                    double avgRating = rs.getDouble("avgRating");
-
-                    allStoryViews.put(new Story(storyID, title, writer, description,
-                            imagePath, body, isDraft, isActive,
-                            calendar, allowComments, isApproved,
-                            views, likes, avgRating), rs.getInt("viewsInPeriod"));
+                    allStoryViews.put(title + "," + writer, rs.getInt("viewsInPeriod"));
                 }
             }
         } finally {
             close();
         }
         return allStoryViews;
+        
+        
     }
 
     public void close() throws SQLException {

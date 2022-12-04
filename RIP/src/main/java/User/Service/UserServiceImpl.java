@@ -165,8 +165,8 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public Map<Writer, Integer> topWriters() {
-        Map<Writer, Integer> topWriters = new HashMap<>();
+    public Map<String, Integer> topWriters() {
+        Map<String, Integer> topWriters = new HashMap<>();
 
         try {
             topWriters = userRepo.topWriters();
@@ -177,11 +177,11 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public Map<Writer, Integer> topRejectedWritersForMonth() {
-        Map<Writer, Integer> topRejectedWriters = new HashMap<>();
+    public Map<String, Integer> topRejectedWritersForMonth() {
+        Map<String, Integer> topRejectedWriters = new HashMap<>();
 
         try {
-            userRepo.topRejectedWritersForMonth();
+            topRejectedWriters = userRepo.topRejectedWritersForMonth();
         } catch (SQLException ex) {
             Logger.getLogger(UserServiceImpl.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -189,11 +189,11 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public Map<Writer, Integer> topApprovingEditors() {
-        Map<Writer, Integer> topApprovingEditors = new HashMap<>();
+    public Map<String, Integer> topApprovingEditors() {
+        Map<String, Integer> topApprovingEditors = new HashMap<>();
 
         try {
-            userRepo.topApprovingEditors();
+            topApprovingEditors = userRepo.topApprovingEditors();
         } catch (SQLException ex) {
             Logger.getLogger(UserServiceImpl.class.getName()).log(Level.SEVERE, null, ex);
         }

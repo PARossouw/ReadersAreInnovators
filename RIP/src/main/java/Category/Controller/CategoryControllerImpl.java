@@ -15,6 +15,7 @@ import jakarta.ws.rs.PathParam;
 import jakarta.ws.rs.Produces;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
+import java.util.HashMap;
 import java.util.List;
 import org.json.simple.JSONObject;
 
@@ -44,11 +45,13 @@ public class CategoryControllerImpl{
         //return Response.status(Response.Status.OK).entity("the test string").build();
     }
 
-    @Path("/topForMonth")
+    @Path("/topForMonth/{month}")
     @GET
     @Produces(MediaType.APPLICATION_JSON)
-    public Response topCategoriesForMonth() {
-        return Response.status(Response.Status.OK).entity(categoryService.topCategoriesForTheMonth()).build();
+    public Response topCategoriesForMonth(@PathParam("month")String month) {
+        return Response.status(Response.Status.OK).entity(categoryService.topCategoriesForTheMonth(month)).build();
+
+
     }
     
     @Path("/preferredCategories/{readerID}")

@@ -10,6 +10,6 @@ public interface LikeTransactionService {
     
     String likeStory(Reader reader, Story story);
     
-    Map<Story, Integer> getAllLikesInPeriod(Calendar startDate);
+    Map<String, Integer> getAllLikesInPeriod(String startDate);
     
 }
