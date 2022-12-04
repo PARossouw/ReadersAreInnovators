@@ -29,23 +29,23 @@ public class UserRepoImpl implements UserRepo {
         con = DBManager.getConnection();
 
         try {
-            if (user instanceof Editor && con != null) {
+//            if (user instanceof Editor && con != null) {
+//
+//                ps = con.prepareStatement("insert into User (username, email, password, role) values (?, ?, ?, ?)");
+//                ps.setString(1, user.getUsername());
+//                ps.setString(2, user.getEmail());
+//                ps.setString(3, user.getPassword());
+//                ps.setInt(4, 3);
+//                rowsAffected = ps.executeUpdate();
+//
+//            } else if (user instanceof Reader && con != null) {
 
-                ps = con.prepareStatement("insert into User (username, email, password, role) values (?, ?, ?, ?)");
-                ps.setString(1, user.getUsername());
-                ps.setString(2, user.getEmail());
-                ps.setString(3, user.getPassword());
-                ps.setInt(4, 3);
-                rowsAffected = ps.executeUpdate();
-
-            } else if (user instanceof Reader && con != null) {
-
-                ps = con.prepareStatement("insert into User (username, email, password) values (?, ?, ?)");
-                ps.setString(1, user.getUsername());
-                ps.setString(2, user.getEmail());
-                ps.setString(3, user.getPassword());
-                rowsAffected = ps.executeUpdate();
-            }
+            ps = con.prepareStatement("insert into User (username, email, password) values (?, ?, ?)");
+            ps.setString(1, user.getUsername());
+            ps.setString(2, user.getEmail());
+            ps.setString(3, user.getPassword());
+            rowsAffected = ps.executeUpdate();
+//            }
         } finally {
             close();
         }
@@ -62,10 +62,10 @@ public class UserRepoImpl implements UserRepo {
             if (con != null) {
 
                 ps = con.prepareStatement("select userid, username, email, "
-                        + "phonenumber, password, isactive, dateadded, role from user "
-                        + "where username = ? or email = ?");
+                        + "phonenumber, password, isactive,role from user "
+                        + "where username = ?");
                 ps.setString(1, user.getUsername());
-                ps.setString(2, user.getEmail());
+                //ps.setString(2, user.getEmail());
 
                 rs = ps.executeQuery();
 
@@ -77,8 +77,8 @@ public class UserRepoImpl implements UserRepo {
                     String password = (rs.getString("password"));
                     Boolean isActive = (rs.getBoolean("isactive"));
 
-                    Calendar calendar = Calendar.getInstance();
-                    calendar.setTime(rs.getDate("dateadded"));
+//                    Calendar calendar = Calendar.getInstance();
+//                    calendar.setTime(rs.getDate("dateadded"));
                     Integer role = (rs.getInt("role"));
 
                     switch (role) {
@@ -106,19 +106,26 @@ public class UserRepoImpl implements UserRepo {
                     u.setPhoneNumber(phoneNumber);
                     u.setPassword(password);
                     u.setIsActive(isActive);
-                    u.setDateAdded(calendar);
+                    //u.setDateAdded(calendar);
+
+                }
+                if (u == null) {   // Prevents a null pointer exception in the service layer. 
+                    u.setUsername("");
+                    u.setEmail("");
                 }
 
-                return u ;
+                return u;
 
             }
         } finally {
             close();
         }
 
-
         close();
-
+        if (u == null) {   // Prevents a null pointer exception in the service layer. 
+            u.setUsername("");
+            u.setEmail("");
+        }
 
         return u;
     }
