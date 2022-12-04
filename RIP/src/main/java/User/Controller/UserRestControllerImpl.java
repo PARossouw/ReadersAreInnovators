@@ -63,25 +63,26 @@ public class UserRestControllerImpl {
         jsonObject.put("message", userService.addPreferredCategoriesToUser(reader, categories));
 
         return Response.status(Response.Status.OK).entity(jsonObject).build();
-
-//        jsonObject.put("name", reader.getUsername());
-//        
-//        
-//        jsonObject.put("categories", categories);
-//        
-//        List<Category> c = (List)jsonObject.get("categories");
-//        c.add(new Category("Ryan"));
-//        
-//        jsonObject.put("c", c);
-//            return Response.status(Response.Status.OK).entity(jsonObject).build();
     }
+    
+    
+        @Path("/categories/preffered/add")
+    @POST
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response addPreferredCategoriesToNewUser(Reader reader) {
+//          return Response.status(Response.Status.OK).entity("hello again").build();
+        return Response.status(Response.Status.OK).entity(userService.addPreferredCategoriesToNewUser(reader)).build();
+    }
+    
+    
 
     @Path("/register")
     @POST
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
     public Response registerUser(User user) {
-        //  return Response.status(Response.Status.OK).entity("hello again").build();
+//          return Response.status(Response.Status.OK).entity("hello again").build();
         return Response.status(Response.Status.OK).entity(userService.registerUser(user)).build();
     }
 

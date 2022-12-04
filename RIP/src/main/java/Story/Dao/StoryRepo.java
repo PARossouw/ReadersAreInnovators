@@ -5,8 +5,10 @@ import Story.Model.Story;
 import java.sql.SQLException;
 import java.util.List;
 import User.Model.User;
+
 import User.Model.Writer;
 import java.util.Map;
+
 
 public interface StoryRepo {
 
@@ -20,7 +22,7 @@ public interface StoryRepo {
 
     List<Story> getStoryByCategory(List<Category> categories) throws SQLException; 
     
-    List<Story> getWriterStories(Writer writer) throws SQLException;
+    List<Story> getWriterStories(User writer) throws SQLException;
     
     List<Story> getPendingStories() throws SQLException;
     

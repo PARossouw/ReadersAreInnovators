@@ -164,24 +164,52 @@ public class CategoryRepoImpl implements CategoryRepo {
     @Override
     public Boolean addPreferredCategories(Reader reader, List<Category> categories) throws SQLException {
 
-        con = DBManager.getConnection();
+       con = DBManager.getConnection();
 
         try {
             if (con != null) {
                 ps = con.prepareStatement("insert into user_category (user, category) values(?, ?)");
 
-                for (int i = 0; i < categories.size(); i++) {
-                    ps.setInt(1, reader.getUserID());
-                    ps.setInt(2, categories.get(i).getCategoryID());
+                    ps.setInt(1, reader.getRoleID());
+                    ps.setInt(2, categories.get(0).getCategoryID());
+                    rowsAffected = ps.executeUpdate();
 
-                }
-                rowsAffected = ps.executeBatch().length;
             }
         } finally {
             close();
         }
         return rowsAffected == categories.size();
     }
+    
+    
+      @Override
+    public Boolean addPreferredCategoriesToUser(Reader reader) throws SQLException {
+
+       con = DBManager.getConnection();
+
+        try {
+            if (con != null) {
+                
+                for(int i =  0 ; i<reader.getPreferredCategories().size(); i++)
+                {
+                ps = con.prepareStatement("insert into user_category (user, category) values(?, ?)");
+
+                    ps.setInt(1, reader.getUserID());
+                    ps.setInt(2, reader.getPreferredCategories().get(i).getCategoryID());
+                    rowsAffected = ps.executeUpdate();
+                }
+            }
+        } finally {
+            close();
+        }
+        return rowsAffected == 1;
+    }
+    
+    
+
+    
+    
+    
 
     @Override
     public List<Category> getStoryCategories(Story story) throws SQLException {
