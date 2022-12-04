@@ -3,6 +3,7 @@ package User_Interactions.View_Transaction.Model;
 import Story.Model.Story;
 import java.util.Calendar;
 import User.Model.Reader;
+import java.util.HashMap;
 
 /**
  *
@@ -14,15 +15,25 @@ public class ViewTransaction {
     private Calendar dateViewed;
     private Reader reader;
     private Story story;
+    private HashMap<Story, Integer> storyViews;
 
     public ViewTransaction() {
     }
 
-    public ViewTransaction(Integer viewID, Calendar dateViewed, Reader reader, Story story) {
+    public ViewTransaction(Integer viewID, Calendar dateViewed, Reader reader, Story story, HashMap<Story, Integer> storyViews) {
         this.viewID = viewID;
         this.dateViewed = dateViewed;
         this.reader = reader;
         this.story = story;
+        this.storyViews = storyViews;
+    }
+
+    public HashMap<Story, Integer> getStoryViews() {
+        return storyViews;
+    }
+
+    public void setStoryViews(HashMap<Story, Integer> storyViews) {
+        this.storyViews = storyViews;
     }
 
     public Integer getViewID() {
@@ -59,6 +70,8 @@ public class ViewTransaction {
 
     @Override
     public String toString() {
-        return "ViewTransaction{" + "viewID=" + viewID + ", dateViewed=" + dateViewed + ", reader=" + reader + ", story=" + story + '}';
+        return "ViewTransaction{" + "viewID=" + viewID + ", dateViewed=" + dateViewed + ", reader=" + reader + ", story=" + story + ", storyViews=" + storyViews + '}';
     }
+
+   
 }

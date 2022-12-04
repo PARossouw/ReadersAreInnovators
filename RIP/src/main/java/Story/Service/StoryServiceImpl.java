@@ -7,7 +7,11 @@ import Story.Model.Story;
 import User.Model.User;
 import java.sql.SQLException;
 import java.util.ArrayList;
+
+import java.util.HashMap;
+
 import java.util.List;
+import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -25,22 +29,12 @@ public class StoryServiceImpl implements StoryService {
     public List<Story> searchStoriesByCategories(List<Category> categories) {
 
         List<Story> storyList = new ArrayList<>();
-
-//        if (categories == null) {
-//            return null;
-//        }
         try {
-            storyList = storyRepo.getStoryByCategory(categories);
-//            for (Story s : storyList) {
-//                s.setCategoryList(categoryRepo.getStoryCategories(s));
-//            }
+            storyList = storyRepo.getStoryByCategory(categories); 
+
         } catch (SQLException ex) {
             Logger.getLogger(StoryServiceImpl.class.getName()).log(Level.SEVERE, null, ex);
         }
-        
-//        Story s = new Story();
-//        s.setTitle("push");
-//        storyList.add(s);
         return storyList;
     }
 
@@ -135,6 +129,38 @@ public class StoryServiceImpl implements StoryService {
         } catch (SQLException ex) {
             Logger.getLogger(StoryServiceImpl.class.getName()).log(Level.SEVERE, null, ex);
         }
+
+// List<Story> stories = new ArrayList<>();
+//        Story story1 = new Story();
+//        story1.setStoryID(8778);
+//        story1.setTitle("seatched title"+storyParameter);
+//        story1.setWriter("Quicny jones");
+//        story1.setViews(22);
+//        story1.setAvgRating(3.2);
+//        
+//        
+//                Story story2 = new Story();
+//        story2.setStoryID(8778);
+//        story2.setTitle("faba` title");
+//        story2.setWriter("Tarun jones");
+//        story2.setViews(22);
+//        story2.setAvgRating(3.2);
+//        
+//        
+//                Story story3 = new Story();
+//        story3.setStoryID(8778);
+//        story3.setTitle("ffvvfd title");
+//        story3.setWriter("Mike jones");
+//        story3.setViews(22);
+//        story3.setAvgRating(3.2);
+//        
+//        
+//        
+//        
+//        stories.add(story1);
+//        stories.add(story2);
+//        stories.add(story3);
+        
         return null;
     }
 
@@ -186,16 +212,33 @@ public class StoryServiceImpl implements StoryService {
     }
 
     @Override
-    public List<Story> getTop20RatedStoriesOfTheMonth() {
+    public Map<String, Integer> getTop20RatedStoriesOfTheMonth(String month) {
+        Map<String, Integer> stories = new HashMap<>();
+        try {
+            stories = storyRepo.getHighestRatedStoriesForMonth(month);
+            return stories;
+        } catch (SQLException ex) {
+            Logger.getLogger(StoryServiceImpl.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return stories;
+
+        
+    }
+    
+        @Override
+    public List<Story> getRandomApprovedStories() {
         List<Story> stories = new ArrayList<>();
         try {
-            stories = storyRepo.getHighestRatedStoriesForMonth();
+            stories = storyRepo.getApprovedStories();
             return stories;
         } catch (SQLException ex) {
             Logger.getLogger(StoryServiceImpl.class.getName()).log(Level.SEVERE, null, ex);
         }
         return stories;
     }
+    
+    
+    
 
     @Override
     public String turnOffComments(Story story) {
@@ -217,5 +260,7 @@ public class StoryServiceImpl implements StoryService {
         return "something went wrong";
 
     }
+
+    
 
 }

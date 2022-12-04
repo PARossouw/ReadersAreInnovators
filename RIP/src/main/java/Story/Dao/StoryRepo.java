@@ -6,6 +6,10 @@ import java.sql.SQLException;
 import java.util.List;
 import User.Model.User;
 
+import User.Model.Writer;
+import java.util.Map;
+
+
 public interface StoryRepo {
 
     List<Story> getApprovedStories() throws SQLException;
@@ -30,7 +34,7 @@ public interface StoryRepo {
     
     Boolean createStory(Story story) throws SQLException ;
      
-    List<Story> getHighestRatedStoriesForMonth() throws SQLException;
+    Map<String, Integer> getHighestRatedStoriesForMonth(String month) throws SQLException;
 
     List<Story> searchForStory(String text) throws SQLException;
 
