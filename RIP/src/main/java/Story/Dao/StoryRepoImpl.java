@@ -453,6 +453,13 @@ public class StoryRepoImpl implements StoryRepo {
             close();
         }
         return storyObj;
+
+//            Story s = new Story();
+//            s.setAllowComments(true);
+//            s.setTitle("yississs");
+//            s.setStoryID(1);
+            
+//            return s;
     }
 
     @Override
@@ -742,7 +749,7 @@ public class StoryRepoImpl implements StoryRepo {
 
         con = DBManager.getConnection();
 
-        int rowsAffected = 0;
+        //int rowsAffected = 0;
 
         try {
             if (con != null) {
