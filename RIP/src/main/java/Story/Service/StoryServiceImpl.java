@@ -4,12 +4,9 @@ import Category.Dao.CategoryRepo;
 import Category.Model.Category;
 import Story.Dao.StoryRepo;
 import Story.Model.Story;
-import User.Model.Reader;
 import User.Model.User;
-import User.Model.Writer;
 import java.sql.SQLException;
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -48,19 +45,17 @@ public class StoryServiceImpl implements StoryService {
     }
 
     @Override
-    public List<Story> viewStoriesByWriter(Writer writer) {
+    public List<Story> viewStoriesByWriter(User writer) {
 
         List<Story> storyList = new ArrayList<>();
         if (writer == null) {
             return null;
         }
-
         try {
             storyList = storyRepo.getWriterStories(writer);
         } catch (SQLException ex) {
             Logger.getLogger(StoryServiceImpl.class.getName()).log(Level.SEVERE, null, ex);
         }
-
         return storyList;
     }
 
@@ -162,15 +157,16 @@ public class StoryServiceImpl implements StoryService {
     @Override
     public List<Story> getPendingStories() {
 
-        List<Story> stories = new ArrayList<>();
+        List<Story> pendingStories = new ArrayList<>();
 
         try {
-            return storyRepo.getPendingStories();
+            pendingStories = storyRepo.getPendingStories();
+            return pendingStories;
         } catch (SQLException ex) {
             Logger.getLogger(StoryServiceImpl.class.getName()).log(Level.SEVERE, null, ex);
         }
 
-        return stories;
+        return pendingStories;
 
     }
 
