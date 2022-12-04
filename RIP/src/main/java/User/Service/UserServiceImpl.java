@@ -79,19 +79,40 @@ public class UserServiceImpl implements UserService {
         }
         return "Operation unsuccessful, please try again later.";
     }
+    
+    @Override
+    public String addPreferredCategoriesToNewUser(Reader reader)
+    {
+        try{
+            categoryRepo.addPreferredCategoriesToUser(reader);
+            return "Successfully added categories to user";
+        }
+        catch(SQLException ex)
+        {
+            ex.printStackTrace();        }
+        
+        
+        
+        return "Operation unsuccessful, please try again later";
+    }
+    
+    
+    
+    
+    
 
     @Override
     public String registerUser(User user) {
 
         try {
-            if (userRepo.getUser(user).getUsername().equals(user.getUsername())) {
-                return "This username or email is already in use.";
-            } else {
+//            if (userRepo.getUser(user).getUsername().equals(user.getUsername())) {
+//                return "This username or email is already in use.";
+//            } else {
 
                 // return userRepo.createUser(user) ? "User registered successfully." : "Could not complete registration at this time.";
                 userRepo.createUser(user);
-                return "Registration was successful. Please log in above. ";
-            }
+                return "Registration was successful. Please log in above.";
+//            }
         } catch (SQLException ex) {
             Logger.getLogger(UserServiceImpl.class.getName()).log(Level.SEVERE, null, ex);
         }
