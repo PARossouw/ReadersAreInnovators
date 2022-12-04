@@ -28,15 +28,16 @@ public class LikeTransactionServiceImpl implements LikeTransactionService {
         if(reader != null && story != null)
         {
             try {
-                if (likeTransactionRepo.getLike(reader, story)) {
-                    likeTransactionRepo.updateLike(reader, story);
-                    return  "The story like status has been successfully updated ";
-                    
-                } else {
+//                if (likeTransactionRepo.getLike(reader, story)) {
+//                    likeTransactionRepo.updateLike(reader, story);
+//                    return  "The story like status has been successfully updated ";
+//                    
+//                } else {
                     likeTransactionRepo.createLike(reader, story);
                     return  "The story like status has been successfully updated ";
                     
-                }   } catch (SQLException ex) {
+                //}
+            } catch (SQLException ex) {
                 Logger.getLogger(LikeTransactionServiceImpl.class.getName()).log(Level.SEVERE, null, ex);
             }
         }
