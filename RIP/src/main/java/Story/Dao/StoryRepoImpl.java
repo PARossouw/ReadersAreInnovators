@@ -256,7 +256,7 @@ public class StoryRepoImpl implements StoryRepo {
             if (con != null) {
                 ps = con.prepareStatement("select storyID, title, writer, description, imagePath, "
                         + "body, isDraft, isActive, createdOn, allowComment, isApproved, views, likes, avgRating "
-                        + "from story where isapproved = 0 and isdraft = 0");
+                        + "from story where isapproved = 0 and isdraft = 0 limit 10");
 
                 rs = ps.executeQuery();
 
