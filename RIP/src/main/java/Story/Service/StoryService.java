@@ -29,7 +29,6 @@ public interface StoryService {
 
     Map<String, Integer> getTop20RatedStoriesOfTheMonth(String month);
 
-
     
     List<Story> getRandomApprovedStories();
 

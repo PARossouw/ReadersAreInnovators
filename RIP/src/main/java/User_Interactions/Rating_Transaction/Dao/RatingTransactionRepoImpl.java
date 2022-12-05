@@ -41,7 +41,7 @@ public class RatingTransactionRepoImpl implements RatingTransactionRepo {
     }
 
     @Override
-    public RatingTransaction getRating(Story story, Reader reader) throws SQLException {
+    public Boolean getRating(Story story, Reader reader) throws SQLException {
 
         con = DBManager.getConnection();
         RatingTransaction rating = new RatingTransaction();
@@ -63,7 +63,7 @@ public class RatingTransactionRepoImpl implements RatingTransactionRepo {
 //                calendar.setTime(createdOn);
                     rating.setReader(reader);
                     rating.setStory(story);
-
+                    return true;
                 }
             }
 
@@ -73,7 +73,7 @@ public class RatingTransactionRepoImpl implements RatingTransactionRepo {
             
 
         
-        return rating;
+        return false;
     }
 
     @Override

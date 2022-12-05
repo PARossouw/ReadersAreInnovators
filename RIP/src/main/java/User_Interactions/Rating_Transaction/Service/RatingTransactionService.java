@@ -4,6 +4,6 @@ import java.util.List;
 
 public interface RatingTransactionService {
     
-    List<String> rateStory(String ratingInfo);
+    String rateStory(String ratingInfo);
     
 }

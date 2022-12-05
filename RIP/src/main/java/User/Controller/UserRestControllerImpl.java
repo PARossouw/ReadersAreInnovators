@@ -67,7 +67,7 @@ public class UserRestControllerImpl {
     }
     
     
-        @Path("/categories/preffered/add")
+    @Path("/categories/preffered/add")
     @POST
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)

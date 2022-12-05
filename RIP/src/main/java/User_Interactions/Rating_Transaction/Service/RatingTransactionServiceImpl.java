@@ -21,27 +21,35 @@ public class RatingTransactionServiceImpl implements RatingTransactionService {
     }
 
     @Override
-    public List<String> rateStory(String ratingInfo) {
+    public String rateStory(String ratingInfo) {
+        //ratingInfo.replace("\"", "");
+        String response;
 
-        List<String> response = new ArrayList<>();
+        ratingInfo = ratingInfo.substring(1, ratingInfo.length() - 1);
+
         String[] rInfo = ratingInfo.split(":");
         try {
-            //   if (ratingRepo.getRating(story, reader) == null) {
             Story story = new Story();
+
             story.setStoryID(Integer.parseInt(rInfo[0]));
 
             Reader reader = new Reader();
             reader.setUserID(Integer.parseInt(rInfo[1]));
+            if (!ratingRepo.getRating(story, reader)) {
+                if (ratingRepo.createRating(story, reader, Integer.parseInt(rInfo[2]))) {
 
-            ratingRepo.createRating(story, reader, Integer.parseInt(rInfo[2]));
-            response.add("Story has been rated " + Integer.parseInt(rInfo[2]) + " stars!");
+                    response = "Story has been rated " + Integer.parseInt(rInfo[2]) + " stars!";
+                    return response;
+                }
+            }else{
+                response = "You have already rated this story";
+                    return response;
+            }
 
-            return response;
         } catch (SQLException ex) {
             Logger.getLogger(RatingTransactionServiceImpl.class.getName()).log(Level.SEVERE, null, ex);
 
-            response.add("Story has not been rated");
-            return response;
         }
+        return "Unfortunately story has not been rated";
     }
 }
