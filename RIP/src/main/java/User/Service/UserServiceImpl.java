@@ -2,6 +2,7 @@ package User.Service;
 
 import Category.Dao.CategoryRepo;
 import Category.Model.Category;
+import SMS.smsreq;
 import Story.Dao.StoryRepo;
 import Story.Model.Story;
 import User.Dao.UserRepo;
@@ -9,8 +10,15 @@ import User.Model.Editor;
 import User.Model.Reader;
 import User.Model.User;
 import User.Model.Writer;
+import User_Interactions.Story_Transaction.Service.Story_TransactionServiceImpl;
+import jakarta.xml.bind.JAXBContext;
+import jakarta.xml.bind.JAXBException;
+import jakarta.xml.bind.Marshaller;
+import java.io.StringWriter;
 import java.sql.SQLException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -212,5 +220,59 @@ public class UserServiceImpl implements UserService {
             Logger.getLogger(UserServiceImpl.class.getName()).log(Level.SEVERE, null, ex);
         }
         return writers;
+    }
+
+    @Override
+    public String referFriend(User user, String number) {
+        
+        smsreq sms = new smsreq();
+        StringWriter sw = new StringWriter();
+        try {
+           
+                Date date = new Date();
+                SimpleDateFormat sdf = new SimpleDateFormat("yyyy/MM/dd,hh:mm:ss");
+
+//                //getting the writer so we can get their number
+//                User user = new User();
+//                user.setUsername(story.getWriter());
+//                user = userRepo.getUser(user);
+
+                //building the sms
+                sms.setDatetime(sdf.format(date));
+//                sms.setMsisdn(user.getPhoneNumber());
+                sms.setMsisdn(number);
+                sms.setPass("2group");
+                sms.setUser("GROUP2");
+                sms.setMessage("Hi there, you have been refered by " + user.getUsername() + " to read a fantastic story! ");
+
+                //building a string with the structure of an xml document
+                JAXBContext jaxBContext = JAXBContext.newInstance(smsreq.class);
+
+                Marshaller marshaller = jaxBContext.createMarshaller();
+
+                marshaller.setProperty(Marshaller.JAXB_FRAGMENT, Boolean.TRUE);
+
+                marshaller.marshal(sms, sw);
+
+            }
+         catch (JAXBException ex) {
+            Logger.getLogger(Story_TransactionServiceImpl.class.getName()).log(Level.SEVERE, null, ex);
+        }
+
+//        //harcoding below
+//        sms = new smsreq();
+//        Date date = new Date();
+//        SimpleDateFormat sdf = new SimpleDateFormat("yyyy/MM/dd,hh:mm:ss");
+//
+//        //getting the writer so we can get their number
+//        User user = new User();
+//        user.setUsername(story.getWriter());
+//        user.setPhoneNumber("0739068691");
+//        sms.setDatetime(sdf.format(date));
+//        sms.setMsisdn(user.getPhoneNumber());
+//        sms.setMessage("Story with the title: \"" + story.getTitle() + "\" has been approved and is now available for public view");
+//        //hardcoding above
+        //return sms;
+        return sw.toString();
     }
 }
