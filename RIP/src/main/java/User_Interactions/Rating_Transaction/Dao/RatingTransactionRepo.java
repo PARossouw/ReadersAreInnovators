@@ -9,7 +9,7 @@ public interface RatingTransactionRepo {
 
     Boolean createRating(Story story, Reader reader, int rating) throws SQLException;
     
-    RatingTransaction getRating(Story story, Reader Reader) throws SQLException;
+    Boolean getRating(Story story, Reader Reader) throws SQLException;
 
     Boolean updateRating(Story story, Reader reader, int rating) throws SQLException;
 
