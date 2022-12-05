@@ -3,6 +3,7 @@ package User.Controller;
 import Category.Dao.CategoryRepoImpl;
 import Category.Model.Category;
 import Story.Dao.StoryRepoImpl;
+import Story.Model.Story;
 import User.Dao.UserRepoImpl;
 import User.Model.Editor;
 import User.Model.Reader;
@@ -29,7 +30,7 @@ import org.json.simple.JSONObject;
 public class UserRestControllerImpl {
 
     private final UserService userService;
-    ObjectMapper mapper;
+    ObjectMapper mapper = new ObjectMapper();
 
     public UserRestControllerImpl() {
         this.userService = new UserServiceImpl(new UserRepoImpl(), new CategoryRepoImpl(), new StoryRepoImpl());
@@ -66,7 +67,7 @@ public class UserRestControllerImpl {
     }
     
     
-        @Path("/categories/preffered/add")
+    @Path("/categories/preffered/add")
     @POST
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
@@ -143,5 +144,25 @@ public class UserRestControllerImpl {
         List<Writer> writers = new ArrayList<>();
         writers = userService.writerSearch(writerSearch);
         return Response.status(Response.Status.OK).entity(writers).build();
+    }
+    
+    @Path("/referFriend")
+    @POST
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response referFriend(JSONObject jsonObject) {
+
+//        return Response.status(Response.Status.OK).entity(storyService.approvePendingStory(editor, story)).build();
+
+        
+        User user = new User();
+        String number = "";
+        user = mapper.convertValue( jsonObject.get("user"), User.class);
+        number = mapper.convertValue( jsonObject.get("phoneNumber"), String.class);
+        
+        
+  
+        return Response.status(Response.Status.OK).entity(userService.referFriend(user, number)).build();
+
     }
 }

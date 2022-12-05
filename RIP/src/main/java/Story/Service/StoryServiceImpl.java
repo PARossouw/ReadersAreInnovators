@@ -132,6 +132,7 @@ public class StoryServiceImpl implements StoryService {
         
         return null;
     }
+    
 
     @Override
     public List<Story> getLikedStory(User reader) {

@@ -2,6 +2,7 @@ package User.Service;
 
 import Category.Dao.CategoryRepo;
 import Category.Model.Category;
+import SMS.smsreq;
 import Story.Dao.StoryRepo;
 import Story.Model.Story;
 import User.Dao.UserRepo;
@@ -9,8 +10,18 @@ import User.Model.Editor;
 import User.Model.Reader;
 import User.Model.User;
 import User.Model.Writer;
+import User_Interactions.Story_Transaction.Service.Story_TransactionServiceImpl;
+import jakarta.xml.bind.JAXBContext;
+import jakarta.xml.bind.JAXBException;
+import jakarta.xml.bind.Marshaller;
+import java.io.StringWriter;
+import java.math.BigInteger;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
 import java.sql.SQLException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -39,7 +50,8 @@ public class UserServiceImpl implements UserService {
             currentUser = userRepo.getUser(user);
 
             if (currentUser != null) {
-                if (currentUser.getPassword().equals(user.getPassword()) && (currentUser.getUsername().equals(user.getUsername())
+                if (currentUser.getPassword().equals(getMd5(user.getPassword()))
+                        && (currentUser.getUsername().equals(user.getUsername())
                         || currentUser.getEmail().equals(user.getEmail()))) {
 
                     if (currentUser instanceof Reader) {
@@ -79,27 +91,18 @@ public class UserServiceImpl implements UserService {
         }
         return "Operation unsuccessful, please try again later.";
     }
-    
+
     @Override
-    public String addPreferredCategoriesToNewUser(Reader reader)
-    {
-        try{
+    public String addPreferredCategoriesToNewUser(Reader reader) {
+        try {
             categoryRepo.addPreferredCategoriesToUser(reader);
             return "Successfully added categories to user";
+        } catch (SQLException ex) {
+            ex.printStackTrace();
         }
-        catch(SQLException ex)
-        {
-            ex.printStackTrace();        }
-        
-        
-        
+
         return "Operation unsuccessful, please try again later";
     }
-    
-    
-    
-    
-    
 
     @Override
     public String registerUser(User user) {
@@ -109,14 +112,15 @@ public class UserServiceImpl implements UserService {
 //                return "This username or email is already in use.";
 //            } else {
 
-                // return userRepo.createUser(user) ? "User registered successfully." : "Could not complete registration at this time.";
-                userRepo.createUser(user);
-                return "Registration was successful. Please log in above.";
+            // return userRepo.createUser(user) ? "User registered successfully." : "Could not complete registration at this time.";
+            user.setPassword(getMd5(user.getPassword()));
+            userRepo.createUser(user);
+            return "Registration was successful. Please log in above.";
 //            }
         } catch (SQLException ex) {
             Logger.getLogger(UserServiceImpl.class.getName()).log(Level.SEVERE, null, ex);
         }
-        return "Operation unsuccessful, please try again later." +user.toString();
+        return "Operation unsuccessful, please try again later." + user.toString();
     }
 
     public String blockWriter(Writer writer) {
@@ -207,10 +211,86 @@ public class UserServiceImpl implements UserService {
         try {
             writers = userRepo.writerSearch(writerSearch);
             return writers;
-        }
-        catch (SQLException ex) {
+        } catch (SQLException ex) {
             Logger.getLogger(UserServiceImpl.class.getName()).log(Level.SEVERE, null, ex);
         }
         return writers;
+    }
+
+    @Override
+    public String referFriend(User user, String number) {
+
+        smsreq sms = new smsreq();
+        StringWriter sw = new StringWriter();
+        try {
+
+            Date date = new Date();
+            SimpleDateFormat sdf = new SimpleDateFormat("yyyy/MM/dd,hh:mm:ss");
+
+//                //getting the writer so we can get their number
+//                User user = new User();
+//                user.setUsername(story.getWriter());
+//                user = userRepo.getUser(user);
+            //building the sms
+            sms.setDatetime(sdf.format(date));
+//                sms.setMsisdn(user.getPhoneNumber());
+            sms.setMsisdn(number);
+            sms.setPass("2group");
+            sms.setUser("GROUP2");
+            sms.setMessage("Hi there, you have been refered by " + user.getUsername() + " to read a fantastic story! ");
+
+            //building a string with the structure of an xml document
+            JAXBContext jaxBContext = JAXBContext.newInstance(smsreq.class);
+
+            Marshaller marshaller = jaxBContext.createMarshaller();
+
+            marshaller.setProperty(Marshaller.JAXB_FRAGMENT, Boolean.TRUE);
+
+            marshaller.marshal(sms, sw);
+
+        } catch (JAXBException ex) {
+            Logger.getLogger(Story_TransactionServiceImpl.class.getName()).log(Level.SEVERE, null, ex);
+        }
+
+//        //harcoding below
+//        sms = new smsreq();
+//        Date date = new Date();
+//        SimpleDateFormat sdf = new SimpleDateFormat("yyyy/MM/dd,hh:mm:ss");
+//
+//        //getting the writer so we can get their number
+//        User user = new User();
+//        user.setUsername(story.getWriter());
+//        user.setPhoneNumber("0739068691");
+//        sms.setDatetime(sdf.format(date));
+//        sms.setMsisdn(user.getPhoneNumber());
+//        sms.setMessage("Story with the title: \"" + story.getTitle() + "\" has been approved and is now available for public view");
+//        //hardcoding above
+        //return sms;
+        return sw.toString();
+    }
+
+    public String getMd5(String input) {
+        try {
+
+            // Static getInstance method is called with hashing MD5
+            MessageDigest md = MessageDigest.getInstance("MD5");
+
+            // digest() method is called to calculate message digest
+            // of an input digest() return array of byte
+            byte[] messageDigest = md.digest(input.getBytes());
+
+            // Convert byte array into signum representation
+            BigInteger no = new BigInteger(1, messageDigest);
+
+            // Convert message digest into hex value
+            String hashtext = no.toString(16);
+            while (hashtext.length() < 32) {
+                hashtext = "0" + hashtext;
+            }
+            return hashtext;
+        } // For specifying wrong message digest algorithms
+        catch (NoSuchAlgorithmException e) {
+            throw new RuntimeException(e);
+        }
     }
 }
