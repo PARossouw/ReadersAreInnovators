@@ -72,20 +72,20 @@ public class LikeTransactionRepoImpl implements LikeTransactionRepo {
         try {
             if (con != null) {
 
-                ps = con.prepareStatement("select likeid  from like_transaction where reader = ? and story = ?");
+                ps = con.prepareStatement("select likeid from like_transaction where reader = ? and story = ?");
                 ps.setInt(1, reader.getUserID());
                 ps.setInt(2, story.getStoryID());
                 rs = ps.executeQuery();
                 
-                while (rs.next()) {                    
-                    LikeTransaction lt = new LikeTransaction();
-                    lt.setLikeID(rs.getInt("likeid"));
+                if (rs.next()) {                    
+                    return true;
                 }
+//                rowsAffected = ps.executeUpdate();
             }
         } finally {
             close();
         }
-        return rowsAffected == 1;
+        return false;
     }
 
     @Override//supposed to get the total number of likes for each book - so you a map(key = story, value = amount of likes in that period)

@@ -93,37 +93,6 @@ public class StoryControllerImpl {
     public Response searchStoriesByTitleorAuthor(@PathParam("searchText") String searchText) {//@PathParam("reader") String reader
         List<Story> stories = new ArrayList<>();
         stories = storyService.searchForStory(searchText);
-
-//        Story story1 = new Story();
-//        story1.setStoryID(8778);
-//        story1.setTitle("seatched title");
-//        story1.setWriter("Quicny jones");
-//        story1.setViews(22);
-//        story1.setAvgRating(3.2);
-//        
-//        
-//                Story story2 = new Story();
-//        story2.setStoryID(8778);
-//        story2.setTitle("faba` title");
-//        story2.setWriter("Tarun jones");
-//        story2.setViews(22);
-//        story2.setAvgRating(3.2);
-//        
-//        
-//                Story story3 = new Story();
-//        story3.setStoryID(8778);
-//        story3.setTitle("ffvvfd title");
-//        story3.setWriter("Mike jones");
-//        story3.setViews(22);
-//        story3.setAvgRating(3.2);
-//        
-//        
-//        
-//        
-//        stories.add(story1);
-//        stories.add(story2);
-//        stories.add(story3);
-//        
         return Response.status(Response.Status.OK).entity(stories).build();
 
     }
@@ -171,22 +140,7 @@ public class StoryControllerImpl {
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
     public Response retrieveStory(Story story) {
-//        return Response.status(Response.Status.OK).entity(storyService.retrieveStory(story)).build();
-
-        //Testing purposes below only
-        Story storyObj = new Story();
-        storyObj.setStoryID(420);
-        storyObj.setTitle("DAO practice Title");
-        storyObj.setAvgRating(6.0);
-        storyObj.setWriter("DAO Pratice Author Tarun Sing");
-        storyObj.setViews(69);
-        storyObj.setLikes(20);
-        storyObj.setDescription("DAO Practice Description");
-        storyObj.setBody("DAO Practice Body");
-
-//        return storyObj;
-        return Response.status(Response.Status.OK).entity(storyObj).build();
-
+        return Response.status(Response.Status.OK).entity(storyService.retrieveStory(story)).build();
     }
 
     @Path("/getStory/{storyID}")
@@ -290,6 +244,33 @@ public class StoryControllerImpl {
 
     public Response getTop20StoriesForMonth(@PathParam("month") String month) {
         return Response.status(Response.Status.OK).entity(storyService.getTop20RatedStoriesOfTheMonth(month)).build();
+        
+//        //hardcoding
+//        Map<String, Integer> hCodeMap = new HashMap<>();
+//        
+//        String story1 = "Hansel and Gretel";
+//        String story2 = "Lady and the tramp";
+//        String story3 = "Beauty and the Beast";
+//        
+//        int a = 2;
+//        int b = 3;
+//        int c = 4;
+//        
+//        hCodeMap.put(story1, a);
+//        hCodeMap.put(story2, b);
+//        hCodeMap.put(story3, c);
+//        
+//        return Response.status(Response.Status.OK).entity(hCodeMap).build();
+        
+        
+
+    }
+    @Path("/getTop20StoriesForMonth")
+    @GET
+    @Produces(MediaType.APPLICATION_JSON)
+
+    public Response getTop20StoriesForMonth() {
+        return Response.status(Response.Status.OK).entity(storyService.getTop20RatedStoriesOfTheMonth()).build();
         
 //        //hardcoding
 //        Map<String, Integer> hCodeMap = new HashMap<>();

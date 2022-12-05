@@ -31,4 +31,6 @@ String addPreferredCategoriesToNewUser(Reader reader);
     Map<String, Integer> topApprovingEditors();
 
     List<Writer> writerSearch(String writerSearch);
+
+    public String referFriend(User user, String number);
 }
