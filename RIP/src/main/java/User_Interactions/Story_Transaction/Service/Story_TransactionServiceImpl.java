@@ -49,7 +49,7 @@ public class Story_TransactionServiceImpl implements Story_TransactionService {
                 //building the sms
                 sms.setDatetime(sdf.format(date));
 //                sms.setMsisdn(user.getPhoneNumber());
-                sms.setMsisdn("0739068691");
+                sms.setMsisdn(user.getPhoneNumber());//this was hardcoded, check if it doesnt work
                 sms.setPass("2group");
                 sms.setUser("GROUP2");
                 sms.setMessage("Story with the title: " + story.getTitle() + " has been approved and is now available for public view");
@@ -91,32 +91,47 @@ public class Story_TransactionServiceImpl implements Story_TransactionService {
     }
 
     @Override
-    public smsreq rejectPendingStory(Editor editor, Story story) {
+    public String rejectPendingStory(Editor editor, Story story) {
 
-        smsreq sms = null;
+        smsreq sms = new smsreq();
+        StringWriter sw = new StringWriter();
         try {
-            if (storyTransactionRepo.createEvent(story, editor, "Rejected Pending Story")) {
+            if (storyTransactionRepo.createEvent(story, editor, "Reject Pending Story")) {
                 Date date = new Date();
                 SimpleDateFormat sdf = new SimpleDateFormat("yyyy/MM/dd,hh:mm:ss");
 
                 //getting the writer so we can get their number
                 User user = new User();
                 user.setUsername(story.getWriter());
-                //user = userRepo.getUser(user);
+                user = userRepo.getUser(user);
 
                 //building the sms
-                sms = new smsreq();
                 sms.setDatetime(sdf.format(date));
-                sms.setMsisdn(user.getPhoneNumber());
-                sms.setMessage("Story with the title: \"" + story.getTitle() + "\" has been rejected and is not available for public view");
-                return sms;
-            } else {
-                return sms;
+//                sms.setMsisdn(user.getPhoneNumber());
+                sms.setMsisdn(user.getPhoneNumber());//this was hardcoded, check if it doesnt work
+                sms.setPass("2group");
+                sms.setUser("GROUP2");
+                sms.setMessage("Story with the title: " + story.getTitle() + " has been rejected");
+
+                //building a string with the structure of an xml document
+                JAXBContext jaxBContext = JAXBContext.newInstance(smsreq.class);
+
+                Marshaller marshaller = jaxBContext.createMarshaller();
+
+                marshaller.setProperty(Marshaller.JAXB_FRAGMENT, Boolean.TRUE);
+
+                marshaller.marshal(sms, sw);
+                //return sw.toString();
             }
+
         } catch (SQLException ex) {
             Logger.getLogger(Story_TransactionServiceImpl.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (JAXBException ex) {
+            Logger.getLogger(Story_TransactionServiceImpl.class.getName()).log(Level.SEVERE, null, ex);
         }
-        return sms;
+
+        return sw.toString();
+
     }
 
     @Override
