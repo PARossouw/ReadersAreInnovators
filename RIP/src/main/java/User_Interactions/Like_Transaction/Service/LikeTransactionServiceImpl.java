@@ -15,6 +15,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 public class LikeTransactionServiceImpl implements LikeTransactionService {
+    
 
     private final LikeTransactionRepo likeTransactionRepo;
 
@@ -36,7 +37,7 @@ public class LikeTransactionServiceImpl implements LikeTransactionService {
                     likeTransactionRepo.createLike(reader, story);
                     return  "The story like status has been successfully updated ";
                     
-                //}
+                }
             } catch (SQLException ex) {
                 Logger.getLogger(LikeTransactionServiceImpl.class.getName()).log(Level.SEVERE, null, ex);
             }

@@ -12,4 +12,5 @@ public interface LikeTransactionService {
     
     Map<String, Integer> getAllLikesInPeriod(String startDate);
     
+    
 }
