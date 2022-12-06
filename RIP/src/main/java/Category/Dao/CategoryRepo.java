@@ -28,6 +28,6 @@ public interface CategoryRepo {
     
     HashMap<String, Integer> topCategoriesForMonth(String month) throws SQLException;
     
-    Boolean addCategoriesToStory(Story story, List<Category> categories) throws SQLException;
+    Boolean addCategoriesToStory(Story story, List<Category> categoryList) throws SQLException;
 
 }

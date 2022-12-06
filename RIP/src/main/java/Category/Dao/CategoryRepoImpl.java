@@ -240,71 +240,63 @@ public class CategoryRepoImpl implements CategoryRepo {
 
     @Override
     public HashMap<String, Integer> topCategoriesForMonth(String month) throws SQLException { //DISCUSS WITH GROUP
+        
+        con = DBManager.getConnection();
 
-//        con = DBManager.getConnection();
-//
-//        HashMap<String, Integer> topCategories = new HashMap<String, Integer>();
-//
-//        try {
-//            if (con != null) {
-//                ps = con.prepareStatement("select categoryID, c.category, dateAdded, count(vt.story) as categoryViews from category c "
-//                        + "inner join story_category sc on c.categoryID = sc.category "
-//                        + "inner join story s on sc.story = s.storyID "
-//                        + "inner join view_transaction vt on s.storyID = vt.story "
-//                        + "where month(dateViewed) = month(current_timestamp) and year(dateViewed) = year(current_timestamp) "
-//                        + "group by c.category order by categoryViews desc limit 5");
-//                rs = ps.executeQuery();
-//
-//                while (rs.next()) {
-//                    Calendar calendar = Calendar.getInstance();
-//                    calendar.setTime(rs.getDate("dateAdded"));
-//
-//                    //topCategories.add(new Category(rs.getInt("categoryID"), rs.getString("category"), calendar));
-//                }
-//            }
-//        } finally {
-//            close();
-//        }
-//        return topCategories;
+        HashMap<String, Integer> topCategories = new HashMap<String, Integer>();
 
+        try {
+            if (con != null) {
+                ps = con.prepareStatement("select categoryID, c.category, dateAdded, count(vt.story) as categoryViews from category c "
+                        + "inner join story_category sc on c.categoryID = sc.category "
+                        + "inner join story s on sc.story = s.storyID "
+                        + "inner join view_transaction vt on s.storyID = vt.story "
+                        + "where month(dateViewed) = month(current_timestamp) and year(dateViewed) = year(current_timestamp) "
+                        + "group by c.category order by categoryViews desc limit 3");
+                rs = ps.executeQuery();
 
-        //hardcoding
-        
-        HashMap<String, Integer> topCategories = new HashMap<>();
-        String cat1 = "cat69";
-        String cat2 = "cat420";
-        String cat3 = "cat3";
-        
-        int x = 1;
-        int y = 2;
-        int z = 3;
-        
-        topCategories.put(cat1, x);
-        topCategories.put(cat2, y);
-        topCategories.put(cat3, z);
-        
+                while (rs.next()) {
+                    String category = rs.getString("category");
+                    int views = rs.getInt("categoryViews");
+                    
+                    
+                    Calendar calendar = Calendar.getInstance();
+                    calendar.setTime(rs.getDate("dateAdded"));
+
+                    topCategories.put(category, views);
+                    if (topCategories.size() == 3){
+                        break;
+                    }
+                }
+            }
+        } finally {
+            close();
+        }
         return topCategories;
+
     }
 
     @Override
-    public Boolean addCategoriesToStory(Story story, List<Category> categories) throws SQLException {
+    public Boolean addCategoriesToStory(Story story, List<Category> categoryList) throws SQLException {
 
         con = DBManager.getConnection();
 
         try {
             if (con != null) {
+                
+                //for(int i =  0 ; i<categories.size(); i++)
+                //{
                 ps = con.prepareStatement("insert into story_category (story, category) values (?,?)");
-                for (Category category : categories) {
+
                     ps.setInt(1, story.getStoryID());
-                    ps.setInt(2, category.getCategoryID());
-                    ps.addBatch();
-                }
-                rowsAffected = ps.executeBatch().length;
+                    ps.setInt(2, categoryList.get(0).getCategoryID());
+                    rowsAffected = ps.executeUpdate();
+                //}
             }
         } finally {
             close();
         }
-        return rowsAffected == categories.size();
+        return rowsAffected == 1;
     }
 
     public void close() throws SQLException {
