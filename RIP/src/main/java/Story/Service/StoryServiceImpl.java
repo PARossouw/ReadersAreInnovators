@@ -5,8 +5,11 @@ import Category.Model.Category;
 import Story.Dao.StoryRepo;
 import Story.Model.Story;
 import User.Model.User;
+import java.io.IOException;
+import java.nio.file.Files;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.Base64;
 
 import java.util.HashMap;
 
@@ -33,6 +36,10 @@ public class StoryServiceImpl implements StoryService {
         try {
             storyList = storyRepo.getStoryByCategory(categories);
 
+            for (Story story : storyList) {
+                story.setImagePath(getEncodedString(story.getImagePath()));
+            }
+
         } catch (SQLException ex) {
             Logger.getLogger(StoryServiceImpl.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -48,6 +55,9 @@ public class StoryServiceImpl implements StoryService {
         }
         try {
             storyList = storyRepo.getWriterStories(writer);
+            for (Story story : storyList) {
+                story.setImagePath(getEncodedString(story.getImagePath()));
+            }
         } catch (SQLException ex) {
             Logger.getLogger(StoryServiceImpl.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -96,6 +106,7 @@ public class StoryServiceImpl implements StoryService {
                 }
 
                 if (storySaved.getStoryID() != -1 ) {
+
                     return "Story has been successfully saved.";
                 }
 
@@ -129,9 +140,11 @@ public class StoryServiceImpl implements StoryService {
 
     @Override
     public Story retrieveStory(Story story) {
+        Story s = new Story();
         try {
-            return storyRepo.retrieveStory(story);
-
+            s = storyRepo.retrieveStory(story);
+            s.setImagePath(getEncodedString(s.getImagePath()));
+            return s;
         } catch (SQLException ex) {
             Logger.getLogger(StoryServiceImpl.class.getName()).log(Level.SEVERE, null, ex);
             return null;
@@ -141,15 +154,20 @@ public class StoryServiceImpl implements StoryService {
 
     @Override
     public List<Story> searchForStory(String storyParameter) {
-        
+
+
+        List<Story> stories = new ArrayList<>();
+
         if (storyParameter.isBlank()) {
             return null;
         }
 
         try {
 
-            return storyRepo.searchForStory(storyParameter);
-
+            stories = storyRepo.searchForStory(storyParameter);
+            for (Story story : stories) {
+                story.setImagePath(getEncodedString(story.getImagePath()));
+            }
         } catch (SQLException ex) {
             Logger.getLogger(StoryServiceImpl.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -167,6 +185,9 @@ public class StoryServiceImpl implements StoryService {
 
         try {
             likedStories = storyRepo.getLikedStories(reader);
+            for (Story story : likedStories) {
+                story.setImagePath(getEncodedString(story.getImagePath()));
+            }
         } catch (SQLException ex) {
             Logger.getLogger(StoryServiceImpl.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -180,6 +201,9 @@ public class StoryServiceImpl implements StoryService {
 
         try {
             pendingStories = storyRepo.getPendingStories();
+            for (Story story : pendingStories) {
+                story.setImagePath(getEncodedString(story.getImagePath()));
+            }
             return pendingStories;
         } catch (SQLException ex) {
             Logger.getLogger(StoryServiceImpl.class.getName()).log(Level.SEVERE, null, ex);
@@ -195,7 +219,11 @@ public class StoryServiceImpl implements StoryService {
         List<Story> stories = new ArrayList<>();
 
         try {
-            return storyRepo.getStoriesForStoryOfTheDay();
+            stories = storyRepo.getStoriesForStoryOfTheDay();
+            for (Story story : stories) {
+                story.setImagePath(getEncodedString(story.getImagePath()));
+            }
+            return stories;
         } catch (SQLException ex) {
             Logger.getLogger(StoryServiceImpl.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -227,6 +255,9 @@ public class StoryServiceImpl implements StoryService {
         List<Story> stories = new ArrayList<>();
         try {
             stories = storyRepo.getHighestRatedStoriesForMonth();
+            for (Story story : stories) {
+                story.setImagePath(getEncodedString(story.getImagePath()));
+            }
             return stories;
         } catch (SQLException ex) {
             Logger.getLogger(StoryServiceImpl.class.getName()).log(Level.SEVERE, null, ex);
@@ -240,6 +271,9 @@ public class StoryServiceImpl implements StoryService {
         List<Story> stories = new ArrayList<>();
         try {
             stories = storyRepo.getApprovedStories();
+            for (Story story : stories) {
+                story.setImagePath(getEncodedString(story.getImagePath()));
+            }
             return stories;
         } catch (SQLException ex) {
             Logger.getLogger(StoryServiceImpl.class.getName()).log(Level.SEVERE, null, ex);
@@ -267,6 +301,7 @@ public class StoryServiceImpl implements StoryService {
         return "something went wrong";
 
     }
+
 
     @Override
     public String makeStoryOfTheDay(Story story) {
@@ -323,6 +358,17 @@ public class StoryServiceImpl implements StoryService {
             Logger.getLogger(StoryServiceImpl.class.getName()).log(Level.SEVERE, null, ex);
         }
         return "could not increment views";
+}
+    public String getEncodedString(String filePath) {
+
+        try {
+            byte[] data = Files.readAllBytes(java.nio.file.Path.of(filePath));
+            String encodedImage = Base64.getMimeEncoder().encodeToString(data);
+            return encodedImage;
+        } catch (IOException ex) {
+            return "Image could not be loaded";
+        }
+
     }
 
 }
