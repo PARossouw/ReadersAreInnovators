@@ -32,5 +32,7 @@ public interface UserService {
 
     List<Writer> writerSearch(String writerSearch);
 
-    public String referFriend(User user, String number);
+    String referFriend(User user, String number);
+
+    String becomeWriter(User user);
 }

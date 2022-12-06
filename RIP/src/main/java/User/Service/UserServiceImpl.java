@@ -64,13 +64,17 @@ public class UserServiceImpl implements UserService {
                     }
                     return currentUser;
                 } else {
-                    return null;
+                    currentUser = new User();
+                    currentUser.setUserID(-1);
+                    return currentUser;
                 }
             }
         } catch (SQLException ex) {
-            currentUser = null;
+            //currentUser = new User();
             Logger.getLogger(UserServiceImpl.class.getName()).log(Level.SEVERE, null, ex);
         }
+        currentUser = new User();
+        currentUser.setUserID(-1);
         return currentUser;
     }
 
@@ -109,7 +113,7 @@ public class UserServiceImpl implements UserService {
         } catch (SQLException ex) {
             Logger.getLogger(UserServiceImpl.class.getName()).log(Level.SEVERE, null, ex);
         }
-        return "Operation unsuccessful, please try again later." + user.toString();
+        return "Operation unsuccessful, please try again later.";
     }
 
     public String blockWriter(Writer writer) {
@@ -161,6 +165,7 @@ public class UserServiceImpl implements UserService {
         Map<String, Integer> topWriters = new HashMap<>();
         try {
             topWriters = userRepo.topWriters();
+            
         } catch (SQLException ex) {
             Logger.getLogger(UserServiceImpl.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -255,5 +260,18 @@ public class UserServiceImpl implements UserService {
         catch (NoSuchAlgorithmException e) {
             throw new RuntimeException(e);
         }
+    }
+
+    @Override
+    public String becomeWriter(User user) {
+        
+        try {
+            if(userRepo.becomeWriter(user)){
+                return "Congratulations, You have become a writer!";
+            }
+        } catch (SQLException ex) {
+            Logger.getLogger(UserServiceImpl.class.getName()).log(Level.SEVERE, null, ex);
+        }
+            return "There was a problem making you a writer";
     }
 }

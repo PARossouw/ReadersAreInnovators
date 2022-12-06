@@ -52,7 +52,10 @@ public class CategoryServiceImpl extends DBManager implements CategoryService {
         HashMap<String, Integer> categoryList = new HashMap<>();
         try {
             categoryList = categoryRepo.topCategoriesForMonth(month);
-            return categoryList;
+            
+            if(categoryList.isEmpty() || categoryList == null){
+                categoryList.put("no data for selected period", -1);
+            }
         } catch (SQLException ex) {
             Logger.getLogger(CategoryServiceImpl.class.getName()).log(Level.SEVERE, null, ex);
         }

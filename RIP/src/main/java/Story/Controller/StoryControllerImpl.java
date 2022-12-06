@@ -51,15 +51,19 @@ public class StoryControllerImpl {
     public Response searchStoriesByRandomCategoriesChosen(@PathParam("categoryStr") String categoryStr) {
         List<Category> categories = new ArrayList<>();
 
-        String[] categoryIDs = categoryStr.split(":");
+        String[] str = categoryStr.split(";");
+        // List<Category> al = new ArrayList<Category>();
         Category category = new Category();
 
-        for (String catID : categoryIDs) {
-            category.setCategoryID(Integer.parseInt(catID));
+        for (int i = 0; i < str.length; i++) {
+            category.setCategoryID(Integer.parseInt(str[i]));
             categories.add(category);
         }
 
-        return Response.status(Response.Status.OK).entity(storyService.searchStoriesByCategories(categories)).build();
+        List<Story> stories = new ArrayList<>();
+        stories = storyService.searchStoriesByCategories(categories);
+        
+        return Response.status(Response.Status.OK).entity(stories).build();
     }
 
     @Path("/search/stories/{searchText}")

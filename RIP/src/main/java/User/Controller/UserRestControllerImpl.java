@@ -127,4 +127,12 @@ public class UserRestControllerImpl {
         String number = mapper.convertValue(jsonObject.get("phoneNumber"), String.class);
         return Response.status(Response.Status.OK).entity(userService.referFriend(user, number)).build();
     }
+    
+    @Path("/writer/become")
+    @POST
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response becomeWriter(User user) {
+        return Response.status(Response.Status.OK).entity(userService.becomeWriter(user)).build();
+    }
 }

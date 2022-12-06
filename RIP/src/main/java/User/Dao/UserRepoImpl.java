@@ -31,16 +31,18 @@ public class UserRepoImpl implements UserRepo {
         try {
             if (con != null) {
                 if (user.getRoleID() == 3) {
-                    ps = con.prepareStatement("insert into User (username, email, password, role) values (?, ?, ?, ?)");
+                    ps = con.prepareStatement("insert into User (username, email, password, role, phoneNumber) values (?, ?, ?, ?, ?)");
                     ps.setString(1, user.getUsername());
                     ps.setString(2, user.getEmail());
                     ps.setString(3, user.getPassword());
                     ps.setInt(4, user.getRoleID());
+                    ps.setString(5, user.getPhoneNumber());
                 } else {
-                    ps = con.prepareStatement("insert into User (username, email, password) values (?, ?, ?)");
+                    ps = con.prepareStatement("insert into User (username, email, password, phoneNumber) values (?, ?, ?, ?)");
                     ps.setString(1, user.getUsername());
                     ps.setString(2, user.getEmail());
                     ps.setString(3, user.getPassword());
+                    ps.setString(4, user.getPhoneNumber());
                 }
                 rowsAffected = ps.executeUpdate();
             }
@@ -54,7 +56,7 @@ public class UserRepoImpl implements UserRepo {
     public User getUser(User user) throws SQLException {
 
         con = DBManager.getConnection();
-        User u = new User();
+        User u = null;
 
         try {
             if (con != null) {

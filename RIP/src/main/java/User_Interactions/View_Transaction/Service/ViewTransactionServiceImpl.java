@@ -29,7 +29,17 @@ public class ViewTransactionServiceImpl implements ViewTransactionService {
     @Override
     public Map<String, Integer> getAllStoryViewsInPeriod(String startDate, String endDate) {
         try {
-            return viewRepo.getAllStoryViewsInPeriod(startDate, endDate);
+
+            Map<String, Integer> storyViewsMap = new HashMap<>();
+
+            storyViewsMap = viewRepo.getAllStoryViewsInPeriod(startDate, endDate);
+
+            if (storyViewsMap.isEmpty() || storyViewsMap == null) {
+                storyViewsMap.put("no data for selected period", -1);
+                return storyViewsMap;
+            }
+            return storyViewsMap;
+
         } catch (SQLException ex) {
             Logger.getLogger(ViewTransactionServiceImpl.class.getName()).log(Level.SEVERE, null, ex);
         }

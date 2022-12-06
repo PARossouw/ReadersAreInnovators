@@ -204,8 +204,10 @@ public class CategoryRepoImpl implements CategoryRepo {
     }
 
     @Override
-    public HashMap<String, Integer> topCategoriesForMonth(String month) throws SQLException { //DISCUSS WITH GROUP
-
+    public HashMap<String, Integer> topCategoriesForMonth(String month) throws SQLException { 
+        
+        String [] time = month.split("-");
+        
         con = DBManager.getConnection();
 
         HashMap<String, Integer> topCategories = new HashMap<>();
@@ -216,8 +218,11 @@ public class CategoryRepoImpl implements CategoryRepo {
                         + "inner join story_category sc on c.categoryID = sc.category "
                         + "inner join story s on sc.story = s.storyID "
                         + "inner join view_transaction vt on s.storyID = vt.story "
-                        + "where month(dateViewed) = month(current_timestamp) and year(dateViewed) = year(current_timestamp) "
-                        + "group by c.category order by categoryViews desc limit 10");
+                        + "where month(dateViewed) = ? and year(dateViewed) = ? "
+                        + "group by c.category order by categoryViews desc limit 3");
+                
+                ps.setString(1, time[1]);
+                ps.setString(2, time[0]);
                 rs = ps.executeQuery();
 
                 while (rs.next()) {
