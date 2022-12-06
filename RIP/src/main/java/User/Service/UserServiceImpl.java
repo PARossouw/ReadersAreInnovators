@@ -15,6 +15,9 @@ import jakarta.xml.bind.JAXBContext;
 import jakarta.xml.bind.JAXBException;
 import jakarta.xml.bind.Marshaller;
 import java.io.StringWriter;
+import java.math.BigInteger;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
 import java.sql.SQLException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -47,7 +50,8 @@ public class UserServiceImpl implements UserService {
             currentUser = userRepo.getUser(user);
 
             if (currentUser != null) {
-                if (currentUser.getPassword().equals(user.getPassword()) && (currentUser.getUsername().equals(user.getUsername())
+                if (currentUser.getPassword().equals(getMd5(user.getPassword()))
+                        && (currentUser.getUsername().equals(user.getUsername())
                         || currentUser.getEmail().equals(user.getEmail()))) {
 
                     if (currentUser instanceof Reader) {
@@ -87,27 +91,18 @@ public class UserServiceImpl implements UserService {
         }
         return "Operation unsuccessful, please try again later.";
     }
-    
+
     @Override
-    public String addPreferredCategoriesToNewUser(Reader reader)
-    {
-        try{
+    public String addPreferredCategoriesToNewUser(Reader reader) {
+        try {
             categoryRepo.addPreferredCategoriesToUser(reader);
             return "Successfully added categories to user";
+        } catch (SQLException ex) {
+            ex.printStackTrace();
         }
-        catch(SQLException ex)
-        {
-            ex.printStackTrace();        }
-        
-        
-        
+
         return "Operation unsuccessful, please try again later";
     }
-    
-    
-    
-    
-    
 
     @Override
     public String registerUser(User user) {
@@ -117,14 +112,15 @@ public class UserServiceImpl implements UserService {
 //                return "This username or email is already in use.";
 //            } else {
 
-                // return userRepo.createUser(user) ? "User registered successfully." : "Could not complete registration at this time.";
-                userRepo.createUser(user);
-                return "Registration was successful. Please log in above.";
+            // return userRepo.createUser(user) ? "User registered successfully." : "Could not complete registration at this time.";
+            user.setPassword(getMd5(user.getPassword()));
+            userRepo.createUser(user);
+            return "Registration was successful. Please log in above.";
 //            }
         } catch (SQLException ex) {
             Logger.getLogger(UserServiceImpl.class.getName()).log(Level.SEVERE, null, ex);
         }
-        return "Operation unsuccessful, please try again later." +user.toString();
+        return "Operation unsuccessful, please try again later." + user.toString();
     }
 
     public String blockWriter(Writer writer) {
@@ -215,8 +211,7 @@ public class UserServiceImpl implements UserService {
         try {
             writers = userRepo.writerSearch(writerSearch);
             return writers;
-        }
-        catch (SQLException ex) {
+        } catch (SQLException ex) {
             Logger.getLogger(UserServiceImpl.class.getName()).log(Level.SEVERE, null, ex);
         }
         return writers;
@@ -224,6 +219,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public String referFriend(User user, String number) {
+
        
 smsreq sms = new smsreq();
         StringWriter sw = new StringWriter();
@@ -239,18 +235,46 @@ smsreq sms = new smsreq();
                 sms.setUser("GROUP2");
                 sms.setMessage("A friend by the username of " + user.getUsername() + " has referred you to read our story of the day: http://localhost:8080/BitByBitClient/StoryServlet");
 
-                //building a string with the structure of an xml document
-                JAXBContext jaxBContext = JAXBContext.newInstance(smsreq.class);
 
-                Marshaller marshaller = jaxBContext.createMarshaller();
+            //building a string with the structure of an xml document
+            JAXBContext jaxBContext = JAXBContext.newInstance(smsreq.class);
 
-                marshaller.setProperty(Marshaller.JAXB_FRAGMENT, Boolean.TRUE);
+            Marshaller marshaller = jaxBContext.createMarshaller();
 
-                marshaller.marshal(sms, sw);
+            marshaller.setProperty(Marshaller.JAXB_FRAGMENT, Boolean.TRUE);
 
-        }catch (JAXBException ex) {
+            marshaller.marshal(sms, sw);
+
+
+        } catch (JAXBException ex) {
+
             Logger.getLogger(Story_TransactionServiceImpl.class.getName()).log(Level.SEVERE, null, ex);
         }
         return sw.toString();
+    }
+
+    public String getMd5(String input) {
+        try {
+
+            // Static getInstance method is called with hashing MD5
+            MessageDigest md = MessageDigest.getInstance("MD5");
+
+            // digest() method is called to calculate message digest
+            // of an input digest() return array of byte
+            byte[] messageDigest = md.digest(input.getBytes());
+
+            // Convert byte array into signum representation
+            BigInteger no = new BigInteger(1, messageDigest);
+
+            // Convert message digest into hex value
+            String hashtext = no.toString(16);
+            while (hashtext.length() < 32) {
+                hashtext = "0" + hashtext;
+            }
+            return hashtext;
+        } // For specifying wrong message digest algorithms
+        catch (NoSuchAlgorithmException e) {
+            throw new RuntimeException(e);
+        }
     }
 }
