@@ -64,6 +64,9 @@ public class LikeTransactionServiceImpl implements LikeTransactionService {
             if (dateCheck) {
                 storyLikesMap = likeTransactionRepo.getAllLikesInPeriod(month);
             }
+            if(storyLikesMap.isEmpty() || storyLikesMap == null){
+                storyLikesMap.put("no data for selected period", -1);
+            }
 
         } catch (SQLException ex) {
             Logger.getLogger(LikeTransactionServiceImpl.class.getName()).log(Level.SEVERE, null, ex);

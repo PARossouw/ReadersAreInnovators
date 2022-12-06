@@ -29,29 +29,21 @@ public class UserRepoImpl implements UserRepo {
         con = DBManager.getConnection();
 
         try {
-//            if (user instanceof Editor && con != null) {
-//
-//                ps = con.prepareStatement("insert into User (username, email, password, role) values (?, ?, ?, ?)");
-//                ps.setString(1, user.getUsername());
-//                ps.setString(2, user.getEmail());
-//                ps.setString(3, user.getPassword());
-//                ps.setInt(4, 3);
-//                rowsAffected = ps.executeUpdate();
-//
-//            } else if (user instanceof Reader && con != null) {
 
             if (user.getRoleID() == 3) {
-                ps = con.prepareStatement("insert into User (username, email, password, role) values (?, ?, ?, ?)");
+                ps = con.prepareStatement("insert into User (username, email, password, role, phoneNumber) values (?, ?, ?, ?, ?)");
                 ps.setString(1, user.getUsername());
                 ps.setString(2, user.getEmail());
                 ps.setString(3, user.getPassword());
                 ps.setInt(4, user.getRoleID());
+                ps.setString(5, user.getPhoneNumber());
             } else {
 
-                ps = con.prepareStatement("insert into User (username, email, password) values (?, ?, ?)");
+                ps = con.prepareStatement("insert into User (username, email, password, phonenumber) values (?, ?, ?, ?)");
                 ps.setString(1, user.getUsername());
                 ps.setString(2, user.getEmail());
                 ps.setString(3, user.getPassword());
+                ps.setString(4, user.getPhoneNumber());
             }
             rowsAffected = ps.executeUpdate();
 
@@ -65,7 +57,7 @@ public class UserRepoImpl implements UserRepo {
     public User getUser(User user) throws SQLException {
 
         con = DBManager.getConnection();
-        User u = new User();
+        User u = null;
 
         try {
             if (con != null) {
@@ -108,6 +100,7 @@ public class UserRepoImpl implements UserRepo {
                             u = new Reader();
                     }
 
+                    u = new User();
                     u.setUserID(userID);
                     u.setRoleID(role);
                     u.setUsername(username);
@@ -118,22 +111,23 @@ public class UserRepoImpl implements UserRepo {
                     //u.setDateAdded(calendar);
 
                 }
-                if (u == null) {   // Prevents a null pointer exception in the service layer. 
-                    u.setUsername("");
-                    u.setEmail("");
-                }
-
-                return u;
+//                if (u == null) {   
+//                    u = new User();
+//                    u.setUsername("");
+//                    u.setEmail("");
+//                }
+//
+//                return u;
 
             }
         } finally {
             close();
         }
 
-        if (u == null) {   // Prevents a null pointer exception in the service layer. 
-            u.setUsername("");
-            u.setEmail("");
-        }
+//        if (u == null) {   // Prevents a null pointer exception in the service layer. 
+//            u.setUsername("");
+//            u.setEmail("");
+//        }
 
         return u;
     }

@@ -67,13 +67,17 @@ public class UserServiceImpl implements UserService {
                     }
                     return currentUser;
                 } else {
-                    return null;
+                    currentUser = new User();
+                    currentUser.setUserID(-1);
+                    return currentUser;
                 }
             }
         } catch (SQLException ex) {
-            currentUser = null;
+            //currentUser = new User();
             Logger.getLogger(UserServiceImpl.class.getName()).log(Level.SEVERE, null, ex);
         }
+        currentUser = new User();
+        currentUser.setUserID(-1);
         return currentUser;
     }
 
@@ -120,7 +124,7 @@ public class UserServiceImpl implements UserService {
         } catch (SQLException ex) {
             Logger.getLogger(UserServiceImpl.class.getName()).log(Level.SEVERE, null, ex);
         }
-        return "Operation unsuccessful, please try again later." + user.toString();
+        return "Operation unsuccessful, please try again later.";
     }
 
     public String blockWriter(Writer writer) {
@@ -174,6 +178,7 @@ public class UserServiceImpl implements UserService {
 
         try {
             topWriters = userRepo.topWriters();
+            
         } catch (SQLException ex) {
             Logger.getLogger(UserServiceImpl.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -220,21 +225,19 @@ public class UserServiceImpl implements UserService {
     @Override
     public String referFriend(User user, String number) {
 
-       
-smsreq sms = new smsreq();
+        smsreq sms = new smsreq();
         StringWriter sw = new StringWriter();
         try {
-             
-                Date date = new Date();
-                SimpleDateFormat sdf = new SimpleDateFormat("yyyy/MM/dd,hh:mm:ss");
 
-                sms.setDatetime(sdf.format(date));
+            Date date = new Date();
+            SimpleDateFormat sdf = new SimpleDateFormat("yyyy/MM/dd,hh:mm:ss");
 
-                sms.setMsisdn(number);
-                sms.setPass("2group");
-                sms.setUser("GROUP2");
-                sms.setMessage("A friend by the username of " + user.getUsername() + " has referred you to read our story of the day: http://localhost:8080/BitByBitClient/StoryServlet");
+            sms.setDatetime(sdf.format(date));
 
+            sms.setMsisdn(number);
+            sms.setPass("2group");
+            sms.setUser("GROUP2");
+            sms.setMessage("A friend by the username of " + user.getUsername() + " has referred you to read our story of the day: http://localhost:8080/BitByBitClient/StoryServlet");
 
             //building a string with the structure of an xml document
             JAXBContext jaxBContext = JAXBContext.newInstance(smsreq.class);
@@ -244,7 +247,6 @@ smsreq sms = new smsreq();
             marshaller.setProperty(Marshaller.JAXB_FRAGMENT, Boolean.TRUE);
 
             marshaller.marshal(sms, sw);
-
 
         } catch (JAXBException ex) {
 
@@ -276,5 +278,18 @@ smsreq sms = new smsreq();
         catch (NoSuchAlgorithmException e) {
             throw new RuntimeException(e);
         }
+    }
+
+    @Override
+    public String becomeWriter(User user) {
+        
+        try {
+            if(userRepo.becomeWriter(user)){
+                return "Congratulations, You have become a writer!";
+            }
+        } catch (SQLException ex) {
+            Logger.getLogger(UserServiceImpl.class.getName()).log(Level.SEVERE, null, ex);
+        }
+            return "There was a problem making you a writer";
     }
 }

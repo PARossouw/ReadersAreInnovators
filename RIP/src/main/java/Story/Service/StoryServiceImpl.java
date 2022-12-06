@@ -114,7 +114,7 @@ public class StoryServiceImpl implements StoryService {
                 Logger.getLogger(StoryServiceImpl.class.getName()).log(Level.SEVERE, null, ex);
             }
         }
-        return "Unfortunetely, the story has not been saved successfully. " + storySaved.toString() + " Cat ID  " + story.getCategoryList().get(0).getCategoryID() + story.getCategoryList().get(1).getCategoryID();
+        return "Unfortunetely, the story has not been saved successfully.";
     }
 
     @Override
@@ -155,7 +155,9 @@ public class StoryServiceImpl implements StoryService {
     @Override
     public List<Story> searchForStory(String storyParameter) {
 
+
         List<Story> stories = new ArrayList<>();
+
         if (storyParameter.isBlank()) {
             return null;
         }
@@ -235,6 +237,11 @@ public class StoryServiceImpl implements StoryService {
         Map<String, Integer> stories = new HashMap<>();
         try {
             stories = storyRepo.getHighestRatedStoriesForMonth(month);
+            
+            if(stories.isEmpty() || stories == null){
+                stories.put("no data for selected period", -1);
+                return stories;
+            }
             return stories;
         } catch (SQLException ex) {
             Logger.getLogger(StoryServiceImpl.class.getName()).log(Level.SEVERE, null, ex);
