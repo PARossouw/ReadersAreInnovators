@@ -298,30 +298,26 @@ public class StoryRepoImpl implements StoryRepo {
         List<Story> storiesByCategory = new ArrayList<>();
         Story storyObj;
 
-        String more = "";
+
         try {
-            if (categories.size() > 1) {
-                for (int i = 1; i < categories.size(); i++) {
-                    more += " or sc.category = ?";
-                }
-            }
+
             if (con != null) {
 
+                
                 ps = con.prepareStatement("select storyID, title, writer, description, "
                         + "imagePath, body, isDraft, isActive, createdOn, allowComment, "
                         + "isApproved, views, likes, avgRating from story s "
                         + "inner join story_category sc on s.storyID = sc.story "
-                        + "where sc.category = ?" + more + " ORDER BY RAND() limit 15");
+                        + "where sc.category = ? ORDER BY RAND() limit 23");
 
-                ps.setInt(1, categories.get(0).getCategoryID());
-
-                if (categories.size() > 1) {
-                    for (int i = 1; i < categories.size(); i++) {
-                        ps.setInt(i + 1, categories.get(i).getCategoryID());
-                    }
+                for(Category c: categories){
+                ps.setInt(1, c.getCategoryID());
+                ps.addBatch();
+                    
                 }
-
                 rs = ps.executeQuery();
+
+            }
 
                 while (rs.next()) {
 
@@ -347,16 +343,31 @@ public class StoryRepoImpl implements StoryRepo {
                     storyObj = new Story(storyID, title, writer1, description, imagePath, body, isDraft, isActive, null, allowComments, isApproved, views, likes, avgRating);
                     storiesByCategory.add(storyObj);
                 }
-            }
+            
         } finally {
             close();
         }
         return storiesByCategory;
+        
+        //hardcoding
+//        List<Story> see = new ArrayList<>();
+//        for (int i = 0; i < 15; i++) {
+//        Story s = new Story();
+//        s.setTitle("afeeaef");
+//        s.setDescription("gsrarga");
+//        s.setViews(856);
+//        s.setAvgRating(5.0);
+//            see.add(s);
+//        }
+//        return see;
+        
+        
+        
     }
 
     @Override
     public Story createStory(Story story) throws SQLException {
-        
+
         Story storyReturn = new Story();
 
         con = DBManager.getConnection();
@@ -462,7 +473,6 @@ public class StoryRepoImpl implements StoryRepo {
 //            s.setAllowComments(true);
 //            s.setTitle("yississs");
 //            s.setStoryID(1);
-            
 //            return s;
     }
 
@@ -521,8 +531,8 @@ public class StoryRepoImpl implements StoryRepo {
 
     @Override//change the sql statement to getting the stories for that particular month - take out category
     public Map<String, Integer> getHighestRatedStoriesForMonth(String month) throws SQLException {
-        
-        String [] time = month.split("-");
+
+        String[] time = month.split("-");
 
         con = DBManager.getConnection();
 
@@ -535,14 +545,15 @@ public class StoryRepoImpl implements StoryRepo {
                 ps = con.prepareStatement("select storyid, title, writer, "
                         + " avg(rt.rating) as averageRating from Story s"
                         + " inner join rating_transaction rt on s.storyID = rt.story "
-                        + "where month(ratedOn) = ? group by story "
+                        + "where month(ratedOn) = ? and year(ratedOn) = ? group by story "
                         + "order by averageRating desc limit 20");
-                
+
                 ps.setString(1, time[1]);
+                ps.setString(2, time[0]);
                 rs = ps.executeQuery();
-                
+
                 while (rs.next()) {
-                    
+
                     int storyID = rs.getInt("storyID");
                     String title = rs.getString("title");
                     String writer = rs.getString("writer");
@@ -556,18 +567,15 @@ public class StoryRepoImpl implements StoryRepo {
 //                    Date createdOn = rs.getDate("createdOn");
 //                    Calendar calendar = Calendar.getInstance();
 //                    calendar.setTime(createdOn);
-
 //                    boolean allowComments = rs.getBoolean("allowComment");
 //                    boolean isApproved = rs.getBoolean("isApproved");
 //                    int views = rs.getInt("views");
 //                    int likes = rs.getInt("likes");
                     double avgRating = rs.getDouble("averageRating");
 
-
-
                     //storyList.add(story); commented out temporarily
                     //storyList.add(story); gotta add to the map
-                    storyList.put(storyID + "," + writer, (int)avgRating);
+                    storyList.put(storyID + "," + writer, (int) avgRating);
                 }
             }
         } finally {
@@ -646,7 +654,7 @@ public class StoryRepoImpl implements StoryRepo {
 
     @Override
     public List<Story> searchForStory(String text) throws SQLException {
-        text = "%"+text+"%";
+        text = "%" + text + "%";
         con = DBManager.getConnection();
 
         List<Story> allApprovedStories = new ArrayList<>();
@@ -657,7 +665,7 @@ public class StoryRepoImpl implements StoryRepo {
 
                 ps = con.prepareStatement("select storyID, title, writer, description, imagePath, body, isDraft, s.isActive, "
                         + "createdOn, allowComment, isApproved, views, likes, avgRating from story s inner join user u on s.writer = u.userid "
-                        + "where title like ? or u.username like ?");
+                        + "where title like ? or u.username like ? limit 5");
                 ps.setString(1, text);
                 ps.setString(2, text);
                 rs = ps.executeQuery();
@@ -754,7 +762,6 @@ public class StoryRepoImpl implements StoryRepo {
         con = DBManager.getConnection();
 
         //int rowsAffected = 0;
-
         try {
             if (con != null) {
                 ps = con.prepareStatement("UPDATE story SET allowcomment = IF(allowcomment != 0, 0, 1) WHERE storyid = ?;");
@@ -783,7 +790,7 @@ public class StoryRepoImpl implements StoryRepo {
 
     @Override
     public Boolean blockStory(Story story) throws SQLException {
-        
+
         con = DBManager.getConnection();
 
         try {
@@ -801,18 +808,18 @@ public class StoryRepoImpl implements StoryRepo {
     }
 
     private Story getStoryID(Story storyReturn) throws SQLException {
-        
+
         con = DBManager.getConnection();
         int storyID = 0;
-        
+
         try {
             if (con != null) {
 
                 ps = con.prepareStatement("select storyid from story where body = ?");
                 ps.setString(1, storyReturn.getBody());
                 rs = ps.executeQuery();
-                
-                if(rs.next()){
+
+                if (rs.next()) {
                     storyID = rs.getInt("storyid");
                 }
                 storyReturn.setStoryID(storyID);
@@ -821,17 +828,16 @@ public class StoryRepoImpl implements StoryRepo {
             close();
         }
         return storyReturn;
-        
-        
+
     }
 
     @Override
     public String incrementViews(Story story) throws SQLException {
-        
-         con = DBManager.getConnection();
-         
-         Reader reader = new Reader();
-         reader.setUserID(Integer.parseInt(story.getWriter()));
+
+        con = DBManager.getConnection();
+
+        Reader reader = new Reader();
+        reader.setUserID(Integer.parseInt(story.getWriter()));
 
         try {
             if (con != null) {
@@ -845,7 +851,7 @@ public class StoryRepoImpl implements StoryRepo {
             close();
         }
         return "view incremented on " + story.getTitle();
-        
+
     }
 
 }

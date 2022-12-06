@@ -23,8 +23,6 @@ import java.util.List;
 import jakarta.ws.rs.core.Response;
 import java.util.ArrayList;
 
-
-
 @Path("/Story")
 public class StoryControllerImpl {
 
@@ -64,23 +62,21 @@ public class StoryControllerImpl {
     public Response searchStoriesByRandomCategoriesChosen(@PathParam("categoryStr") String categoryStr) {//@PathParam("reader") String reader
         List<Category> categories = new ArrayList<>();
 
-       
-        String[] str = categoryStr.split(":");
-       // List<Category> al = new ArrayList<Category>();
+        String[] str = categoryStr.split(";");
+        // List<Category> al = new ArrayList<Category>();
         Category category = new Category();
-        
-        for(int i =0 ; i<str.length; i++)
-        {
+
+        for (int i = 0; i < str.length; i++) {
             category.setCategoryID(Integer.parseInt(str[i]));
             categories.add(category);
         }
-        
+
         List<Story> stories = new ArrayList<>();
         stories = storyService.searchStoriesByCategories(categories);
         
-
-
         return Response.status(Response.Status.OK).entity(stories).build();
+
+
     }
 
     @Path("/search/stories/{searchText}")//"/search/categories/{reader}"
@@ -241,7 +237,7 @@ public class StoryControllerImpl {
 
     public Response getTop20StoriesForMonth(@PathParam("month") String month) {
         return Response.status(Response.Status.OK).entity(storyService.getTop20RatedStoriesOfTheMonth(month)).build();
-        
+
 //        //hardcoding
 //        Map<String, Integer> hCodeMap = new HashMap<>();
 //        
@@ -258,17 +254,15 @@ public class StoryControllerImpl {
 //        hCodeMap.put(story3, c);
 //        
 //        return Response.status(Response.Status.OK).entity(hCodeMap).build();
-        
-        
-
     }
+
     @Path("/getTop20StoriesForMonth")
     @GET
     @Produces(MediaType.APPLICATION_JSON)
 
     public Response getTop20StoriesForMonth() {
         return Response.status(Response.Status.OK).entity(storyService.getTop20RatedStoriesOfTheMonth()).build();
-        
+
 //        //hardcoding
 //        Map<String, Integer> hCodeMap = new HashMap<>();
 //        
@@ -285,9 +279,6 @@ public class StoryControllerImpl {
 //        hCodeMap.put(story3, c);
 //        
 //        return Response.status(Response.Status.OK).entity(hCodeMap).build();
-        
-        
-
     }
 
     @Path("/getRandomApprovedStories")
@@ -306,7 +297,7 @@ public class StoryControllerImpl {
         return Response.status(Response.Status.OK).entity(storyService.turnOffComments(story)).build();
 //    String x = "test 3";
     }
-    
+
     @Path("/makeStoryOfTheDay")
     @POST
     @Consumes(MediaType.APPLICATION_JSON)
@@ -316,7 +307,7 @@ public class StoryControllerImpl {
         return Response.status(Response.Status.OK).entity(storyService.makeStoryOfTheDay(story)).build();
 //        return Response.status(Response.Status.OK).entity(goodStory).build();
     }
-    
+
     @Path("/getStoryOfTheDay")
     @GET
     @Produces(MediaType.APPLICATION_JSON)
@@ -324,7 +315,7 @@ public class StoryControllerImpl {
 
         return Response.status(Response.Status.OK).entity(storyService.getStoryOfTheDay()).build();
     }
-    
+
     @Path("/story/block")
     @POST
     @Consumes(MediaType.APPLICATION_JSON)
@@ -332,7 +323,7 @@ public class StoryControllerImpl {
     public Response blockStory(Story story) {
         return Response.status(Response.Status.OK).entity(storyService.blockStory(story)).build();
     }
-    
+
     @Path("/story/incrementViews")
     @POST
     @Consumes(MediaType.APPLICATION_JSON)
