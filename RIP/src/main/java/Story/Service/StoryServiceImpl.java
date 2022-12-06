@@ -19,6 +19,7 @@ public class StoryServiceImpl implements StoryService {
 
     private final StoryRepo storyRepo;
     private final CategoryRepo categoryRepo;
+    public static Story storyOfTheDay;
 
     public StoryServiceImpl(StoryRepo storyRepo, CategoryRepo categoryRepo) {
         this.storyRepo = storyRepo;
@@ -30,7 +31,7 @@ public class StoryServiceImpl implements StoryService {
 
         List<Story> storyList = new ArrayList<>();
         try {
-            storyList = storyRepo.getStoryByCategory(categories); 
+            storyList = storyRepo.getStoryByCategory(categories);
 
         } catch (SQLException ex) {
             Logger.getLogger(StoryServiceImpl.class.getName()).log(Level.SEVERE, null, ex);
@@ -57,6 +58,8 @@ public class StoryServiceImpl implements StoryService {
     public String saveStory(Story story) {
 
         Boolean storySuccessfullySaved = false;
+        Story storySaved = new Story();
+        storySaved.setStoryID(-1);
 
         if (story == null) {
             return "The story is empty and could not be saved.";
@@ -64,14 +67,35 @@ public class StoryServiceImpl implements StoryService {
             try {
 
                 if (story.getStoryID() == -1) {
-                    storySuccessfullySaved = storyRepo.createStory(story);
+                    
+                    storySaved = storyRepo.createStory(story);
+                    
+                    //hardCoding
+//                    Category cat = new Category();
+//                    cat.setCategoryID(1);
+//                    storySaved.getCategoryList().add(cat);
+//                    
+//                    storySaved.setCategoryList(story.getCategoryList());
+                    for (int i = 0; i < story.getCategoryList().size(); i++) {
+                        List<Category> catList = new ArrayList<>();
+                        catList.add(story.getCategoryList().get(i));
+                        
+                          categoryRepo.addCategoriesToStory(storySaved, catList);
+                    }
+                  
                 } else {
                     storySuccessfullySaved = storyRepo.updateStory(story);
-                    categoryRepo.addCategoriesToStory(story, story.getCategoryList());
+                    
+                    for (int i = 0; i < story.getCategoryList().size(); i++) {
+                        List<Category> catList = new ArrayList<>();
+                        catList.add(story.getCategoryList().get(i));
+                        
+                          categoryRepo.addCategoriesToStory(story, catList);
+                    }
+                    //categoryRepo.addCategoriesToStory(story, story.getCategoryList());
                 }
 
-
-                if (storySuccessfullySaved) {
+                if (storySaved.getStoryID() != -1 ) {
                     return "Story has been successfully saved.";
                 }
 
@@ -79,7 +103,7 @@ public class StoryServiceImpl implements StoryService {
                 Logger.getLogger(StoryServiceImpl.class.getName()).log(Level.SEVERE, null, ex);
             }
         }
-        return "Unfortunetely, the story has not been saved successfully. " + story.toString();
+        return "Unfortunetely, the story has not been saved successfully. " + storySaved.toString() + " Cat ID  " + story.getCategoryList().get(0).getCategoryID() + story.getCategoryList().get(1).getCategoryID();
     }
 
     @Override
@@ -129,10 +153,9 @@ public class StoryServiceImpl implements StoryService {
         } catch (SQLException ex) {
             Logger.getLogger(StoryServiceImpl.class.getName()).log(Level.SEVERE, null, ex);
         }
-        
+
         return null;
     }
-    
 
     @Override
     public List<Story> getLikedStory(User reader) {
@@ -192,8 +215,8 @@ public class StoryServiceImpl implements StoryService {
         }
         return stories;
 
-        
     }
+
     @Override
     public List<Story> getTop20RatedStoriesOfTheMonth() {
         List<Story> stories = new ArrayList<>();
@@ -205,10 +228,9 @@ public class StoryServiceImpl implements StoryService {
         }
         return stories;
 
-        
     }
-    
-        @Override
+
+    @Override
     public List<Story> getRandomApprovedStories() {
         List<Story> stories = new ArrayList<>();
         try {
@@ -219,7 +241,7 @@ public class StoryServiceImpl implements StoryService {
         }
         return stories;
     }
-    
+
     @Override
     public String turnOffComments(Story story) {
 
@@ -240,5 +262,62 @@ public class StoryServiceImpl implements StoryService {
         return "something went wrong";
 
     }
-    
+
+    @Override
+    public String makeStoryOfTheDay(Story story) {
+        if (story != null) {
+            this.storyOfTheDay = story;
+            return " was made story of the day.";
+        }
+        return "...there was a problem saving the story of the day";
+    }
+
+    @Override
+    public Story getStoryOfTheDay() {
+//        Story s = new Story();
+//        s.setTitle("test title");
+//        s.setBody("test body");
+//        s.setIsDraft(false);
+//        s.setStoryID(1);
+//        s.setIsApproved(true);
+//        return s;
+        if (this.storyOfTheDay == null) {
+
+            while (true) {
+                Story story = new Story();
+                story.setStoryID((int) ((Math.random() * 100000) + 1));
+
+                story = retrieveStory(story);
+                if (story.getIsApproved() != null && story.getIsApproved() == true && story.getIsActive() == true && story.getIsDraft() == false) {
+                    this.storyOfTheDay = story;
+                    return story;
+                }
+
+            }
+
+        }
+        return this.storyOfTheDay;
+    }
+
+    @Override
+    public String blockStory(Story story) {
+
+        try {
+            return storyRepo.blockStory(story) ? "" + story.getTitle() + " removed from public view" : "Could not remove story from public view.";
+        } catch (SQLException ex) {
+            Logger.getLogger(StoryServiceImpl.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return "something went wrong";
+    }
+
+    @Override
+    public String incrementViews(Story story) {
+        try {
+            return storyRepo.incrementViews(story);
+        } catch (SQLException ex) {
+            Logger.getLogger(StoryServiceImpl.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return "could not increment views";
+    }
+
 }

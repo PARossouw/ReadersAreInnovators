@@ -50,25 +50,19 @@ public class CommentRepoImpl implements CommentRepo {
         try {
             if (con != null) {
                 ps = con.prepareStatement("select commentID, commentBody, commentedOn, reader, story from comment where story = ?");
-                // ps.setInt(1, story.getStoryID());
-                ps.setInt(1, 4);
+
+                ps.setInt(1, story.getStoryID());
 
                 rs = ps.executeQuery();
 
                 while (rs.next()) {
-//                Date createdOn = rs.getDate("dateAdded");
-//                Calendar calendar = Calendar.getInstance();
-//                calendar.setTime(createdOn);
 
                     Reader reader = new Reader();
                     reader.setUserID(rs.getInt("reader"));
 
                     Comment comment = new Comment();
-                    //comment.setCommentID(rs.getInt("commentID"));
+
                     comment.setCommentBody(rs.getString("commentBody"));
-                    //comment.setReader(reader);
-                    //comment.setStory(story);
-                    //comment.setReader(rs.getInt("reader"));
 
                     storyComments.add(comment);
                 }
@@ -76,6 +70,7 @@ public class CommentRepoImpl implements CommentRepo {
         } finally {
             close();
         }
+        
         return storyComments;
 
 //test Code below 
