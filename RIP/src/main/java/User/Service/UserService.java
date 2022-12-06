@@ -13,9 +13,9 @@ public interface UserService {
     User login(User user);
 
     String addPreferredCategoriesToUser(Reader reader, List<Category> categories);
-    
-String addPreferredCategoriesToNewUser(Reader reader);
-    
+
+    String addPreferredCategoriesToNewUser(Reader reader);
+
     String registerUser(User user);
 
     String blockWriter(Writer writer);
@@ -24,7 +24,7 @@ String addPreferredCategoriesToNewUser(Reader reader);
 
     String removeEditor(Editor editor);
 
-    Map<String, Integer> topWriters() ;
+    Map<String, Integer> topWriters();
 
     Map<String, Integer> topRejectedWritersForMonth();
 

@@ -9,7 +9,6 @@ import java.util.Calendar;
 import java.util.List;
 import User.Model.Reader;
 import User.Model.User;
-import jakarta.ws.rs.core.Response;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -57,7 +56,6 @@ public class CategoryRepoImpl implements CategoryRepo {
                     Calendar calendar = Calendar.getInstance();
                     calendar.setTime(rs.getDate("dateAdded"));
                     category.setDateAdded(calendar);
-
                 }
             }
         } finally {
@@ -79,7 +77,6 @@ public class CategoryRepoImpl implements CategoryRepo {
                 ps.setInt(2, category.getCategoryID());
 
                 rowsAffected = ps.executeUpdate();
-
             }
         } finally {
             close();
@@ -96,41 +93,14 @@ public class CategoryRepoImpl implements CategoryRepo {
 
         try {
             if (con != null) {
-                ps = con.prepareStatement("select categoryid, category, dateAdded from category");
+                ps = con.prepareStatement("select categoryid, category from category");
                 rs = ps.executeQuery();
 
                 while (rs.next()) {
 
-                    // Calendar calendar = Calendar.getInstance();
-                    // calendar.setTime(rs.getDate("dateAdded"));
-                    Category category = new Category();
-                    category.setName(rs.getString("category"));
-                    category.setCategoryID(rs.getInt("categoryid"));
-                    categoryList.add(category);
-
-                    // categoryList.add(new Category(rs.getInt("categoryid"), rs.getString("category"), calendar));
+                    categoryList.add(new Category(rs.getInt("categoryid"), rs.getString("category"), null));
                 }
-
             }
-            //-----Testing code------
-//         List<Category> categoryListTest = new ArrayList<>();
-//            Category cat1 = new Category();
-//            Category cat2 = new Category();
-//            Category cat3 = new Category();
-//            
-//            cat1.setName("Thriller");
-//            cat2.setName("Science");
-//            cat3.setName("Religious");
-//            
-//            
-//            
-//            
-//            
-//            
-//            categoryListTest.add(cat1);
-//            categoryListTest.add(cat2);
-//            categoryListTest.add(cat3);
-            // --------------------
         } finally {
             close();
         }
@@ -164,35 +134,35 @@ public class CategoryRepoImpl implements CategoryRepo {
     @Override
     public Boolean addPreferredCategories(Reader reader, List<Category> categories) throws SQLException {
 
-       con = DBManager.getConnection();
+        con = DBManager.getConnection();
 
         try {
             if (con != null) {
                 ps = con.prepareStatement("insert into user_category (user, category) values(?, ?)");
 
+                for (Category category : categories) {
                     ps.setInt(1, reader.getRoleID());
-                    ps.setInt(2, categories.get(0).getCategoryID());
-                    rowsAffected = ps.executeUpdate();
-
+                    ps.setInt(2, category.getCategoryID());
+                    ps.addBatch();
+                }
+                rowsAffected = ps.executeBatch().length;
             }
         } finally {
             close();
         }
         return rowsAffected == categories.size();
     }
-    
-    
-      @Override
+
+    //Two of the same method, we need to decide on one
+    @Override
     public Boolean addPreferredCategoriesToUser(Reader reader) throws SQLException {
 
-       con = DBManager.getConnection();
+        con = DBManager.getConnection();
 
         try {
             if (con != null) {
-                
-                for(int i =  0 ; i<reader.getPreferredCategories().size(); i++)
-                {
-                ps = con.prepareStatement("insert into user_category (user, category) values(?, ?)");
+                for (int i = 0; i < reader.getPreferredCategories().size(); i++) {
+                    ps = con.prepareStatement("insert into user_category (user, category) values(?, ?)");
 
                     ps.setInt(1, reader.getUserID());
                     ps.setInt(2, reader.getPreferredCategories().get(i).getCategoryID());
@@ -204,12 +174,6 @@ public class CategoryRepoImpl implements CategoryRepo {
         }
         return rowsAffected == 1;
     }
-    
-    
-
-    
-    
-    
 
     @Override
     public List<Category> getStoryCategories(Story story) throws SQLException {
@@ -220,7 +184,8 @@ public class CategoryRepoImpl implements CategoryRepo {
 
         try {
             if (con != null) {
-                ps = con.prepareStatement("select categoryid, category, dateAdded from Category where categoryid IN (select category from story_category where story = ?)");
+                ps = con.prepareStatement("select categoryid, category, dateAdded from Category "
+                        + "where categoryid IN (select category from story_category where story = ?)");
                 ps.setInt(1, story.getViews());
                 rs = ps.executeQuery();
 
@@ -240,10 +205,10 @@ public class CategoryRepoImpl implements CategoryRepo {
 
     @Override
     public HashMap<String, Integer> topCategoriesForMonth(String month) throws SQLException { //DISCUSS WITH GROUP
-        
+
         con = DBManager.getConnection();
 
-        HashMap<String, Integer> topCategories = new HashMap<String, Integer>();
+        HashMap<String, Integer> topCategories = new HashMap<>();
 
         try {
             if (con != null) {
@@ -252,19 +217,18 @@ public class CategoryRepoImpl implements CategoryRepo {
                         + "inner join story s on sc.story = s.storyID "
                         + "inner join view_transaction vt on s.storyID = vt.story "
                         + "where month(dateViewed) = month(current_timestamp) and year(dateViewed) = year(current_timestamp) "
-                        + "group by c.category order by categoryViews desc limit 3");
+                        + "group by c.category order by categoryViews desc limit 10");
                 rs = ps.executeQuery();
 
                 while (rs.next()) {
                     String category = rs.getString("category");
                     int views = rs.getInt("categoryViews");
-                    
-                    
+
                     Calendar calendar = Calendar.getInstance();
                     calendar.setTime(rs.getDate("dateAdded"));
 
                     topCategories.put(category, views);
-                    if (topCategories.size() == 3){
+                    if (topCategories.size() == 3) {
                         break;
                     }
                 }
@@ -273,7 +237,6 @@ public class CategoryRepoImpl implements CategoryRepo {
             close();
         }
         return topCategories;
-
     }
 
     @Override
@@ -283,20 +246,19 @@ public class CategoryRepoImpl implements CategoryRepo {
 
         try {
             if (con != null) {
-                
-                //for(int i =  0 ; i<categories.size(); i++)
-                //{
                 ps = con.prepareStatement("insert into story_category (story, category) values (?,?)");
 
+                for (Category category : categoryList) {
                     ps.setInt(1, story.getStoryID());
-                    ps.setInt(2, categoryList.get(0).getCategoryID());
-                    rowsAffected = ps.executeUpdate();
-                //}
+                    ps.setInt(2, category.getCategoryID());
+                    ps.addBatch();
+                }
+                rowsAffected = ps.executeBatch().length;
             }
         } finally {
             close();
         }
-        return rowsAffected == 1;
+        return rowsAffected == categoryList.size();
     }
 
     public void close() throws SQLException {

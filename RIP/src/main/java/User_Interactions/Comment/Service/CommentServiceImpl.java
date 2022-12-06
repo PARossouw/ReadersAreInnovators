@@ -21,7 +21,7 @@ public class CommentServiceImpl implements CommentService {
     public String commentOnAStory(Comment comment) {
 
         try {
-            if (comment == null || comment.getCommentBody().length() == 0) {
+            if (comment == null || comment.getCommentBody().isEmpty() || comment.getCommentBody().isBlank()) {
                 return "An empty comment was entered, please try again";//the textField should make it so this is impossible
             }
             if (commentRepo.createComment(comment)) {
@@ -57,15 +57,3 @@ public class CommentServiceImpl implements CommentService {
     }
 
 }
-
-
-/*
- List<Writer> writers = new ArrayList<>();
-        try {
-            writers = userRepo.writerSearch(writerSearch);
-            return writers;
-        } catch (SQLException ex) {
-            Logger.getLogger(UserServiceImpl.class.getName()).log(Level.SEVERE, null, ex);
-        }
-        return writers;
- */

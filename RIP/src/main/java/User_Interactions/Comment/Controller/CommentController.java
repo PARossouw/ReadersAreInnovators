@@ -9,9 +9,9 @@ import java.util.List;
  * @author pieter, ryan, tarun, anton
  */
 public interface CommentController {
-    
+
     String commentOnAStory(Comment comment);
-    
+
     List<Comment> getAllComments(Story story);
-    
+
 }
