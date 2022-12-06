@@ -332,4 +332,12 @@ public class StoryControllerImpl {
     public Response blockStory(Story story) {
         return Response.status(Response.Status.OK).entity(storyService.blockStory(story)).build();
     }
+    
+    @Path("/story/incrementViews")
+    @POST
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response incrementViews(Story story) {
+        return Response.status(Response.Status.OK).entity(storyService.incrementViews(story)).build();
+    }
 }

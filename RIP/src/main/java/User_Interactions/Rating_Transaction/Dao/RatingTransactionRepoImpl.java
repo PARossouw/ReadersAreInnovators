@@ -47,22 +47,14 @@ public class RatingTransactionRepoImpl implements RatingTransactionRepo {
         RatingTransaction rating = new RatingTransaction();
 
         try {
-            if (con == null) {
+            if (con != null) {
 
-                ps = con.prepareStatement("select ratingID, rating, ratedOn, reader, story from rating_transaction where story = ? and reader = ?");
+                ps = con.prepareStatement("select ratingID, reader, story from rating_transaction where story = ? and reader = ?");
                 ps.setInt(1, story.getStoryID());
                 ps.setInt(2, reader.getUserID());
                 rs = ps.executeQuery();
 
-                while (rs.next()) {
-                    rating.setRatingID(rs.getInt("ratingID"));
-                    rating.setRating(rs.getInt("rating"));
-
-//                java.util.Date createdOn = rs.getDate("ratedOn");
-//                Calendar calendar = Calendar.getInstance();
-//                calendar.setTime(createdOn);
-                    rating.setReader(reader);
-                    rating.setStory(story);
+                if (rs.next()) {
                     return true;
                 }
             }

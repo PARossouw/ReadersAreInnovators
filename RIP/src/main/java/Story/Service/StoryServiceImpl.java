@@ -76,13 +76,23 @@ public class StoryServiceImpl implements StoryService {
 //                    storySaved.getCategoryList().add(cat);
 //                    
 //                    storySaved.setCategoryList(story.getCategoryList());
-                    
-                    categoryRepo.addCategoriesToStory(storySaved, story.getCategoryList());
+                    for (int i = 0; i < story.getCategoryList().size(); i++) {
+                        List<Category> catList = new ArrayList<>();
+                        catList.add(story.getCategoryList().get(i));
+                        
+                          categoryRepo.addCategoriesToStory(storySaved, catList);
+                    }
+                  
                 } else {
                     storySuccessfullySaved = storyRepo.updateStory(story);
                     
-                    
-                    categoryRepo.addCategoriesToStory(story, story.getCategoryList());
+                    for (int i = 0; i < story.getCategoryList().size(); i++) {
+                        List<Category> catList = new ArrayList<>();
+                        catList.add(story.getCategoryList().get(i));
+                        
+                          categoryRepo.addCategoriesToStory(story, catList);
+                    }
+                    //categoryRepo.addCategoriesToStory(story, story.getCategoryList());
                 }
 
                 if (storySaved.getStoryID() != -1 ) {
@@ -93,7 +103,7 @@ public class StoryServiceImpl implements StoryService {
                 Logger.getLogger(StoryServiceImpl.class.getName()).log(Level.SEVERE, null, ex);
             }
         }
-        return "Unfortunetely, the story has not been saved successfully. " + storySaved.toString();
+        return "Unfortunetely, the story has not been saved successfully. " + storySaved.toString() + " Cat ID  " + story.getCategoryList().get(0).getCategoryID() + story.getCategoryList().get(1).getCategoryID();
     }
 
     @Override
@@ -298,6 +308,16 @@ public class StoryServiceImpl implements StoryService {
             Logger.getLogger(StoryServiceImpl.class.getName()).log(Level.SEVERE, null, ex);
         }
         return "something went wrong";
+    }
+
+    @Override
+    public String incrementViews(Story story) {
+        try {
+            return storyRepo.incrementViews(story);
+        } catch (SQLException ex) {
+            Logger.getLogger(StoryServiceImpl.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return "could not increment views";
     }
 
 }

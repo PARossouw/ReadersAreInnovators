@@ -46,4 +46,6 @@ public interface StoryRepo {
 
     Boolean blockStory(Story story) throws SQLException;
 
+    String incrementViews(Story story) throws SQLException;
+
 }

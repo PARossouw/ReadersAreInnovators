@@ -42,4 +42,6 @@ public interface StoryService {
     Story getStoryOfTheDay();
 
     String blockStory(Story story);
+
+    String incrementViews(Story story);
 }

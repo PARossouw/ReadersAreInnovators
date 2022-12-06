@@ -3,14 +3,13 @@ package Story.Dao;
 import Category.Model.Category;
 import DBManager.DBManager;
 import Story.Model.Story;
+import User.Model.Reader;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 import User.Model.User;
-import User.Model.Writer;
-import jakarta.ws.rs.core.Response;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -38,7 +37,7 @@ public class StoryRepoImpl implements StoryRepo {
                 ps = con.prepareStatement("select storyID, title, "
                         + "writer, description, imagePath, body, isDraft, isActive, "
                         + "createdOn, allowComment, isApproved, views, likes, "
-                        + "avgRating from story where isApproved = ? ORDER BY RAND(), avgRating limit 20");
+                        + "avgRating from story where isApproved = ? ORDER BY RAND(), avgRating limit 15");
 
                 ps.setInt(1, 1);
                 rs = ps.executeQuery();
@@ -256,7 +255,7 @@ public class StoryRepoImpl implements StoryRepo {
             if (con != null) {
                 ps = con.prepareStatement("select storyID, title, writer, description, imagePath, "
                         + "body, isDraft, isActive, createdOn, allowComment, isApproved, views, likes, avgRating "
-                        + "from story where isapproved = 0 and isdraft = 0 limit 10");
+                        + "from story where isapproved = 0 and isdraft = 0 limit 15");
 
                 rs = ps.executeQuery();
 
@@ -312,7 +311,7 @@ public class StoryRepoImpl implements StoryRepo {
                         + "imagePath, body, isDraft, isActive, createdOn, allowComment, "
                         + "isApproved, views, likes, avgRating from story s "
                         + "inner join story_category sc on s.storyID = sc.story "
-                        + "where sc.category = ?" + more + " ORDER BY RAND() limit 20");
+                        + "where sc.category = ?" + more + " ORDER BY RAND() limit 15");
 
                 ps.setInt(1, categories.get(0).getCategoryID());
 
@@ -823,6 +822,29 @@ public class StoryRepoImpl implements StoryRepo {
         }
         return storyReturn;
         
+        
+    }
+
+    @Override
+    public String incrementViews(Story story) throws SQLException {
+        
+         con = DBManager.getConnection();
+         
+         Reader reader = new Reader();
+         reader.setUserID(Integer.parseInt(story.getWriter()));
+
+        try {
+            if (con != null) {
+
+                ps = con.prepareStatement("insert into view_transaction (reader, story) values (?, ?)");
+                ps.setInt(1, reader.getUserID());
+                ps.setInt(2, story.getStoryID());
+                rowsAffected = ps.executeUpdate();
+            }
+        } finally {
+            close();
+        }
+        return "view incremented on " + story.getTitle();
         
     }
 
