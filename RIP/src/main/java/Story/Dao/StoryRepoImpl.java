@@ -356,7 +356,9 @@ public class StoryRepoImpl implements StoryRepo {
     }
 
     @Override
-    public Boolean createStory(Story story) throws SQLException {
+    public Story createStory(Story story) throws SQLException {
+        
+        Story storyReturn = new Story();
 
         con = DBManager.getConnection();
 
@@ -376,7 +378,9 @@ public class StoryRepoImpl implements StoryRepo {
         } finally {
             close();
         }
-        return rowsAffected == 1;
+        storyReturn.setBody(story.getBody());
+        storyReturn = getStoryID(storyReturn);
+        return storyReturn;
     }
 
     /*
@@ -518,75 +522,75 @@ public class StoryRepoImpl implements StoryRepo {
 
     @Override//change the sql statement to getting the stories for that particular month - take out category
     public Map<String, Integer> getHighestRatedStoriesForMonth(String month) throws SQLException {
+        
+        String [] time = month.split("-");
 
-//        con = DBManager.getConnection();
-//
-//        Map<String, Integer> storyList = new HashMap<>();
-//        List<Story> storyList = new ArrayList<>();
-//
-//        try {
-//            if (con != null) {
-//
-//                //this sql sattement is wrong, no month is mentioned
-//                ps = con.prepareStatement("select title,writer, description, imagePath, "
-//                ps = con.prepareStatement("select storyID, title,writer, description, imagePath, "
-//                        + "body, isDraft , isActive, createdOn, allowComment, isApproved, views, likes, "
-//                        + " avg(rt.rating) as averageRating from Story s"
-//                        + " inner join rating_transaction rt on s.storyID = rt.story "
-//                        + "group by story "
-//                        + "order by averageRating desc limit 20");
-//                        + "order by averageRating desc limit 23");
-//
-//                while (rs.next()) {
-//
-//                    int storyID = rs.getInt("storyID");
-//                    String title = rs.getString("title");
-//                    String writer = rs.getString("writer");
+        con = DBManager.getConnection();
+
+        Map<String, Integer> storyList = new HashMap<>();
+
+        try {
+            if (con != null) {
+
+                //this sql sattement is wrong, no month is mentioned
+                ps = con.prepareStatement("select storyid, title, writer, "
+                        + " avg(rt.rating) as averageRating from Story s"
+                        + " inner join rating_transaction rt on s.storyID = rt.story "
+                        + "where month(ratedOn) = ? group by story "
+                        + "order by averageRating desc limit 20");
+                
+                ps.setString(1, time[1]);
+                rs = ps.executeQuery();
+                
+                while (rs.next()) {
+                    
+                    int storyID = rs.getInt("storyID");
+                    String title = rs.getString("title");
+                    String writer = rs.getString("writer");
 //                    String description = rs.getString("description");
+//                    String imagePath = rs.getString("imagePath");
 //                    String imagePath = rs.getString("imagePath");
 //                    String body = rs.getString("body");
 //                    boolean isDraft = rs.getBoolean("isDraft");
 //                    boolean isActive = rs.getBoolean("isActive");
-//
+
 //                    Date createdOn = rs.getDate("createdOn");
 //                    Calendar calendar = Calendar.getInstance();
 //                    calendar.setTime(createdOn);
-//
+
 //                    boolean allowComments = rs.getBoolean("allowComment");
 //                    boolean isApproved = rs.getBoolean("isApproved");
 //                    int views = rs.getInt("views");
 //                    int likes = rs.getInt("likes");
-//                    double avgRating = rs.getDouble("averageRating");
-//
-//                    Story story = new Story(storyID, title, writer, description,
-//                            imagePath, body, isDraft, isActive,
-//                            null, allowComments, isApproved,
-//                            views, likes, avgRating);
-//
-//                    //storyList.add(story); commented out temporarily
-//                    storyList.add(story);
-//                }
-//            }
-//        } finally {
-//            close();
-//        }
-//        return storyList;
+                    double avgRating = rs.getDouble("averageRating");
+
+
+
+                    //storyList.add(story); commented out temporarily
+                    //storyList.add(story); gotta add to the map
+                    storyList.put(storyID + "," + writer, (int)avgRating);
+                }
+            }
+        } finally {
+            close();
+        }
+        return storyList;
         //hardcoding
-        Map<String, Integer> hCodeMap = new HashMap<>();
-
-        String story1 = "frettel and nettel";
-        String story2 = "becky and krekel";
-        String story3 = "tekkle and mekkle";
-
-        int a = 2;
-        int b = 3;
-        int c = 4;
-
-        hCodeMap.put(story1, a);
-        hCodeMap.put(story2, b);
-        hCodeMap.put(story3, c);
-
-        return hCodeMap;
+//        Map<String, Integer> hCodeMap = new HashMap<>();
+//
+//        String story1 = "frettel and nettel";
+//        String story2 = "becky and krekel";
+//        String story3 = "tekkle and mekkle";
+//
+//        int a = 2;
+//        int b = 3;
+//        int c = 4;
+//
+//        hCodeMap.put(story1, a);
+//        hCodeMap.put(story2, b);
+//        hCodeMap.put(story3, c);
+//
+//        return hCodeMap;
 
     }
 
@@ -776,6 +780,50 @@ public class StoryRepoImpl implements StoryRepo {
         if (con != null) {
             con.close();
         }
+    }
+
+    @Override
+    public Boolean blockStory(Story story) throws SQLException {
+        
+        con = DBManager.getConnection();
+
+        try {
+            if (con != null) {
+
+                ps = con.prepareStatement("update story set isActive = 0 where storyid = ?");
+                ps.setInt(1, story.getStoryID());
+                rowsAffected = ps.executeUpdate();
+            }
+        } finally {
+            close();
+        }
+        return rowsAffected == 1;
+
+    }
+
+    private Story getStoryID(Story storyReturn) throws SQLException {
+        
+        con = DBManager.getConnection();
+        int storyID = 0;
+        
+        try {
+            if (con != null) {
+
+                ps = con.prepareStatement("select storyid from story where body = ?");
+                ps.setString(1, storyReturn.getBody());
+                rs = ps.executeQuery();
+                
+                if(rs.next()){
+                    storyID = rs.getInt("storyid");
+                }
+                storyReturn.setStoryID(storyID);
+            }
+        } finally {
+            close();
+        }
+        return storyReturn;
+        
+        
     }
 
 }

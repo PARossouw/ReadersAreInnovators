@@ -32,7 +32,7 @@ public interface StoryRepo {
     
     Story retrieveStory(Story story) throws SQLException ; 
     
-    Boolean createStory(Story story) throws SQLException ;
+    Story createStory(Story story) throws SQLException ;
      
     Map<String, Integer> getHighestRatedStoriesForMonth(String month) throws SQLException;
 
@@ -43,5 +43,7 @@ public interface StoryRepo {
     Boolean turnOffComments(Story story) throws SQLException;
 
     List<Story> getHighestRatedStoriesForMonth()throws SQLException;
+
+    Boolean blockStory(Story story) throws SQLException;
 
 }

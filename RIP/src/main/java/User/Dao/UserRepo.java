@@ -29,4 +29,6 @@ public interface UserRepo {
     
     User getUserWithUsername(User user) throws SQLException;
 
+    public User getUserByUserID(User user) throws SQLException;
+
 }

@@ -10,6 +10,7 @@ import Story.Service.StoryService;
 import Story.Service.StoryServiceImpl;
 import User.Model.Reader;
 import User.Model.User;
+import User.Model.Writer;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.ws.rs.Consumes;
 import jakarta.ws.rs.GET;
@@ -22,10 +23,6 @@ import java.util.List;
 import jakarta.ws.rs.core.Response;
 import java.util.ArrayList;
 
-import java.util.HashMap;
-import java.util.Map;
-
-import java.util.Collections;
 
 
 @Path("/Story")
@@ -308,5 +305,31 @@ public class StoryControllerImpl {
     public Response turnOffComments(Story story) {
         return Response.status(Response.Status.OK).entity(storyService.turnOffComments(story)).build();
 //    String x = "test 3";
+    }
+    
+    @Path("/makeStoryOfTheDay")
+    @POST
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response makeStoryOfTheDay(Story story) {
+        // String goodStory = "Mellisa saved the story";
+        return Response.status(Response.Status.OK).entity(storyService.makeStoryOfTheDay(story)).build();
+//        return Response.status(Response.Status.OK).entity(goodStory).build();
+    }
+    
+    @Path("/getStoryOfTheDay")
+    @GET
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response getStoryOfTheDay() {
+
+        return Response.status(Response.Status.OK).entity(storyService.getStoryOfTheDay()).build();
+    }
+    
+    @Path("/story/block")
+    @POST
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response blockStory(Story story) {
+        return Response.status(Response.Status.OK).entity(storyService.blockStory(story)).build();
     }
 }

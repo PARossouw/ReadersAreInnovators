@@ -36,4 +36,10 @@ public interface StoryService {
     String turnOffComments(Story story);
 
     List<Story> getTop20RatedStoriesOfTheMonth();
+
+    String makeStoryOfTheDay(Story story);
+
+    Story getStoryOfTheDay();
+
+    String blockStory(Story story);
 }
