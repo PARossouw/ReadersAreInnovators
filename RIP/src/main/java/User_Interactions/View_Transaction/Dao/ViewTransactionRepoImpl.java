@@ -4,11 +4,9 @@ import DBManager.DBManager;
 import Story.Model.Story;
 import User.Model.Reader;
 import java.sql.Connection;
-import java.sql.Date;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.Calendar;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -54,20 +52,13 @@ public class ViewTransactionRepoImpl implements ViewTransactionRepo {
                 rs = ps.executeQuery();
 
                 while (rs.next()) {
-
-                    //String title = rs.getString("title");
-                    int title = rs.getInt("storyID");
-                    String writer = rs.getString("writer");
-
-                    allStoryViews.put(title + "," + writer, rs.getInt("viewsInPeriod"));
+                    allStoryViews.put(rs.getInt("storyID") + "," + rs.getString("writer"), rs.getInt("viewsInPeriod"));
                 }
             }
         } finally {
             close();
         }
         return allStoryViews;
-        
-        
     }
 
     public void close() throws SQLException {

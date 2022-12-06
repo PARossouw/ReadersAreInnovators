@@ -44,9 +44,7 @@ public class UserServiceImpl implements UserService {
     public User login(User user) {
 
         User currentUser = null;
-
         try {
-            //this should check if the user password equals the password
             currentUser = userRepo.getUser(user);
 
             if (currentUser != null) {
@@ -58,7 +56,6 @@ public class UserServiceImpl implements UserService {
                         ((Reader) currentUser).setPreferredCategories(categoryRepo.getPreferredCategories(currentUser));
                         ((Reader) currentUser).setLikedStories(storyRepo.getLikedStories(currentUser));
 
-                        //need to populate all writer stories if the user is a writer
                         if (currentUser instanceof Writer) {
                             List<Story> writerStories = storyRepo.getWriterStories((Writer) currentUser);
                             ((Writer) currentUser).setAllWriterStories(writerStories);
@@ -89,7 +86,6 @@ public class UserServiceImpl implements UserService {
                 return "Something went wrong, please try again.";
             }
             return categoryRepo.addPreferredCategories(reader, categories) ? "Successfully added categories." : "Could not add categories at this time.";
-
         } catch (SQLException ex) {
             Logger.getLogger(UserServiceImpl.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -104,7 +100,6 @@ public class UserServiceImpl implements UserService {
         } catch (SQLException ex) {
             ex.printStackTrace();
         }
-
         return "Operation unsuccessful, please try again later";
     }
 
@@ -112,15 +107,9 @@ public class UserServiceImpl implements UserService {
     public String registerUser(User user) {
 
         try {
-//            if (userRepo.getUser(user).getUsername().equals(user.getUsername())) {
-//                return "This username or email is already in use.";
-//            } else {
-
-            // return userRepo.createUser(user) ? "User registered successfully." : "Could not complete registration at this time.";
             user.setPassword(getMd5(user.getPassword()));
             userRepo.createUser(user);
             return "Registration was successful. Please log in above.";
-//            }
         } catch (SQLException ex) {
             Logger.getLogger(UserServiceImpl.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -140,8 +129,7 @@ public class UserServiceImpl implements UserService {
         } catch (SQLException ex) {
             Logger.getLogger(UserServiceImpl.class.getName()).log(Level.SEVERE, null, ex);
         }
-
-        return "unsuccessful";
+        return "Unsuccessful";
     }
 
     @Override
@@ -175,7 +163,6 @@ public class UserServiceImpl implements UserService {
     @Override
     public Map<String, Integer> topWriters() {
         Map<String, Integer> topWriters = new HashMap<>();
-
         try {
             topWriters = userRepo.topWriters();
             
@@ -188,7 +175,6 @@ public class UserServiceImpl implements UserService {
     @Override
     public Map<String, Integer> topRejectedWritersForMonth() {
         Map<String, Integer> topRejectedWriters = new HashMap<>();
-
         try {
             topRejectedWriters = userRepo.topRejectedWritersForMonth();
         } catch (SQLException ex) {
@@ -200,7 +186,6 @@ public class UserServiceImpl implements UserService {
     @Override
     public Map<String, Integer> topApprovingEditors() {
         Map<String, Integer> topApprovingEditors = new HashMap<>();
-
         try {
             topApprovingEditors = userRepo.topApprovingEditors();
         } catch (SQLException ex) {
@@ -211,7 +196,6 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public List<Writer> writerSearch(String writerSearch) {
-
         List<Writer> writers = new ArrayList<>();
         try {
             writers = userRepo.writerSearch(writerSearch);
@@ -224,7 +208,6 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public String referFriend(User user, String number) {
-
         smsreq sms = new smsreq();
         StringWriter sw = new StringWriter();
         try {
@@ -257,7 +240,6 @@ public class UserServiceImpl implements UserService {
 
     public String getMd5(String input) {
         try {
-
             // Static getInstance method is called with hashing MD5
             MessageDigest md = MessageDigest.getInstance("MD5");
 

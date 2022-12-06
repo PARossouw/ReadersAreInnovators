@@ -1,6 +1,5 @@
 package User.Dao;
 
-import User.Model.Editor;
 import User.Model.User;
 import User.Model.Writer;
 import java.sql.SQLException;
@@ -29,6 +28,6 @@ public interface UserRepo {
     
     User getUserWithUsername(User user) throws SQLException;
 
-    public User getUserByUserID(User user) throws SQLException;
+    User getUserByUserID(User user) throws SQLException;
 
 }

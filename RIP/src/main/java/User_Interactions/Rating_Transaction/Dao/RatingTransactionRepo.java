@@ -2,7 +2,6 @@ package User_Interactions.Rating_Transaction.Dao;
 
 import Story.Model.Story;
 import User.Model.Reader;
-import User_Interactions.Rating_Transaction.Model.RatingTransaction;
 import java.sql.SQLException;
 
 public interface RatingTransactionRepo {
