@@ -34,6 +34,8 @@ public class Story_TransactionServiceImpl implements Story_TransactionService {
     @Override
     public String approvePendingStory(Editor editor, Story story) {
 
+        story.setIsApproved(true);
+
         smsreq sms = new smsreq();
         StringWriter sw = new StringWriter();
         try {
@@ -43,8 +45,8 @@ public class Story_TransactionServiceImpl implements Story_TransactionService {
 
                 //getting the writer so we can get their number
                 User user = new User();
-                user.setUsername(story.getWriter());
-                user = userRepo.getUser(user);
+                user.setUserID(Integer.parseInt(story.getWriter()));
+                user = userRepo.getUserByUserID(user);
 
                 //building the sms
                 sms.setDatetime(sdf.format(date));
@@ -92,7 +94,8 @@ public class Story_TransactionServiceImpl implements Story_TransactionService {
 
     @Override
     public String rejectPendingStory(Editor editor, Story story) {
-
+        story.setIsApproved(false);
+        
         smsreq sms = new smsreq();
         StringWriter sw = new StringWriter();
         try {
@@ -102,8 +105,8 @@ public class Story_TransactionServiceImpl implements Story_TransactionService {
 
                 //getting the writer so we can get their number
                 User user = new User();
-                user.setUsername(story.getWriter());
-                user = userRepo.getUser(user);
+                user.setUserID(Integer.parseInt(story.getWriter()));
+                user = userRepo.getUserByUserID(user);
 
                 //building the sms
                 sms.setDatetime(sdf.format(date));

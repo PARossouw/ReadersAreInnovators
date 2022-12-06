@@ -220,24 +220,21 @@ public class UserServiceImpl implements UserService {
     @Override
     public String referFriend(User user, String number) {
 
-        smsreq sms = new smsreq();
+       
+smsreq sms = new smsreq();
         StringWriter sw = new StringWriter();
         try {
+             
+                Date date = new Date();
+                SimpleDateFormat sdf = new SimpleDateFormat("yyyy/MM/dd,hh:mm:ss");
 
-            Date date = new Date();
-            SimpleDateFormat sdf = new SimpleDateFormat("yyyy/MM/dd,hh:mm:ss");
+                sms.setDatetime(sdf.format(date));
 
-//                //getting the writer so we can get their number
-//                User user = new User();
-//                user.setUsername(story.getWriter());
-//                user = userRepo.getUser(user);
-            //building the sms
-            sms.setDatetime(sdf.format(date));
-//                sms.setMsisdn(user.getPhoneNumber());
-            sms.setMsisdn(number);
-            sms.setPass("2group");
-            sms.setUser("GROUP2");
-            sms.setMessage("Hi there, you have been refered by " + user.getUsername() + " to read a fantastic story! ");
+                sms.setMsisdn(number);
+                sms.setPass("2group");
+                sms.setUser("GROUP2");
+                sms.setMessage("A friend by the username of " + user.getUsername() + " has referred you to read our story of the day: http://localhost:8080/BitByBitClient/StoryServlet");
+
 
             //building a string with the structure of an xml document
             JAXBContext jaxBContext = JAXBContext.newInstance(smsreq.class);
@@ -248,24 +245,11 @@ public class UserServiceImpl implements UserService {
 
             marshaller.marshal(sms, sw);
 
+
         } catch (JAXBException ex) {
+
             Logger.getLogger(Story_TransactionServiceImpl.class.getName()).log(Level.SEVERE, null, ex);
         }
-
-//        //harcoding below
-//        sms = new smsreq();
-//        Date date = new Date();
-//        SimpleDateFormat sdf = new SimpleDateFormat("yyyy/MM/dd,hh:mm:ss");
-//
-//        //getting the writer so we can get their number
-//        User user = new User();
-//        user.setUsername(story.getWriter());
-//        user.setPhoneNumber("0739068691");
-//        sms.setDatetime(sdf.format(date));
-//        sms.setMsisdn(user.getPhoneNumber());
-//        sms.setMessage("Story with the title: \"" + story.getTitle() + "\" has been approved and is now available for public view");
-//        //hardcoding above
-        //return sms;
         return sw.toString();
     }
 

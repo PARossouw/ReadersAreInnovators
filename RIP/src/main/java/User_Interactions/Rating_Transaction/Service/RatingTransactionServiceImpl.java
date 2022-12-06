@@ -35,7 +35,8 @@ public class RatingTransactionServiceImpl implements RatingTransactionService {
 
             Reader reader = new Reader();
             reader.setUserID(Integer.parseInt(rInfo[1]));
-            if (!ratingRepo.getRating(story, reader)) {
+            
+            if (!(ratingRepo.getRating(story, reader))) {
                 if (ratingRepo.createRating(story, reader, Integer.parseInt(rInfo[2]))) {
 
                     response = "Story has been rated " + Integer.parseInt(rInfo[2]) + " stars!";
