@@ -12,7 +12,7 @@ public interface UserController {
 
     User login(User user);
 
-    String addPreferredCategriesToUser(Reader reader,List<Category> categories);
+    String addPreferredCategriesToUser(Reader reader, List<Category> categories);
 
     String registerUser(User user);
 

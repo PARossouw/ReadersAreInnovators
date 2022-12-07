@@ -4,8 +4,6 @@ import Story.Model.Story;
 import User.Model.Reader;
 import User_Interactions.View_Transaction.Dao.ViewTransactionRepo;
 import java.sql.SQLException;
-import java.util.Calendar;
-import java.util.HashMap;
 import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -31,34 +29,20 @@ public class ViewTransactionServiceImpl implements ViewTransactionService {
     @Override
     public Map<String, Integer> getAllStoryViewsInPeriod(String startDate, String endDate) {
         try {
-            return viewRepo.getAllStoryViewsInPeriod(startDate, endDate);
+
+            Map<String, Integer> storyViewsMap = new HashMap<>();
+
+            storyViewsMap = viewRepo.getAllStoryViewsInPeriod(startDate, endDate);
+
+            if (storyViewsMap.isEmpty() || storyViewsMap == null) {
+                storyViewsMap.put("no data for selected period", -1);
+                return storyViewsMap;
+            }
+            return storyViewsMap;
+
         } catch (SQLException ex) {
             Logger.getLogger(ViewTransactionServiceImpl.class.getName()).log(Level.SEVERE, null, ex);
         }
         return null;
-
-//        //hardcoding
-//        HashMap<String, Integer> hardCodeMap = new HashMap();
-//        
-//        Story s1 = new Story(); s1.setTitle("69420 1st story ");
-//        Story s2 = new Story(); s2.setTitle("2nd story " + startDate);
-//        Story s3 = new Story(); s3.setTitle("3rd story ");
-//        
-//        int a = 5;
-//        int b = 10;
-//        int c = 15;
-//        
-//        hardCodeMap.put(s1.getTitle(), a);
-//        hardCodeMap.put(s2.getTitle(), b);
-//        hardCodeMap.put(s3.getTitle(), c);
-////        
-//        
-//        
-//        return hardCodeMap;
-        
-        
-
-        
-          //return Response.status(Response.Status.OK).entity(hardCodeMap).build();
     }
 }

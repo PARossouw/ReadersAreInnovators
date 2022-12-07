@@ -8,7 +8,6 @@ import java.sql.SQLException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.time.LocalDate;
-import java.util.Calendar;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.logging.Level;
@@ -25,17 +24,14 @@ public class LikeTransactionServiceImpl implements LikeTransactionService {
     @Override
     public String likeStory(Reader reader, Story story) {
 
-        if(reader != null && story != null)
-        {
+        if (reader != null && story != null) {
             try {
                 if (likeTransactionRepo.getLike(reader, story)) {
-//                    likeTransactionRepo.updateLike(reader, story);
-                    return  "The story like status has been successfully updated ";
-                    
+                    likeTransactionRepo.updateLike(reader, story);
+                    return "The story like status has been successfully updated ";
                 } else {
                     likeTransactionRepo.createLike(reader, story);
-                    return  "The story like status has been successfully updated ";
-                    
+                    return "The story was added to your liked stories.";
                 }
             } catch (SQLException ex) {
                 Logger.getLogger(LikeTransactionServiceImpl.class.getName()).log(Level.SEVERE, null, ex);
@@ -48,26 +44,24 @@ public class LikeTransactionServiceImpl implements LikeTransactionService {
     public Map<String, Integer> getAllLikesInPeriod(String month) {
 
         Boolean dateCheck = false;
-        Map<String, Integer> storyLikesMap = new HashMap<String, Integer>();
+        Map<String, Integer> storyLikesMap = new HashMap<>();
         try {
-
             if (month == null) {
                 dateCheck = false;
             }
-
-            if (new SimpleDateFormat("yyyy-mm").parse(month).before(Date.valueOf(LocalDate.now()))){
+            if (new SimpleDateFormat("yyyy-mm").parse(month).before(Date.valueOf(LocalDate.now()))) {
                 dateCheck = true;
             }
-            if (!new SimpleDateFormat("yyyy-mm").parse(month).equals(Date.valueOf(LocalDate.now()))){
+            if (!new SimpleDateFormat("yyyy-mm").parse(month).equals(Date.valueOf(LocalDate.now()))) {
                 dateCheck = true;
             }
             if (dateCheck) {
                 storyLikesMap = likeTransactionRepo.getAllLikesInPeriod(month);
             }
-
-        } catch (SQLException ex) {
-            Logger.getLogger(LikeTransactionServiceImpl.class.getName()).log(Level.SEVERE, null, ex);
-        } catch (ParseException ex) {
+            if(storyLikesMap.isEmpty() || storyLikesMap == null){
+                storyLikesMap.put("no data for selected period", -1);
+            }
+        } catch (SQLException | ParseException ex) {
             Logger.getLogger(LikeTransactionServiceImpl.class.getName()).log(Level.SEVERE, null, ex);
         }
         return storyLikesMap;

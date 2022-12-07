@@ -44,9 +44,7 @@ public class UserServiceImpl implements UserService {
     public User login(User user) {
 
         User currentUser = null;
-
         try {
-            //this should check if the user password equals the password
             currentUser = userRepo.getUser(user);
 
             if (currentUser != null) {
@@ -58,7 +56,6 @@ public class UserServiceImpl implements UserService {
                         ((Reader) currentUser).setPreferredCategories(categoryRepo.getPreferredCategories(currentUser));
                         ((Reader) currentUser).setLikedStories(storyRepo.getLikedStories(currentUser));
 
-                        //need to populate all writer stories if the user is a writer
                         if (currentUser instanceof Writer) {
                             List<Story> writerStories = storyRepo.getWriterStories((Writer) currentUser);
                             ((Writer) currentUser).setAllWriterStories(writerStories);
@@ -67,13 +64,17 @@ public class UserServiceImpl implements UserService {
                     }
                     return currentUser;
                 } else {
-                    return null;
+                    currentUser = new User();
+                    currentUser.setUserID(-1);
+                    return currentUser;
                 }
             }
         } catch (SQLException ex) {
-            currentUser = null;
+            //currentUser = new User();
             Logger.getLogger(UserServiceImpl.class.getName()).log(Level.SEVERE, null, ex);
         }
+        currentUser = new User();
+        currentUser.setUserID(-1);
         return currentUser;
     }
 
@@ -85,7 +86,6 @@ public class UserServiceImpl implements UserService {
                 return "Something went wrong, please try again.";
             }
             return categoryRepo.addPreferredCategories(reader, categories) ? "Successfully added categories." : "Could not add categories at this time.";
-
         } catch (SQLException ex) {
             Logger.getLogger(UserServiceImpl.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -100,7 +100,6 @@ public class UserServiceImpl implements UserService {
         } catch (SQLException ex) {
             ex.printStackTrace();
         }
-
         return "Operation unsuccessful, please try again later";
     }
 
@@ -108,19 +107,13 @@ public class UserServiceImpl implements UserService {
     public String registerUser(User user) {
 
         try {
-//            if (userRepo.getUser(user).getUsername().equals(user.getUsername())) {
-//                return "This username or email is already in use.";
-//            } else {
-
-            // return userRepo.createUser(user) ? "User registered successfully." : "Could not complete registration at this time.";
             user.setPassword(getMd5(user.getPassword()));
             userRepo.createUser(user);
             return "Registration was successful. Please log in above.";
-//            }
         } catch (SQLException ex) {
             Logger.getLogger(UserServiceImpl.class.getName()).log(Level.SEVERE, null, ex);
         }
-        return "Operation unsuccessful, please try again later." + user.toString();
+        return "Operation unsuccessful, please try again later.";
     }
 
     public String blockWriter(Writer writer) {
@@ -136,8 +129,7 @@ public class UserServiceImpl implements UserService {
         } catch (SQLException ex) {
             Logger.getLogger(UserServiceImpl.class.getName()).log(Level.SEVERE, null, ex);
         }
-
-        return "unsuccessful";
+        return "Unsuccessful";
     }
 
     @Override
@@ -171,9 +163,9 @@ public class UserServiceImpl implements UserService {
     @Override
     public Map<String, Integer> topWriters() {
         Map<String, Integer> topWriters = new HashMap<>();
-
         try {
             topWriters = userRepo.topWriters();
+            
         } catch (SQLException ex) {
             Logger.getLogger(UserServiceImpl.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -183,7 +175,6 @@ public class UserServiceImpl implements UserService {
     @Override
     public Map<String, Integer> topRejectedWritersForMonth() {
         Map<String, Integer> topRejectedWriters = new HashMap<>();
-
         try {
             topRejectedWriters = userRepo.topRejectedWritersForMonth();
         } catch (SQLException ex) {
@@ -195,7 +186,6 @@ public class UserServiceImpl implements UserService {
     @Override
     public Map<String, Integer> topApprovingEditors() {
         Map<String, Integer> topApprovingEditors = new HashMap<>();
-
         try {
             topApprovingEditors = userRepo.topApprovingEditors();
         } catch (SQLException ex) {
@@ -206,7 +196,6 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public List<Writer> writerSearch(String writerSearch) {
-
         List<Writer> writers = new ArrayList<>();
         try {
             writers = userRepo.writerSearch(writerSearch);
@@ -219,22 +208,19 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public String referFriend(User user, String number) {
-
-       
-smsreq sms = new smsreq();
+        smsreq sms = new smsreq();
         StringWriter sw = new StringWriter();
         try {
-             
-                Date date = new Date();
-                SimpleDateFormat sdf = new SimpleDateFormat("yyyy/MM/dd,hh:mm:ss");
 
-                sms.setDatetime(sdf.format(date));
+            Date date = new Date();
+            SimpleDateFormat sdf = new SimpleDateFormat("yyyy/MM/dd,hh:mm:ss");
 
-                sms.setMsisdn(number);
-                sms.setPass("2group");
-                sms.setUser("GROUP2");
-                sms.setMessage("A friend by the username of " + user.getUsername() + " has referred you to read our story of the day: http://localhost:8080/BitByBitClient/StoryServlet");
+            sms.setDatetime(sdf.format(date));
 
+            sms.setMsisdn(number);
+            sms.setPass("2group");
+            sms.setUser("GROUP2");
+            sms.setMessage("A friend by the username of " + user.getUsername() + " has referred you to read our story of the day: http://localhost:8080/BitByBitClient/StoryServlet");
 
             //building a string with the structure of an xml document
             JAXBContext jaxBContext = JAXBContext.newInstance(smsreq.class);
@@ -245,7 +231,6 @@ smsreq sms = new smsreq();
 
             marshaller.marshal(sms, sw);
 
-
         } catch (JAXBException ex) {
 
             Logger.getLogger(Story_TransactionServiceImpl.class.getName()).log(Level.SEVERE, null, ex);
@@ -255,7 +240,6 @@ smsreq sms = new smsreq();
 
     public String getMd5(String input) {
         try {
-
             // Static getInstance method is called with hashing MD5
             MessageDigest md = MessageDigest.getInstance("MD5");
 
@@ -276,5 +260,18 @@ smsreq sms = new smsreq();
         catch (NoSuchAlgorithmException e) {
             throw new RuntimeException(e);
         }
+    }
+
+    @Override
+    public String becomeWriter(User user) {
+        
+        try {
+            if(userRepo.becomeWriter(user)){
+                return "Congratulations, You have become a writer!";
+            }
+        } catch (SQLException ex) {
+            Logger.getLogger(UserServiceImpl.class.getName()).log(Level.SEVERE, null, ex);
+        }
+            return "There was a problem making you a writer";
     }
 }

@@ -4,7 +4,6 @@ import Category.Dao.CategoryRepo;
 import Category.Model.Category;
 import DBManager.DBManager;
 import Story.Model.Story;
-import User.Model.Reader;
 import User.Model.User;
 import java.sql.SQLException;
 import java.util.ArrayList;
@@ -26,8 +25,8 @@ public class CategoryServiceImpl extends DBManager implements CategoryService {
 
         List<Category> allCategories = new ArrayList<>();
         try {
-            return allCategories = categoryRepo.getAllCategories();
-
+            allCategories = categoryRepo.getAllCategories();
+            return allCategories;
         } catch (SQLException ex) {
             Logger.getLogger(CategoryServiceImpl.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -41,7 +40,6 @@ public class CategoryServiceImpl extends DBManager implements CategoryService {
                 return "No categories provided. Provide categories to add to story";
             }
             return categoryRepo.addCategoriesToStory(story, categories) ? "Categories successfully added to Story" : "Unable to add Categories";
-
         } catch (SQLException ex) {
             Logger.getLogger(CategoryServiceImpl.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -51,15 +49,15 @@ public class CategoryServiceImpl extends DBManager implements CategoryService {
     @Override
     public HashMap<String, Integer> topCategoriesForTheMonth(String month) {
 
-        HashMap<String, Integer> categoryList = new HashMap<String, Integer>();
+        HashMap<String, Integer> categoryList = new HashMap<>();
         try {
-            return categoryList = categoryRepo.topCategoriesForMonth(month);
+            categoryList = categoryRepo.topCategoriesForMonth(month);
+            
+            if(categoryList.isEmpty() || categoryList == null){
+                categoryList.put("no data for selected period", -1);
+            }
         } catch (SQLException ex) {
             Logger.getLogger(CategoryServiceImpl.class.getName()).log(Level.SEVERE, null, ex);
-//            List<Category> listCat = new ArrayList<>();
-//            listCat.add(new Category("Cat1"));
-//            listCat.add(new Category("Cat2"));
-//            return listCat;
         }
         return categoryList;
     }

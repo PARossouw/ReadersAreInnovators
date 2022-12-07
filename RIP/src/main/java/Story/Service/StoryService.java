@@ -19,19 +19,16 @@ public interface StoryService {
     Story retrieveStory(Story story);
 
     List<Story> searchForStory(String storyParameter);
-    
+
     List<Story> getLikedStory(User reader);
 
     List<Story> getPendingStories();
-    
+
     List<Story> getStoriesForStoryOfTheDay();
 
+    Map<String, Double> getTop20RatedStoriesOfTheMonth(String month);
 
-    Map<String, Integer> getTop20RatedStoriesOfTheMonth(String month);
-
-    
     List<Story> getRandomApprovedStories();
-
 
     String turnOffComments(Story story);
 

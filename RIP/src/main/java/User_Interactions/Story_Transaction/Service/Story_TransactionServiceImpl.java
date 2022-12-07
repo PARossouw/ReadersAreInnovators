@@ -64,31 +64,10 @@ public class Story_TransactionServiceImpl implements Story_TransactionService {
                 marshaller.setProperty(Marshaller.JAXB_FRAGMENT, Boolean.TRUE);
 
                 marshaller.marshal(sms, sw);
-                //return sw.toString();
             }
-//            else {
-//                return sms;
-//            }
-        } catch (SQLException ex) {
-            Logger.getLogger(Story_TransactionServiceImpl.class.getName()).log(Level.SEVERE, null, ex);
-        } catch (JAXBException ex) {
+        } catch (SQLException | JAXBException ex) {
             Logger.getLogger(Story_TransactionServiceImpl.class.getName()).log(Level.SEVERE, null, ex);
         }
-
-//        //harcoding below
-//        sms = new smsreq();
-//        Date date = new Date();
-//        SimpleDateFormat sdf = new SimpleDateFormat("yyyy/MM/dd,hh:mm:ss");
-//
-//        //getting the writer so we can get their number
-//        User user = new User();
-//        user.setUsername(story.getWriter());
-//        user.setPhoneNumber("0739068691");
-//        sms.setDatetime(sdf.format(date));
-//        sms.setMsisdn(user.getPhoneNumber());
-//        sms.setMessage("Story with the title: \"" + story.getTitle() + "\" has been approved and is now available for public view");
-//        //hardcoding above
-        //return sms;
         return sw.toString();
     }
 
@@ -124,17 +103,11 @@ public class Story_TransactionServiceImpl implements Story_TransactionService {
                 marshaller.setProperty(Marshaller.JAXB_FRAGMENT, Boolean.TRUE);
 
                 marshaller.marshal(sms, sw);
-                //return sw.toString();
             }
-
-        } catch (SQLException ex) {
-            Logger.getLogger(Story_TransactionServiceImpl.class.getName()).log(Level.SEVERE, null, ex);
-        } catch (JAXBException ex) {
+        } catch (SQLException | JAXBException ex) {
             Logger.getLogger(Story_TransactionServiceImpl.class.getName()).log(Level.SEVERE, null, ex);
         }
-
         return sw.toString();
-
     }
 
     @Override
@@ -148,7 +121,7 @@ public class Story_TransactionServiceImpl implements Story_TransactionService {
             }
         } catch (SQLException ex) {
             Logger.getLogger(Story_TransactionServiceImpl.class.getName()).log(Level.SEVERE, null, ex);
-            return "unsuccessful operation";
+            return "Unsuccessful operation";
         }
         return "Could not find story";
     }

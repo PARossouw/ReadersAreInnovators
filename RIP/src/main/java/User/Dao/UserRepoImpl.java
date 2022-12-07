@@ -29,32 +29,23 @@ public class UserRepoImpl implements UserRepo {
         con = DBManager.getConnection();
 
         try {
-//            if (user instanceof Editor && con != null) {
-//
-//                ps = con.prepareStatement("insert into User (username, email, password, role) values (?, ?, ?, ?)");
-//                ps.setString(1, user.getUsername());
-//                ps.setString(2, user.getEmail());
-//                ps.setString(3, user.getPassword());
-//                ps.setInt(4, 3);
-//                rowsAffected = ps.executeUpdate();
-//
-//            } else if (user instanceof Reader && con != null) {
-
-            if (user.getRoleID() == 3) {
-                ps = con.prepareStatement("insert into User (username, email, password, role) values (?, ?, ?, ?)");
-                ps.setString(1, user.getUsername());
-                ps.setString(2, user.getEmail());
-                ps.setString(3, user.getPassword());
-                ps.setInt(4, user.getRoleID());
-            } else {
-
-                ps = con.prepareStatement("insert into User (username, email, password) values (?, ?, ?)");
-                ps.setString(1, user.getUsername());
-                ps.setString(2, user.getEmail());
-                ps.setString(3, user.getPassword());
+            if (con != null) {
+                if (user.getRoleID() == 3) {
+                    ps = con.prepareStatement("insert into User (username, email, password, role, phoneNumber) values (?, ?, ?, ?, ?)");
+                    ps.setString(1, user.getUsername());
+                    ps.setString(2, user.getEmail());
+                    ps.setString(3, user.getPassword());
+                    ps.setInt(4, user.getRoleID());
+                    ps.setString(5, user.getPhoneNumber());
+                } else {
+                    ps = con.prepareStatement("insert into User (username, email, password, phoneNumber) values (?, ?, ?, ?)");
+                    ps.setString(1, user.getUsername());
+                    ps.setString(2, user.getEmail());
+                    ps.setString(3, user.getPassword());
+                    ps.setString(4, user.getPhoneNumber());
+                }
+                rowsAffected = ps.executeUpdate();
             }
-            rowsAffected = ps.executeUpdate();
-
         } finally {
             close();
         }
@@ -65,33 +56,23 @@ public class UserRepoImpl implements UserRepo {
     public User getUser(User user) throws SQLException {
 
         con = DBManager.getConnection();
-        User u = new User();
+        User u = null;
 
         try {
             if (con != null) {
 
                 ps = con.prepareStatement("select userid, username, email, "
-                        + "phonenumber, password, isactive,role from user "
-                        + "where username = ?");
+                        + "phonenumber, password, isactive, dateAdded, role, isBlocked"
+                        + " from user where username = ?");
                 ps.setString(1, user.getUsername());
-                //ps.setString(2, user.getEmail());
 
                 rs = ps.executeQuery();
 
                 while (rs.next()) {
-                    int userID = (rs.getInt("userid"));
-                    String username = (rs.getString("username"));
-                    String email = (rs.getString("email"));
-                    String phoneNumber = (rs.getString("phonenumber"));
-                    String password = (rs.getString("password"));
-                    Boolean isActive = (rs.getBoolean("isactive"));
+                    Calendar calendar = Calendar.getInstance();
+                    calendar.setTime(rs.getDate("dateAdded"));
 
-//                    Calendar calendar = Calendar.getInstance();
-//                    calendar.setTime(rs.getDate("dateadded"));
-                    Integer role = (rs.getInt("role"));
-
-                    switch (role) {
-
+                    switch (rs.getInt("role")) {
                         case 1:
                             u = new Reader();
                             break;
@@ -107,34 +88,19 @@ public class UserRepoImpl implements UserRepo {
                         default:
                             u = new Reader();
                     }
-
-                    u.setUserID(userID);
-                    u.setRoleID(role);
-                    u.setUsername(username);
-                    u.setEmail(email);
-                    u.setPhoneNumber(phoneNumber);
-                    u.setPassword(password);
-                    u.setIsActive(isActive);
-                    //u.setDateAdded(calendar);
-
+                    u.setUserID(rs.getInt("userid"));
+                    u.setRoleID(rs.getInt("role"));
+                    u.setUsername(rs.getString("username"));
+                    u.setEmail(rs.getString("email"));
+                    u.setPhoneNumber(rs.getString("phonenumber"));
+                    u.setPassword(rs.getString("password"));
+                    u.setIsActive(rs.getBoolean("isactive"));
+                    u.setDateAdded(calendar);
                 }
-                if (u == null) {   // Prevents a null pointer exception in the service layer. 
-                    u.setUsername("");
-                    u.setEmail("");
-                }
-
-                return u;
-
             }
         } finally {
             close();
         }
-
-        if (u == null) {   // Prevents a null pointer exception in the service layer. 
-            u.setUsername("");
-            u.setEmail("");
-        }
-
         return u;
     }
 
@@ -145,7 +111,6 @@ public class UserRepoImpl implements UserRepo {
 
         try {
             if (con != null) {
-
                 ps = con.prepareStatement("update user set role = 2 where userid = ?");
                 ps.setInt(1, user.getUserID());
                 rowsAffected = ps.executeUpdate();
@@ -163,7 +128,6 @@ public class UserRepoImpl implements UserRepo {
 
         try {
             if (con != null) {
-
                 ps = con.prepareStatement("update user set isActive = 0 where userid = ?");
                 ps.setInt(1, user.getUserID());
                 rowsAffected = ps.executeUpdate();
@@ -180,36 +144,14 @@ public class UserRepoImpl implements UserRepo {
         Map<String, Integer> topWriters = new HashMap<>();
 
         try {
-            if (con != null) {  //Confirm sql call once database is populated
+            if (con != null) {
                 ps = con.prepareStatement("select username, role, u.isactive, sum(views) as allViews from user u "
                         + "inner join story s on u.userid = s.writer group by writer order by allViews desc limit 30");
                 rs = ps.executeQuery();
 
                 while (rs.next()) {
-
-//                    int userID = (rs.getInt("userid"));
-                    String username = (rs.getString("username"));
-//                    String email = (rs.getString("email"));
-//                    String phoneNumber = (rs.getString("phonenumber"));
-//                    String password = (rs.getString("password"));
-//                    boolean isActive = (rs.getBoolean("isactive"));
-
-//                    Calendar calendar = Calendar.getInstance();
-//                    calendar.setTime(rs.getDate("dateadded"));
-                    int role = (rs.getInt("role"));
-//                    int views = rs.getInt("allViews");
-
-                    if (role == 2) {
-                        Writer writer = new Writer();
-//                        writer.setUserID(userID);
-//                        writer.setUsername(username);
-//                        writer.setEmail(email);
-//                        writer.setPhoneNumber(phoneNumber);
-//                        writer.setPassword(password);
-//                        writer.setIsActive(isActive);
-//                        writer.setDateAdded(calendar);
-                        int allViews = rs.getInt("allViews");
-                        topWriters.put(username, allViews);
+                    if (rs.getInt("role") == 2) {
+                        topWriters.put(rs.getString("username"), rs.getInt("allViews"));
                     }
                 }
             }
@@ -217,23 +159,6 @@ public class UserRepoImpl implements UserRepo {
             close();
         }
         return topWriters;
-        //hardcoding
-//        Map<String, Integer> topWriters = new HashMap<>();
-//
-//        String writer1 = "Anton";
-//        String writer2 = "Pieter";
-//        String writer3 = "Ryan";
-//
-//        int views1 = 10;
-//        int views2 = 20;
-//        int views3 = 30;
-//
-//        topWriters.put(writer1, views1);
-//        topWriters.put(writer2, views2);
-//        topWriters.put(writer3, views3);
-//
-//        return topWriters;
-
     }
 
     @Override
@@ -251,15 +176,9 @@ public class UserRepoImpl implements UserRepo {
                 rs = ps.executeQuery();
 
                 while (rs.next()) {
+                    if (rs.getInt("role") == 2) {
 
-                    String username = (rs.getString("username"));
-
-                    int role = (rs.getInt("role"));
-                    int rejectedCount = rs.getInt("timesRejected");
-
-                    if (role == 2) {
-
-                        topRejectedWriters.put(username, rejectedCount);
+                        topRejectedWriters.put(rs.getString("username"), rs.getInt("timesRejected"));
                     }
                 }
             }
@@ -267,7 +186,6 @@ public class UserRepoImpl implements UserRepo {
             close();
         }
         return topRejectedWriters;
-
     }
 
     @Override
@@ -285,31 +203,9 @@ public class UserRepoImpl implements UserRepo {
                 rs = ps.executeQuery();
 
                 while (rs.next()) {
-
-//                    int userID = (rs.getInt("userid"));
-                    String username = (rs.getString("username"));
-//                    String email = (rs.getString("email"));
-//                    String phoneNumber = (rs.getString("phonenumber"));
-////                    String password = (rs.getString("password"));
-//                    boolean isActive = (rs.getBoolean("isactive"));
-
-//                    Calendar date = Calendar.getInstance();
-//                    date.setTime(rs.getDate("dateadded"));
-
-                    int role = (rs.getInt("role"));
-                    int timesApproved = rs.getInt("timesApproved");
-
-                    if (role == 3) {
-//                        Editor editor = new Editor();
-//                        editor.setUserID(userID);
-//                        editor.setUsername(username);
-//                        editor.setEmail(email);
-//                        editor.setPhoneNumber(phoneNumber);
-//                        editor.setPassword(password);
-//                        editor.setIsActive(isActive);
-//                        editor.setDateAdded(date);
-                        editorList.put(username, timesApproved);//put the toString there temporarily
-                        if(editorList.size() == 3){
+                    if (rs.getInt("role") == 3) {
+                        editorList.put(rs.getString("username"), rs.getInt("timesApproved"));//put the toString there temporarily
+                        if (editorList.size() == 3) {
                             break;
                         }
                     }
@@ -319,22 +215,6 @@ public class UserRepoImpl implements UserRepo {
             close();
         }
         return editorList;
-        //hardcoding
-//        Map<String, Integer> topApprovingEditors = new HashMap<>();
-//
-//        String editor1 = "Jason";
-//        String editor2 = "Michael";
-//        String editor3 = "Aidan";
-//
-//        int approved1 = 365;
-//        int approved2 = 52;
-//        int approved3 = 24;
-//
-//        topApprovingEditors.put(editor1, approved1);
-//        topApprovingEditors.put(editor2, approved2);
-//        topApprovingEditors.put(editor3, approved3);
-//
-//        return topApprovingEditors;
     }
 
     @Override
@@ -344,7 +224,6 @@ public class UserRepoImpl implements UserRepo {
 
         try {
             if (con != null) {
-
                 ps = con.prepareStatement("update user set role = 1, isBlocked = 1 where userid = ?");
                 ps.setInt(1, writer.getUserID());
                 rowsAffected = ps.executeUpdate();
@@ -353,7 +232,6 @@ public class UserRepoImpl implements UserRepo {
             close();
         }
         return rowsAffected == 1;
-
     }
 
     @Override
@@ -362,10 +240,6 @@ public class UserRepoImpl implements UserRepo {
         con = DBManager.getConnection();
 
         List<Writer> writers = new ArrayList<>();
-//        writer.setUsername(writerSearch);
-//        writers.add(writer);
-//        return writers;
-
         try {
             if (con != null) {
 
@@ -380,26 +254,14 @@ public class UserRepoImpl implements UserRepo {
 
                 while (rs.next()) {
                     Writer writer = new Writer();
-                    int userID = (rs.getInt("userid"));
-                    String username = (rs.getString("username"));
-                    String email = (rs.getString("email"));
-                    String phoneNumber = (rs.getString("phonenumber"));
-                    String password = (rs.getString("password"));
-                    Boolean isActive = (rs.getBoolean("isactive"));
 
-                    //watch out for calendar
-//                Calendar calendar = Calendar.getInstance();
-//                calendar.setTime(rs.getDate("dateadded"));
-                    Integer role = (rs.getInt("role"));
-
-                    writer.setRoleID(role);
-                    writer.setUserID(userID);
-                    writer.setUsername(username);
-                    writer.setEmail(email);
-                    writer.setPhoneNumber(phoneNumber);
-                    writer.setPassword(password);
-                    writer.setIsActive(isActive);
-//                u.setDateAdded(calendar);
+                    writer.setRoleID(rs.getInt("role"));
+                    writer.setUserID(rs.getInt("userid"));
+                    writer.setUsername(rs.getString("username"));
+                    writer.setEmail(rs.getString("email"));
+                    writer.setPhoneNumber(rs.getString("phonenumber"));
+                    writer.setPassword(rs.getString("password"));
+                    writer.setIsActive(rs.getBoolean("isactive"));
 
                     writers.add(writer);
                 }
@@ -419,7 +281,6 @@ public class UserRepoImpl implements UserRepo {
 
         try {
             if (con != null) {
-
                 ps = con.prepareStatement("select userid, username, email, "
                         + "phonenumber, password, isactive, dateadded, role from user "
                         + "where username = ?");
@@ -428,18 +289,10 @@ public class UserRepoImpl implements UserRepo {
                 rs = ps.executeQuery();
 
                 if (rs.next()) {
-                    int userID = (rs.getInt("userid"));
-                    String username = (rs.getString("username"));
-                    String email = (rs.getString("email"));
-                    String phoneNumber = (rs.getString("phonenumber"));
-                    String password = (rs.getString("password"));
-                    Boolean isActive = (rs.getBoolean("isactive"));
-
                     Calendar calendar = Calendar.getInstance();
                     calendar.setTime(rs.getDate("dateadded"));
-                    Integer role = (rs.getInt("role"));
 
-                    switch (role) {
+                    switch (rs.getInt("role")) {
 
                         case 1:
                             u = new Reader();
@@ -456,14 +309,67 @@ public class UserRepoImpl implements UserRepo {
                         default:
                             u = new Reader();
                     }
+                    u.setUserID(rs.getInt("userid"));
+                    u.setRoleID(rs.getInt("role"));
+                    u.setUsername(rs.getString("username"));
+                    u.setEmail(rs.getString("email"));
+                    u.setPhoneNumber(rs.getString("phonenumber"));
+                    u.setPassword(rs.getString("password"));
+                    u.setIsActive(rs.getBoolean("isactive"));
+                    u.setDateAdded(calendar);
+                }
+            }
+        } finally {
+            close();
+        }
+        return u;
+    }
 
-                    u.setUserID(userID);
-                    u.setRoleID(role);
-                    u.setUsername(username);
-                    u.setEmail(email);
-                    u.setPhoneNumber(phoneNumber);
-                    u.setPassword(password);
-                    u.setIsActive(isActive);
+    @Override
+    public User getUserByUserID(User user) throws SQLException {
+
+        con = DBManager.getConnection();
+
+        User u = new User();
+
+        try {
+            if (con != null) {
+
+                ps = con.prepareStatement("select userid, username, email, "
+                        + "phonenumber, password, isactive, dateadded, role from user "
+                        + "where userid = ?");
+                ps.setInt(1, user.getUserID());
+
+                rs = ps.executeQuery();
+
+                if (rs.next()) {
+                    Calendar calendar = Calendar.getInstance();
+                    calendar.setTime(rs.getDate("dateadded"));
+
+                    switch (rs.getInt("role")) {
+
+                        case 1:
+                            u = new Reader();
+                            break;
+                        case 2:
+                            u = new Writer();
+                            break;
+                        case 3:
+                            u = new Editor();
+                            break;
+                        case 4:
+                            u = new AdminEditor();
+                            break;
+                        default:
+                            u = new Reader();
+                    }
+                    u.setUserID(rs.getInt("userid"));
+                    u.setRoleID(rs.getInt("role"));
+                    u.setUsername(rs.getString("username"));
+                    u.setEmail(rs.getString("email"));
+                    u.setPhoneNumber(rs.getString("phonenumber"));
+                    u.setPassword(rs.getString("password"));
+                    u.setIsActive(rs.getBoolean("isactive"));
                     u.setDateAdded(calendar);
                 }
             }
@@ -486,80 +392,4 @@ public class UserRepoImpl implements UserRepo {
         }
     }
 
-    @Override
-    public User getUserByUserID(User user) throws SQLException {
-
-        con = DBManager.getConnection();
-
-        User u = new User();
-
-        try {
-            if (con != null) {
-
-                ps = con.prepareStatement("select userid, username, email, "
-                        + "phonenumber, password, isactive, dateadded, role from user "
-                        + "where userid = ?");
-                ps.setInt(1, user.getUserID());
-
-                rs = ps.executeQuery();
-
-                if (rs.next()) {
-                    int userID = (rs.getInt("userid"));
-                    String username = (rs.getString("username"));
-                    String email = (rs.getString("email"));
-                    String phoneNumber = (rs.getString("phonenumber"));
-                    String password = (rs.getString("password"));
-                    Boolean isActive = (rs.getBoolean("isactive"));
-
-                    Calendar calendar = Calendar.getInstance();
-                    calendar.setTime(rs.getDate("dateadded"));
-                    Integer role = (rs.getInt("role"));
-
-                    switch (role) {
-
-                        case 1:
-                            u = new Reader();
-                            break;
-                        case 2:
-                            u = new Writer();
-                            break;
-                        case 3:
-                            u = new Editor();
-                            break;
-                        case 4:
-                            u = new AdminEditor();
-                            break;
-                        default:
-                            u = new Reader();
-                    }
-
-                    u.setUserID(userID);
-                    u.setRoleID(role);
-                    u.setUsername(username);
-                    u.setEmail(email);
-                    u.setPhoneNumber(phoneNumber);
-                    u.setPassword(password);
-                    u.setIsActive(isActive);
-                    u.setDateAdded(calendar);
-                }
-            }
-        } finally {
-            close();
-        }
-        return u;
-
-    }
-
 }
-
-//hardcoding
-//        List<Writer> writers = new ArrayList<>();
-//        Writer writer1 = new Writer();
-//        writer1.setUsername("Anton");
-//        Writer writer2 = new Writer();
-//        writer2.setUsername("Buffy");
-//        
-//        writers.add(writer1);
-//        writers.add(writer2);
-//        return writers;
-

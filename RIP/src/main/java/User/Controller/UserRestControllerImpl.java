@@ -1,9 +1,7 @@
 package User.Controller;
 
 import Category.Dao.CategoryRepoImpl;
-import Category.Model.Category;
 import Story.Dao.StoryRepoImpl;
-import Story.Model.Story;
 import User.Dao.UserRepoImpl;
 import User.Model.Editor;
 import User.Model.Reader;
@@ -20,10 +18,7 @@ import jakarta.ws.rs.PathParam;
 import jakarta.ws.rs.Produces;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
-import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import org.json.simple.JSONObject;
 
 @Path("/User")
@@ -46,44 +41,26 @@ public class UserRestControllerImpl {
 
     @Path("/categories/add")
     @POST
-    //@Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
-    public Response addPreferredCategoriesToUser(/*JSONObject jsonObject*/) {
-        //return Response.status(Response.Status.OK).entity(userService.addPreferredCategoriesToUser((Reader)jsonObject.get("reader"), (List)jsonObject.get("categories"))).build();
-
-        //just for testing the JSONObject
-        JSONObject jsonObject = new JSONObject();
-
-        Reader reader = new Reader();
-        reader.setUsername("username is Anton");
-        List<Category> categories = new ArrayList<>();
-        categories.add(new Category("sex"));
-        categories.add(new Category("drugs"));
-        categories.add(new Category("alcohol"));
-
-        jsonObject.put("message", userService.addPreferredCategoriesToUser(reader, categories));
-
-        return Response.status(Response.Status.OK).entity(jsonObject).build();
+    public Response addPreferredCategoriesToUser(JSONObject jsonObject) {
+        return Response.status(Response.Status.OK).entity(userService.addPreferredCategoriesToUser(
+                mapper.convertValue(jsonObject.get("reader"), Reader.class), 
+                (List) jsonObject.get("categories"))).build();
     }
-    
-    
+
     @Path("/categories/preffered/add")
     @POST
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
     public Response addPreferredCategoriesToNewUser(Reader reader) {
-//          return Response.status(Response.Status.OK).entity("hello again").build();
         return Response.status(Response.Status.OK).entity(userService.addPreferredCategoriesToNewUser(reader)).build();
     }
-    
-    
 
     @Path("/register")
     @POST
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
     public Response registerUser(User user) {
-//          return Response.status(Response.Status.OK).entity("hello again").build();
         return Response.status(Response.Status.OK).entity(userService.registerUser(user)).build();
     }
 
@@ -115,8 +92,7 @@ public class UserRestControllerImpl {
     @GET
     @Produces(MediaType.APPLICATION_JSON)
     public Response topWriters() {
-        Map<String, Integer> topWriters = userService.topWriters();
-        return Response.status(Response.Status.OK).entity(topWriters).build();
+        return Response.status(Response.Status.OK).entity(userService.topWriters()).build();
 
     }
 
@@ -124,8 +100,7 @@ public class UserRestControllerImpl {
     @GET
     @Produces(MediaType.APPLICATION_JSON)
     public Response topRejectedWritersForMonth() {
-        Map<String, Integer> topRejectedWriters = userService.topRejectedWritersForMonth();
-        return Response.status(Response.Status.OK).entity(topRejectedWriters).build();
+        return Response.status(Response.Status.OK).entity(userService.topRejectedWritersForMonth()).build();
 
     }
 
@@ -133,36 +108,31 @@ public class UserRestControllerImpl {
     @GET
     @Produces(MediaType.APPLICATION_JSON)
     public Response topApprovingEditors() {
-        Map<String, Integer> topApprovingEditors = userService.topApprovingEditors();
-        return Response.status(Response.Status.OK).entity(topApprovingEditors).build();
+        return Response.status(Response.Status.OK).entity(userService.topApprovingEditors()).build();
     }
 
     @Path("/searchWriter/{writerSearch}")
     @GET
     @Produces(MediaType.APPLICATION_JSON)
     public Response writerSearch(@PathParam("writerSearch") String writerSearch) {
-        List<Writer> writers = new ArrayList<>();
-        writers = userService.writerSearch(writerSearch);
-        return Response.status(Response.Status.OK).entity(writers).build();
+        return Response.status(Response.Status.OK).entity(userService.writerSearch(writerSearch)).build();
     }
-    
+
     @Path("/referFriend")
     @POST
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
     public Response referFriend(JSONObject jsonObject) {
-
-//        return Response.status(Response.Status.OK).entity(storyService.approvePendingStory(editor, story)).build();
-
-        
-        User user = new User();
-        String number = "";
-        user = mapper.convertValue( jsonObject.get("user"), User.class);
-        number = mapper.convertValue( jsonObject.get("phoneNumber"), String.class);
-        
-        
-  
+        User user = mapper.convertValue(jsonObject.get("user"), User.class);
+        String number = mapper.convertValue(jsonObject.get("phoneNumber"), String.class);
         return Response.status(Response.Status.OK).entity(userService.referFriend(user, number)).build();
-
+    }
+    
+    @Path("/writer/become")
+    @POST
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response becomeWriter(User user) {
+        return Response.status(Response.Status.OK).entity(userService.becomeWriter(user)).build();
     }
 }
